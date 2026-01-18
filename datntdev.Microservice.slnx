@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/apps/">
+    <Project Path="srcs/apps/Identity/datntdev.Microservice.App.Identity.csproj" />
+  </Folder>
+  <Folder Name="/infra/">
+    <Project Path="srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj" />
+  </Folder>
+  <Folder Name="/shared/">
+    <Project Path="srcs/shared/Web.Host/datntdev.Microservice.Shared.Web.Host.csproj" />
+  </Folder>
+</Solution>
