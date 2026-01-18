@@ -1,0 +1,6 @@
+@datntdev.Microservice.Srv.Payment.Web.Host_HostAddress = http://localhost:5182
+
+GET {{datntdev.Microservice.Srv.Payment.Web.Host_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

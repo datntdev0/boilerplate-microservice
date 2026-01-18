@@ -5,7 +5,30 @@
   <Folder Name="/infra/">
     <Project Path="srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj" />
   </Folder>
+  <Folder Name="/services/" />
+  <Folder Name="/services/admin/">
+    <Project Path="srcs/services/admin/Application/datntdev.Microservice.Srv.Admin.Application.csproj" />
+    <Project Path="srcs/services/admin/Contracts/datntdev.Microservice.Srv.Admin.Contracts.csproj" />
+    <Project Path="srcs/services/admin/Web.Host/datntdev.Microservice.Srv.Admin.Web.Host.csproj" />
+  </Folder>
+  <Folder Name="/services/identity/">
+    <Project Path="srcs/services/identity/Application/datntdev.Microservice.Srv.Identity.Application.csproj" />
+    <Project Path="srcs/services/identity/Contracts/datntdev.Microservice.Srv.Identity.Contracts.csproj" />
+    <Project Path="srcs/services/identity/Web.Host/datntdev.Microservice.Srv.Identity.Web.Host.csproj" />
+  </Folder>
+  <Folder Name="/services/notify/">
+    <Project Path="srcs/services/notify/Application/datntdev.Microservice.Srv.Notify.Application.csproj" />
+    <Project Path="srcs/services/notify/Contracts/datntdev.Microservice.Srv.Notify.Contracts.csproj" />
+    <Project Path="srcs/services/notify/Web.Host/datntdev.Microservice.Srv.Notify.Web.Host.csproj" />
+  </Folder>
+  <Folder Name="/services/payment/">
+    <Project Path="srcs/services/payment/Application/datntdev.Microservice.Srv.Payment.Application.csproj" />
+    <Project Path="srcs/services/payment/Contracts/datntdev.Microservice.Srv.Payment.Contracts.csproj" />
+    <Project Path="srcs/services/payment/Web.Host/datntdev.Microservice.Srv.Payment.Web.Host.csproj" />
+  </Folder>
   <Folder Name="/shared/">
+    <Project Path="srcs/shared/Common/datntdev.Microservice.Shared.Common.csproj" />
+    <Project Path="srcs/shared/Application/datntdev.Microservice.Shared.Application.csproj" />
     <Project Path="srcs/shared/Web.Host/datntdev.Microservice.Shared.Web.Host.csproj" />
   </Folder>
 </Solution>
