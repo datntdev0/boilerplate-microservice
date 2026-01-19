@@ -4,6 +4,8 @@
   </Folder>
   <Folder Name="/infra/">
     <Project Path="srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj" />
+    <Project Path="srcs/infra/Gateway/datntdev.Microservice.Infra.Gateway.csproj" />
+    <Project Path="srcs/infra/Migrator/datntdev.Microservice.Infra.Migrator.csproj" />
   </Folder>
   <Folder Name="/services/" />
   <Folder Name="/services/admin/">

@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\services\identity\Web.Host\datntdev.Microservice.Srv.Identity.Web.Host.csproj" />
     <ProjectReference Include="..\..\services\notify\Web.Host\datntdev.Microservice.Srv.Notify.Web.Host.csproj" />
     <ProjectReference Include="..\..\services\payment\Web.Host\datntdev.Microservice.Srv.Payment.Web.Host.csproj" />
+    <ProjectReference Include="..\Gateway\datntdev.Microservice.Infra.Gateway.csproj" />
   </ItemGroup>
 
 </Project>
