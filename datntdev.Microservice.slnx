@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/apps/">
     <Project Path="srcs/apps/Identity/datntdev.Microservice.App.Identity.csproj" />
+    <Project Path="srcs/apps/Angular/datntdev.Microservice.App.Angular.esproj" />
   </Folder>
   <Folder Name="/infra/">
     <Project Path="srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj" />
@@ -29,8 +30,8 @@
     <Project Path="srcs/services/payment/Web.Host/datntdev.Microservice.Srv.Payment.Web.Host.csproj" />
   </Folder>
   <Folder Name="/shared/">
-    <Project Path="srcs/shared/Common/datntdev.Microservice.Shared.Common.csproj" />
     <Project Path="srcs/shared/Application/datntdev.Microservice.Shared.Application.csproj" />
+    <Project Path="srcs/shared/Common/datntdev.Microservice.Shared.Common.csproj" />
     <Project Path="srcs/shared/Web.Host/datntdev.Microservice.Shared.Web.Host.csproj" />
   </Folder>
 </Solution>
