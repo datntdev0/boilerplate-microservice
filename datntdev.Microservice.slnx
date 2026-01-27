@@ -1,7 +1,10 @@
 <Solution>
   <Folder Name="/apps/">
+    <Project Path="srcs/apps/Angular/datntdev.Microservice.App.Angular.esproj">
+      <Build />
+      <Deploy />
+    </Project>
     <Project Path="srcs/apps/Identity/datntdev.Microservice.App.Identity.csproj" />
-    <Project Path="srcs/apps/Angular/datntdev.Microservice.App.Angular.esproj" />
   </Folder>
   <Folder Name="/infra/">
     <Project Path="srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj" />
