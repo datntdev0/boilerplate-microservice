@@ -1,10 +1,13 @@
-﻿namespace datntdev.Microservice.Infra.Migrator
+﻿using datntdev.Microservice.Shared.Web.Host.Hosting;
+using Microsoft.Extensions.Hosting;
+
+namespace datntdev.Microservice.Infra.Migrator
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            new AppStartup<MicroserviceInfraMigratorModule>().Build(args).Run();
         }
     }
 }
