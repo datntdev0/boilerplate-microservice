@@ -1,7 +1,7 @@
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering, withRoutes } from '@angular/ssr';
-import { appConfig } from './app.config';
-import { serverRoutes } from './app.routes.server';
+import { serverRoutes } from './main.routes.server';
+import { mainConfig } from './main.config';
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -9,4 +9,4 @@ const serverConfig: ApplicationConfig = {
   ]
 };
 
-export const config = mergeApplicationConfig(appConfig, serverConfig);
+export const mainConfigServer = mergeApplicationConfig(mainConfig, serverConfig);

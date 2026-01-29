@@ -1,13 +1,11 @@
 {
-  "name": "datntdev.microservice.app.angular",
+  "name": "datntdev-microservices-app-angular",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:datntdev.Microservice.App.Angular": "node dist/datntdev.Microservice.App.Angular/server/server.mjs"
+    "start:ssr": "node dist/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -22,26 +20,27 @@
     ]
   },
   "private": true,
-  "packageManager": "npm@11.6.2",
+  "packageManager": "npm@10.9.2",
   "dependencies": {
-    "@angular/common": "^21.1.0",
-    "@angular/compiler": "^21.1.0",
-    "@angular/core": "^21.1.0",
-    "@angular/forms": "^21.1.0",
-    "@angular/platform-browser": "^21.1.0",
-    "@angular/platform-server": "^21.1.0",
-    "@angular/router": "^21.1.0",
-    "@angular/ssr": "^21.1.1",
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
+    "@angular/platform-server": "^21.0.0",
+    "@angular/router": "^21.0.0",
+    "@angular/ssr": "^21.0.5",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.1.1",
-    "@angular/cli": "^21.1.1",
-    "@angular/compiler-cli": "^21.1.0",
+    "@angular/build": "^21.0.5",
+    "@angular/cli": "^21.0.5",
+    "@angular/compiler-cli": "^21.0.0",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "@vitest/coverage-v8": "^4.0.17",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

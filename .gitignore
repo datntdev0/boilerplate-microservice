@@ -4,9 +4,17 @@
 # Visual Studio directory
 .vs/ 
 
+# Angular Cache directory
+.angular/
+
 # Build results
 bin/
 obj/
+dist/
+node_modules/
+
+# Test results
+coverage/
 
 # User-specific files
 *.user

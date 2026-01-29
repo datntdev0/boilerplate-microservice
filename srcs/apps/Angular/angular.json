@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "datntdev.Microservice.App.Angular": {
+    ".": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -66,16 +66,26 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "datntdev.Microservice.App.Angular:build:production"
+              "buildTarget": ".:build:production"
             },
             "development": {
-              "buildTarget": "datntdev.Microservice.App.Angular:build:development"
+              "buildTarget": ".:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "coverage": true,
+            "coverageReporters": [ "text", "html" ],
+            "coverageWatermarks": {
+              "statements": [ 50, 80 ],
+              "branches": [ 50, 80 ],
+              "functions": [ 50, 80 ],
+              "lines": [ 50, 80 ]
+            }
+          }
         }
       }
     }
