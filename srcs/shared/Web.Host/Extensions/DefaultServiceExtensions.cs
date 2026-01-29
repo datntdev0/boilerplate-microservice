@@ -50,6 +50,7 @@ public static class DefaultServiceExtensions
     public static IServiceCollection AddDefaultServiceDiscovery(this IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddServiceDiscovery();
+
         services.ConfigureHttpClientDefaults(http =>
         {
             // Turn on resilience by default

@@ -1,29 +1,36 @@
+using datntdev.Microservice.Infra.Gateway.HealthChecks;
+using datntdev.Microservice.Shared.Web.Host.Extensions;
+using datntdev.Microservice.Shared.Web.Host.Hosting;
+
 namespace datntdev.Microservice.Infra.Gateway;
+
+public class Startup : WebStartup<MicroserviceInfraGatewayModule>
+{
+    public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
+    {
+        var yarpConfig = configs.GetSection("ReverseProxy");
+
+        services.AddDefaultServices(configs);
+        services.AddReverseProxy().LoadFromConfig(yarpConfig).AddServiceDiscoveryDestinationResolver();
+        services.AddHealthChecks().AddCheck<GatewayHealthCheck>("gateway_health_check", tags: ["alive"]);
+    }
+
+    public override void Configure(WebApplication app, IConfigurationRoot configs)
+    {
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapReverseProxy();
+
+        app.MapDefaultHealthChecks();
+    }
+}
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        builder.AddServiceDefaults();
-
-        // Add services to the container.
-
-        builder.Services.AddControllers();
-
-        var app = builder.Build();
-
-        app.MapDefaultEndpoints();
-
-        // Configure the HTTP request pipeline.
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-
-        app.MapControllers();
-
-        app.Run();
+        new Startup().Build(args).Run();
     }
 }
