@@ -1,9 +1,6 @@
 <Solution>
   <Folder Name="/apps/">
-    <Project Path="srcs/apps/Angular/datntdev.Microservice.App.Angular.esproj">
-      <Build />
-      <Deploy />
-    </Project>
+    <Project Path="srcs/apps/Angular/datntdev.Microservice.App.Angular.esproj" />
     <Project Path="srcs/apps/Identity/datntdev.Microservice.App.Identity.csproj" />
   </Folder>
   <Folder Name="/infra/">
@@ -36,5 +33,13 @@
     <Project Path="srcs/shared/Application/datntdev.Microservice.Shared.Application.csproj" />
     <Project Path="srcs/shared/Common/datntdev.Microservice.Shared.Common.csproj" />
     <Project Path="srcs/shared/Web.Host/datntdev.Microservice.Shared.Web.Host.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Common/datntdev.Microservice.Tests.Common.csproj" />
+    <Project Path="tests/Infra.Gateway/datntdev.Microservice.Tests.Infra.Gateway.csproj" />
+    <Project Path="tests/Srv.Admin/datntdev.Microservice.Tests.Srv.Admin.csproj" />
+    <Project Path="tests/Srv.Identity/datntdev.Microservice.Tests.Srv.Identity.csproj" />
+    <Project Path="tests/Srv.Notify/datntdev.Microservice.Tests.Srv.Notify.csproj" />
+    <Project Path="tests/Srv.Payment/datntdev.Microservice.Tests.Srv.Payment.csproj" />
   </Folder>
 </Solution>
