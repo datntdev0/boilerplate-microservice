@@ -4,8 +4,8 @@ import { buildStyles, buildScripts } from './build.js';
 
 // Watch paths configuration
 const WATCH_PATHS = {
-    styles: "./src/**/*.scss",
-    scripts: "./src/**/*.js"
+    styles: "./src/styles/**/*.scss",
+    scripts: "./src/scripts/**/*.js"
 };
 
 /**

@@ -1,1 +1,6 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196" />
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196">
+  <ItemGroup>
+    <None Include=".storybook\main.ts" />
+    <None Include=".storybook\preview.ts" />
+  </ItemGroup>
+</Project>

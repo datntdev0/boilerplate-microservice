@@ -1,13 +1,13 @@
 const config = {
     options: {
-        dist: ["./dist"],
+        dist: ["./src/dist"],
     },
     source: {
         styles: ["./src/styles/index.scss"],
         scripts: ["./src/scripts/index.js"],
     }, 
     bundle: {
-        styles: "css/style.css",
+        styles: "css/bundle.css",
         scripts: "js/bundle.js",
     }
 };
