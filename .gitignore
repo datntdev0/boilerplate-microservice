@@ -19,5 +19,6 @@ coverage/
 # User-specific files
 *.user
 
+# Storybook build output
 *storybook.log
 storybook-static

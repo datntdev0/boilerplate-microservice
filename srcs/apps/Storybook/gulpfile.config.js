@@ -1,6 +1,10 @@
 const config = {
     options: {
-        dist: ["./src/dist"],
+        dist: [
+            "./src/dist",
+            "../Angular/public/dist",
+            "../Identity/wwwroot/dist",
+        ],
     },
     source: {
         styles: ["./src/styles/index.scss"],

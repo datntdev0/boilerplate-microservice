@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196">
   <ItemGroup>
+    <None Remove="src\dist\**" />
+    <TypeScriptConfiguration Remove="src\dist\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include=".storybook\main.ts" />
     <None Include=".storybook\preview.ts" />
   </ItemGroup>
