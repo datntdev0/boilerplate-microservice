@@ -14,6 +14,18 @@ function outputPipe(pipe, dirname) {
     bundleDest.forEach(destPath => {
         pipe = pipe.pipe(gulp.dest(destPath)) 
     });
+    return pipe;
+}
+
+export function buildAssets(cb) {
+    const bundleDir = config.bundle.assets;
+    
+    let assetsPipe = gulp
+        .src(config.source.assets, { encoding: false })
+
+    assetsPipe = outputPipe(assetsPipe, bundleDir);
+
+    return assetsPipe;
 }
 
 export function buildStyles(cb) {
@@ -25,7 +37,7 @@ export function buildStyles(cb) {
         .pipe(sass().on('error', sass.logError))
         .pipe(concat(bundleName));
 
-    outputPipe(bundlePipe, bundleDir);
+    bundlePipe = outputPipe(bundlePipe, bundleDir);
 
     return bundlePipe;
 }
@@ -38,10 +50,10 @@ export function buildScripts(cb) {
         .src(config.source.scripts)
         .pipe(concat(bundleName));
 
-    outputPipe(bundlePipe, bundleDir);
+    bundlePipe = outputPipe(bundlePipe, bundleDir);
 
     return bundlePipe;
 }
 
 export default gulp.series(cleanTask, 
-    gulp.parallel(buildStyles, buildScripts));
+    gulp.parallel(buildAssets, buildStyles, buildScripts));

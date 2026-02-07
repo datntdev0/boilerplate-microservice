@@ -12,6 +12,16 @@ function getDistPaths() {
         paths.push(...config.options.dist.map(x => path.join(x, bundleDir)));
     }
 
+    if (config.bundle.scripts) {
+        const bundleDir = path.dirname(config.bundle.scripts);
+        paths.push(...config.options.dist.map(x => path.join(x, bundleDir)));
+    }
+
+    if (config.bundle.assets) {
+        const bundleDir = path.dirname(config.bundle.assets);
+        paths.push(...config.options.dist.map(x => path.join(x, bundleDir)));
+    }
+
     return paths;
 }
 

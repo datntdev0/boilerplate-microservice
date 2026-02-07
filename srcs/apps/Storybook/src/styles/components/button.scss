@@ -1,0 +1,49 @@
+//
+// Buttons Base
+//
+
+// Button
+.btn {
+    --#{$prefix}btn-color: var(--#{$prefix}body-color);
+
+    // Reset outline
+    outline: none !important;
+
+    // Link
+    &.btn-link {
+        border: 0;
+        border-radius: 0;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        text-decoration: none;
+        font-weight: $btn-font-weight;
+    }
+
+    // Outline
+    &.btn-outline:not(.btn-outline-dashed) {
+        border: 1px solid $input-border-color;
+    }
+
+    // Outline dashed
+    &.btn-outline-dashed {
+        border: 1px dashed $input-border-color;
+    }
+
+    // Flex
+    &.btn-flex {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    // Align start
+    &.btn-trim-start {
+        justify-content: flex-start !important;
+        padding-left: 0 !important;
+    }
+
+    // Align start
+    &.btn-trim-end {
+        justify-content: flex-end !important;
+        padding-right: 0 !important;
+    }
+}

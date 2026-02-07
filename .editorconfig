@@ -1,6 +1,30 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
+# TypeScript and JavaScript files: use 2 spaces (common in frontend projects)
+[*.{ts,tsx,js,jsx}]
+indent_size = 2
+tab_width = 2
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# SCSS, CSS and HTML files: 2 spaces
+[*.{scss,css,html,htm}]
+indent_size = 2
+tab_width = 2
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# JSON, Markdown, YAML: 2 spaces (tools and linters commonly expect 2)
+[*.{json,md,yml,yaml}]
+indent_size = 2
+tab_width = 2
+indent_style = space
+trim_trailing_whitespace = false
+insert_final_newline = true
+
 # C# files
 [*.cs]
 

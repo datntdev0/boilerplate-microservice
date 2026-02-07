@@ -7,10 +7,10 @@ type User = {
 };
 
 export interface PageProps {
-  user?: User;
-  onLogin?: () => void;
-  onLogout?: () => void;
-  onCreateAccount?: () => void;
+  user: User;
+  onLogin: () => void;
+  onLogout: () => void;
+  onCreateAccount: () => void;
 }
 
 export const Page = ({ user, onLogin, onLogout, onCreateAccount }: PageProps) => html`

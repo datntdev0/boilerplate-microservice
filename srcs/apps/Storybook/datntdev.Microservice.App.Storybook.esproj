@@ -7,4 +7,7 @@
     <None Include=".storybook\main.ts" />
     <None Include=".storybook\preview.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\stories\containers\" />
+  </ItemGroup>
 </Project>

@@ -15,19 +15,20 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@storybook/addon-docs": "^10.2.3",
+    "@storybook/addon-themes": "^10.2.7",
+    "@storybook/web-components-vite": "^10.2.3",
     "@types/node": "^25.1.0",
     "eslint": "^9.39.2",
+    "eslint-plugin-storybook": "^10.2.3",
     "gulp": "^5.0.1",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^6.0.1",
-    "sass": "^1.97.3",
-    "typescript": "^5.9.3",
-    "storybook": "^10.2.3",
-    "@storybook/web-components-vite": "^10.2.3",
-    "@storybook/addon-docs": "^10.2.3",
     "lit": "^3.3.2",
-    "eslint-plugin-storybook": "^10.2.3"
+    "sass": "^1.97.3",
+    "storybook": "^10.2.3",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "bootstrap": "^5.3.8"

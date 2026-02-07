@@ -9,10 +9,12 @@ const config = {
     source: {
         styles: ["./src/styles/index.scss"],
         scripts: ["./src/scripts/index.js"],
+        assets: ["./src/assets/**/*"],
     }, 
     bundle: {
         styles: "css/bundle.css",
         scripts: "js/bundle.js",
+        assets: "media",
     }
 };
 
