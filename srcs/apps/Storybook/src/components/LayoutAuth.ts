@@ -8,11 +8,11 @@ export const LayoutAuth = ({ content }: LayoutAuthProps) => html`
 <div class="d-flex flex-column flex-root">
   <style>
     [data-bs-theme="light"] body {
-      background-image: url('/media/images/auth-bg-light.jpg');
+      background-image: url('/media/images/bg-light.jpg');
     }
 
     [data-bs-theme="dark"] body {
-      background-image: url('/media/images/auth-bg-dark.jpg');
+      background-image: url('/media/images/bg-dark.jpg');
     }
   </style>
   <div class="d-flex flex-column flex-lg-row flex-column-fluid">

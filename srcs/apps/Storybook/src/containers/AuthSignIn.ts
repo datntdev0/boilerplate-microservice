@@ -2,11 +2,7 @@ import { html } from 'lit';
 
 import { LayoutAuth } from '../components/LayoutAuth.js';
 
-export interface AuthSignInProps {
-
-}
-
-export const AuthSignIn = (props: AuthSignInProps) => html`
+export const AuthSignIn = () => html`
 ${LayoutAuth({
   content: html`  
   <div class="d-flex flex-center flex-column flex-column-fluid">
@@ -28,7 +24,7 @@ ${LayoutAuth({
           </a>
         </div>
         <div class="col-md-6">
-          <a href="javascript:void(0);" class="mt-2 btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
+          <a href="javascript:void(0);" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
             <img alt="Logo" src="/media/logos/apple-light-icon.svg" class="h-15px me-3 theme-light-show">
             <img alt="Logo" src="/media/logos/apple-dark-icon.svg" class="h-15px me-3 theme-dark-show">
             Sign in with Apple
@@ -40,11 +36,11 @@ ${LayoutAuth({
       </div>
 
       <div class="mt-8">
-        <input class="form-control form-control-lg bg-transparent" placeholder="Email" type="email" name="email" />
+        <input class="form-control bg-transparent" placeholder="Email" type="email" name="email" />
       </div>
 
       <div class="mt-4">
-        <input class="form-control form-control-lg bg-transparent" placeholder="Password" type="password" name="password" />
+        <input class="form-control bg-transparent" placeholder="Password" type="password" name="password" />
       </div>
 
       <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
@@ -63,5 +59,5 @@ ${LayoutAuth({
       </div>
     </form>
   </div>`
-  })}
+})}
 `;
