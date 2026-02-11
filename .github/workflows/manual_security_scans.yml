@@ -1,0 +1,15 @@
+name: Manual Security Scans
+run-name: Manual Security Scans
+
+on:
+  workflow_dispatch:
+
+permissions:
+  security-events: write
+  actions: read
+  packages: read
+  contents: read
+
+jobs:
+  security_scans:
+    uses: ./.github/workflows/sub_security_scans.yml

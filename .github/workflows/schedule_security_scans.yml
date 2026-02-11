@@ -1,0 +1,16 @@
+name: Schedule Security Scans
+run-name: Weekly Security Scans
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs every Sunday at midnight UTC
+
+permissions:
+  security-events: write
+  actions: read
+  packages: read
+  contents: read
+  
+jobs:
+  security_scans:
+    uses: ./.github/workflows/sub_security_scans.yml

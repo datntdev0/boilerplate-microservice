@@ -1,0 +1,53 @@
+on:
+  workflow_call:
+
+permissions:
+  security-events: write
+  actions: read
+  packages: read
+  contents: read
+
+jobs:
+  
+  analyze_codeql:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - language: csharp
+          build-mode: autobuild
+        - language: javascript
+          build-mode: none
+        - language: typescript
+          build-mode: none
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+
+    - name: Analysis CodeQL 
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:${{matrix.language}}"
+
+  analyze_sonar:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+  analyze_synk:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
