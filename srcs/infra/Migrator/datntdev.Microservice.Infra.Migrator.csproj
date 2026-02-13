@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\apps\Identity\datntdev.Microservice.App.Identity.csproj" />
     <ProjectReference Include="..\..\shared\Web.Host\datntdev.Microservice.Shared.Web.Host.csproj" />
   </ItemGroup>
 
