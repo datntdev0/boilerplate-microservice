@@ -21,7 +21,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MongoDB.EntityFrameworkCore" Version="9.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\apps\Identity\datntdev.Microservice.App.Identity.csproj" />
+    <ProjectReference Include="..\..\services\admin\Application\datntdev.Microservice.Srv.Admin.Application.csproj" />
+    <ProjectReference Include="..\..\services\identity\Application\datntdev.Microservice.Srv.Identity.Application.csproj" />
+    <ProjectReference Include="..\..\services\notify\Application\datntdev.Microservice.Srv.Notify.Application.csproj" />
+    <ProjectReference Include="..\..\services\payment\Application\datntdev.Microservice.Srv.Payment.Application.csproj" />
     <ProjectReference Include="..\..\shared\Web.Host\datntdev.Microservice.Shared.Web.Host.csproj" />
   </ItemGroup>
 

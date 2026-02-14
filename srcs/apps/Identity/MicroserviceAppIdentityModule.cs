@@ -2,6 +2,10 @@
 
 namespace datntdev.Microservice.App.Identity;
 
-internal class MicroserviceAppIdentityModule : BaseModule
+public class MicroserviceAppIdentityModule : BaseModule
 {
+    public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
+    {
+        services.AddDbContext<MicroserviceAppIdentityDbContext>();
+    }
 }
