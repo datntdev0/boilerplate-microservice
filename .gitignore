@@ -22,3 +22,9 @@ coverage/
 # Storybook build output
 *storybook.log
 storybook-static
+
+# DataGrip ignore files
+.datagrip/**/shelf/
+.datagrip/**/workspace.xml
+.datagrip/**/dataSources/
+.datagrip/**/dataSources.local.xml
