@@ -12,7 +12,7 @@ using datntdev.Microservice.App.Identity;
 namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
 {
     [DbContext(typeof(MicroserviceAppIdentityDbContext))]
-    [Migration("20260214144554_InitialDatabase")]
+    [Migration("20260215153959_InitialDatabase")]
     partial class InitialDatabase
     {
         /// <inheritdoc />
@@ -37,11 +37,10 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
@@ -55,11 +54,10 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("UserId")

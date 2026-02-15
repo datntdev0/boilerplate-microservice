@@ -46,6 +46,7 @@ public abstract class BaseDbContext(DbContextOptions options) : DbContext(option
             if (entry.Entity is IUpdated entity)
             {
                 entity.UpdatedAt = DateTime.UtcNow;
+                entity.UpdatedBy = string.Empty;
             }
         }
 
@@ -54,6 +55,7 @@ public abstract class BaseDbContext(DbContextOptions options) : DbContext(option
             if (entry.Entity is ICreated entity)
             {
                 entity.CreatedAt = DateTime.UtcNow;
+                entity.CreatedBy = string.Empty;
             }
         }
     }

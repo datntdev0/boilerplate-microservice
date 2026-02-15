@@ -40,7 +40,7 @@ internal class MicroserviceInfraMigratorWorker(IServiceProvider services) : IHos
     {
         try
         {
-            _logger.LogInformation("Migration started.");
+            _logger.LogInformation("Migrator service is starting...");
             await Task.WhenAll(
                 StartMigrationAsync(_services.GetRequiredService<MicroserviceAppIdentityDbContext>()),
                 StartMigrationAsync(_services.GetRequiredService<MicroserviceSrvIdentityDbContext>()),
@@ -48,7 +48,11 @@ internal class MicroserviceInfraMigratorWorker(IServiceProvider services) : IHos
                 StartMigrationAsync(_services.GetRequiredService<MicroserviceSrvAdminDbContext>()),
                 StartMigrationAsync(_services.GetRequiredService<MicroserviceSrvNotifyDbContext>())
             );
-            _logger.LogInformation("Migration completed.");
+            _logger.LogInformation("Database migration is completed. Starting data seeding...");
+            await Task.WhenAll(
+                new Seeders.MicroserviceAppIdentitySeeder(_services).SeedAsync()
+            );
+            _logger.LogInformation("Migrator service is completed. Stopping application lifetime...");
         }
         catch (Exception ex)
         {
