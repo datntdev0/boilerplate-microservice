@@ -16,6 +16,8 @@ internal class Startup : WebStartup<MicroserviceAppIdentityModule>
     {
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
+
         app.UseAntiforgery();
 
         app.MapStaticAssets();

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using datntdev.Microservice.App.Identity.Identity;
+using datntdev.Microservice.App.Identity.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,9 +9,20 @@ namespace datntdev.Microservice.App.Identity.Components.Pages.Auth;
 public partial class SignIn
 {
     private EditContext _editContext = default!;
-    
+    private string _alertTitle = string.Empty;
+    private string _alertText = string.Empty;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    [Inject]
+    private IdentityManager IdentityManager { get; set; } = default!;
+
     [SupplyParameterFromForm]
     private InputModel Model { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string ReturnUrl { get; set; } = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -23,9 +36,18 @@ public partial class SignIn
         return _editContext.IsValid(fieldIdentifier) ? string.Empty : "is-invalid";
     }
 
-    private Task HandleValidSubmitAsync()
+    private async Task HandleValidSubmitAsync()
     {
-        return Task.CompletedTask;
+        var loginResult = await IdentityManager.SignInWithPassword(Model.Email!, Model.Password!);
+        if (loginResult.Status == IdentityResultStatus.Success)
+        {
+            NavigationManager.NavigateTo(ReturnUrl, forceLoad: true);
+        }
+        else
+        {
+            _alertTitle = "Login Failed";
+            _alertText = "Invalid login attempt. Please try again.";
+        }
     }
 
     public class InputModel
