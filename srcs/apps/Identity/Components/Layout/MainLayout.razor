@@ -1,3 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<div class="d-flex flex-column flex-root">
+  <style>
+    [data-bs-theme="light"] body {
+      background-image: url('/dist/media/images/bg-light.jpg');
+    }
+
+    [data-bs-theme="dark"] body {
+      background-image: url('/dist/media/images/bg-dark.jpg');
+    }
+  </style>
+  <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+    <div class="d-flex flex-column-fluid justify-content-center p-12">
+      <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
+        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
+          @Body
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

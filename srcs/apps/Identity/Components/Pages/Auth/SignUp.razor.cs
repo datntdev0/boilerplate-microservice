@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using datntdev.Microservice.App.Identity.Identity;
+using datntdev.Microservice.App.Identity.Models;
+using datntdev.Microservice.Shared.Common;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +10,15 @@ namespace datntdev.Microservice.App.Identity.Components.Pages.Auth;
 public partial class SignUp
 {
     private EditContext _editContext = default!;
-    
+    private string _alertTitle = string.Empty;
+    private string _alertText = string.Empty;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    [Inject]
+    private IdentityManager IdentityManager { get; set; } = default!;
+
     [SupplyParameterFromForm]
     private InputModel Model { get; set; } = new();
 
@@ -23,9 +34,20 @@ public partial class SignUp
         return _editContext.IsValid(fieldIdentifier) ? string.Empty : "is-invalid";
     }
 
-    private Task HandleValidSubmitAsync()
+    private async Task HandleValidSubmitAsync()
     {
-        return Task.CompletedTask;
+        var registerResult = await IdentityManager.SignUpWithPassword(
+            Model.Email!, Model.Password!);
+
+        if (registerResult.Status == IdentityResultStatus.Success)
+        {
+            NavigationManager.NavigateTo(Constants.Endpoints.AuthSignIn, forceLoad: true);
+        }
+        else
+        {
+            _alertTitle = "Registration Failed";
+            _alertText = "Invalid register attempt. Please try again.";
+        }
     }
 
     public class InputModel

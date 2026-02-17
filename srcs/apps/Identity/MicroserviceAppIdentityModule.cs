@@ -26,6 +26,10 @@ internal static class MicroserviceAppIdentityModuleExtensions
                     options.LogoutPath = Constants.Endpoints.AuthSignOut;
                 });
 
+        services.AddAuthorization()
+                .AddAuthenticationCore()
+                .AddCascadingAuthenticationState();
+
         services.AddScoped<IdentityManager>()
                 .AddSingleton<PasswordHasher>()
                 .AddHttpContextAccessor();

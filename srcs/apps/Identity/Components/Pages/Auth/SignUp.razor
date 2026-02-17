@@ -1,4 +1,5 @@
 ﻿@page "/auth/signup"
+@using datntdev.Microservice.App.Identity.Components.Shared
 
 <div class="d-flex flex-center flex-column flex-column-fluid">
   <EditForm class="form w-100" novalidate="novalidate"
@@ -86,3 +87,8 @@
     </div>
   </EditForm>
 </div>
+
+<AlertDialog Title="@_alertTitle" Text="@_alertText" Type="AlertDialogType.Danger"
+             ConfirmButtonText="Let's me try again" 
+             ConfirmButtonVariant="AlertDialogButtonVariant.Danger"
+             IsVisible="@(!string.IsNullOrEmpty(_alertTitle))"/>
