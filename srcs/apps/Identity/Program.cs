@@ -11,6 +11,7 @@ internal class Startup : WebStartup<MicroserviceAppIdentityModule>
         services.AddDefaultServices(configs);
         services.AddRazorComponents();
         services.AddControllers();
+        services.AddIdentityServices();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
@@ -18,6 +19,8 @@ internal class Startup : WebStartup<MicroserviceAppIdentityModule>
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
+
+        app.UseAuthorization();
 
         app.UseAntiforgery();
 

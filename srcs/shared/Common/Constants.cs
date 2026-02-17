@@ -16,5 +16,7 @@ public class Constants
         public const string AuthSignIn = "/auth/signin";
         public const string AuthSignUp = "/auth/signup";
         public const string AuthSignOut = "/auth/signout";
+        public const string OAuth2Token = "/connect/token";
+        public const string OAuth2Authorize = "/connect/authorize";
     }
 }
