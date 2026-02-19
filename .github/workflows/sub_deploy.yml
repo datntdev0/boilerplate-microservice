@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+  
+permissions:
+  contents: read
+
+jobs:
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy Backend
+        run: echo "Backend deployment process would run here"
+        
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy Frontend
+        run: echo "Frontend deployment process would run here"

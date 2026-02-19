@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+  
+permissions:
+  contents: read
+
+jobs:
+
+  backend_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run Backend Tests
+        run: echo "Backend tests would run here"
+
+  frontend_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run Frontend Tests
+        run: echo "Frontend tests would run here"

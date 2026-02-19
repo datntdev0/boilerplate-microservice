@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+  
+permissions:
+  contents: read
+
+jobs:
+
+  build_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build Backend Image
+        run: echo "Backend image build process would run here"
+
+  build_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build Frontend Image
+        run: echo "Frontend image build process would run here"

@@ -1,0 +1,19 @@
+name: Manual Deploy
+run-name: Manual Deploy
+
+on:
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+
+jobs:
+
+  test:
+    uses: ./.github/workflows/sub_unit_tests.yml
+
+  build:
+    uses: ./.github/workflows/sub_build.yml
+
+  deploy:
+    uses: ./.github/workflows/sub_deploy.yml
