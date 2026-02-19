@@ -11,8 +11,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Run Backend Tests
-        run: echo "Backend tests would run here"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with: 
+          dotnet-version: 9.0.x
+      - name: Trust HTTPS development certificate
+        run: dotnet dev-certs https --trust
+      - name: Build Backend
+        run: dotnet build datntdev.Microservice.slnf
+      - name: Run unit tests
+        run: dotnet test datntdev.Microservice.slnf --no-build
 
   frontend_tests:
     runs-on: ubuntu-latest

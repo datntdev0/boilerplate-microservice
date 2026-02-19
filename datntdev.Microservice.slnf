@@ -1,0 +1,32 @@
+{
+  "solution": {
+    "path": "datntdev.Microservice.slnx",
+    "projects": [
+      "srcs\\apps\\Identity\\datntdev.Microservice.App.Identity.csproj",
+      "srcs\\infra\\Aspire\\datntdev.Microservice.Infra.Aspire.csproj",
+      "srcs\\infra\\Gateway\\datntdev.Microservice.Infra.Gateway.csproj",
+      "srcs\\infra\\Migrator\\datntdev.Microservice.Infra.Migrator.csproj",
+      "srcs\\services\\admin\\Application\\datntdev.Microservice.Srv.Admin.Application.csproj",
+      "srcs\\services\\admin\\Contracts\\datntdev.Microservice.Srv.Admin.Contracts.csproj",
+      "srcs\\services\\admin\\Web.Host\\datntdev.Microservice.Srv.Admin.Web.Host.csproj",
+      "srcs\\services\\identity\\Application\\datntdev.Microservice.Srv.Identity.Application.csproj",
+      "srcs\\services\\identity\\Contracts\\datntdev.Microservice.Srv.Identity.Contracts.csproj",
+      "srcs\\services\\identity\\Web.Host\\datntdev.Microservice.Srv.Identity.Web.Host.csproj",
+      "srcs\\services\\notify\\Application\\datntdev.Microservice.Srv.Notify.Application.csproj",
+      "srcs\\services\\notify\\Contracts\\datntdev.Microservice.Srv.Notify.Contracts.csproj",
+      "srcs\\services\\notify\\Web.Host\\datntdev.Microservice.Srv.Notify.Web.Host.csproj",
+      "srcs\\services\\payment\\Application\\datntdev.Microservice.Srv.Payment.Application.csproj",
+      "srcs\\services\\payment\\Contracts\\datntdev.Microservice.Srv.Payment.Contracts.csproj",
+      "srcs\\services\\payment\\Web.Host\\datntdev.Microservice.Srv.Payment.Web.Host.csproj",
+      "srcs\\shared\\Application\\datntdev.Microservice.Shared.Application.csproj",
+      "srcs\\shared\\Common\\datntdev.Microservice.Shared.Common.csproj",
+      "srcs\\shared\\Web.Host\\datntdev.Microservice.Shared.Web.Host.csproj",
+      "tests\\Common\\datntdev.Microservice.Tests.Common.csproj",
+      "tests\\Infra.Gateway\\datntdev.Microservice.Tests.Infra.Gateway.csproj",
+      "tests\\Srv.Admin\\datntdev.Microservice.Tests.Srv.Admin.csproj",
+      "tests\\Srv.Identity\\datntdev.Microservice.Tests.Srv.Identity.csproj",
+      "tests\\Srv.Notify\\datntdev.Microservice.Tests.Srv.Notify.csproj",
+      "tests\\Srv.Payment\\datntdev.Microservice.Tests.Srv.Payment.csproj"
+    ]
+  }
+}
