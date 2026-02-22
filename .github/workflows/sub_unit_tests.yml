@@ -21,8 +21,21 @@ jobs:
           WSL_INTEROP: "" # https://github.com/dotnet/aspnetcore/issues/65391
       - name: Build Backend
         run: dotnet build datntdev.Microservice.slnf
-      - name: Run unit tests
-        run: dotnet test datntdev.Microservice.slnf --no-build
+      - name: Run unit tests - Gateway
+        working-directory: tests/Infra.Gateway
+        run: dotnet test --no-build
+      - name: Run unit tests - Srv.Admin
+        working-directory: tests/Srv.Admin
+        run: dotnet test --no-build
+      - name: Run unit tests - Srv.Identity
+        working-directory: tests/Srv.Identity
+        run: dotnet test --no-build
+      - name: Run unit tests - Srv.Notify
+        working-directory: tests/Srv.Notify
+        run: dotnet test --no-build
+      - name: Run unit tests - Srv.Payment
+        working-directory: tests/Srv.Payment
+        run: dotnet test --no-build
 
   frontend_tests:
     runs-on: ubuntu-latest
