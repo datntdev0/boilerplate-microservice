@@ -1,0 +1,39 @@
+
+$utilities: (
+    "width": (
+        responsive: true,
+        property: width,
+        class: w,
+        values: $utilities-sizes
+    ),
+    "max-width": (
+        responsive: true,
+        property: max-width,
+        class: mw,
+        values: $utilities-sizes
+    ),
+    "min-width": (
+        responsive: true,
+        property: min-width,
+        class: min-w,
+        values: $utilities-sizes
+    ),
+    "height": (
+        responsive: true,
+        property: height,
+        class: h,
+        values: $utilities-sizes
+    ),
+    "max-height": (
+        responsive: true,
+        property: max-height,
+        class: mh,
+        values: $utilities-sizes
+    ),
+    "min-height": (
+        responsive: true,
+        property: min-height,
+        class: min-h,
+        values: $utilities-sizes
+    )
+);

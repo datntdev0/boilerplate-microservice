@@ -8,11 +8,6 @@
   "projects": {
     ".": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -29,7 +24,12 @@
                 "input": "public"
               }
             ],
-            "styles": [],
+            "styles": ["src/styles/index.scss"],
+            "stylePreprocessorOptions": {
+              "sass": {
+                "silenceDeprecations": [ "color-functions", "global-builtin", "import", "mixed-decls" ]
+              }
+            },
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -90,6 +90,7 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": ".:build",
+            "styles": ["src/styles/index.scss"],
             "compodoc": false,
             "port": 6006
           }
@@ -98,6 +99,7 @@
           "builder": "@storybook/angular:build-storybook",
           "options": {
             "configDir": ".storybook",
+            "styles": ["src/styles/index.scss"],
             "browserTarget": ".:build",
             "compodoc": false,
             "outputDir": "storybook-static"
