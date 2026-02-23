@@ -76,13 +76,31 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "coverage": true,
-            "coverageReporters": [ "text", "html" ],
+            "coverageReporters": ["text","html"],
             "coverageWatermarks": {
-              "statements": [ 50, 80 ],
-              "branches": [ 50, 80 ],
-              "functions": [ 50, 80 ],
-              "lines": [ 50, 80 ]
+              "statements": [50,80],
+              "branches": [50,80],
+              "functions": [50,80],
+              "lines": [50,80]
             }
+          }
+        },
+        "storybook-start": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": ".:build",
+            "compodoc": false,
+            "port": 6006
+          }
+        },
+        "storybook-build": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": ".:build",
+            "compodoc": false,
+            "outputDir": "storybook-static"
           }
         }
       }
