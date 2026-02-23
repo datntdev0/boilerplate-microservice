@@ -42,5 +42,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Run Frontend Tests
-        run: echo "Frontend tests would run here"
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: srcs/apps/Angular/package-lock.json
+      - name: Install dependencies
+        working-directory: srcs/apps/Angular
+        run: npm install
+      - name: Run unit tests
+        working-directory: srcs/apps/Angular
+        run: npm test -- --watch=false

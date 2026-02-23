@@ -17,9 +17,12 @@ jobs:
           node-version: '24'
           cache: 'npm'
           cache-dependency-path: srcs/apps/Storybook/package-lock.json
-      - name: Build Styles
+      - name: Install dependencies
         working-directory: srcs/apps/Storybook
-        run: npm install && npm run build
+        run: npm install
+      - name: Build styles
+        working-directory: srcs/apps/Storybook
+        run: npm run build
 
   build_backend:
     runs-on: ubuntu-latest
