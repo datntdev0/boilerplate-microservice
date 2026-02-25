@@ -1,6 +1,6 @@
 import { BootstrapContext, bootstrapApplication } from '@angular/platform-browser';
 import { mainConfigServer } from './main.config.server';
-import RootComponent from './root.component';
+import RootComponent from './root';
 
 const bootstrap = (context: BootstrapContext) =>
   bootstrapApplication(RootComponent, mainConfigServer, context);

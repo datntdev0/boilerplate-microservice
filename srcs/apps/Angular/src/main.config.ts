@@ -6,7 +6,8 @@ import { routes } from './main.routes';
 
 export const mainConfig: ApplicationConfig = {
   providers: [
+    provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay())
   ]
 };
