@@ -5,5 +5,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   selector: 'error-layout',
   templateUrl: './error-layout.html',
+  host: { "class": "d-flex flex-column flex-root" }
 })
 export class ErrorLayout { }
