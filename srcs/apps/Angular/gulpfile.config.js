@@ -1,7 +1,7 @@
 const config = {
     options: {
         dist: [
-            "./dist/cdn/",
+            "./dist/assets/",
             "../Identity/wwwroot/",
         ],
     },
@@ -11,8 +11,8 @@ const config = {
         assets: ["./public/**/*"],
     }, 
     bundle: {
-        styles: "css/bundle.css",
-        scripts: "js/bundle.js",
+        styles: "styles/bundle.css",
+        scripts: "scripts/bundle.js",
         assets: "",
     }
 };

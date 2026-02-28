@@ -11,8 +11,9 @@ permissions:
 
 jobs:
 
-  test:
+  unit_test:
     uses: ./.github/workflows/sub_unit_tests.yml
 
-  build:
-    uses: ./.github/workflows/sub_build.yml
+  deploy_app:
+    needs: unit_test
+    uses: ./.github/workflows/sub_deploy.yml

@@ -21,3 +21,23 @@ jobs:
         uses: actions/checkout@v4
       - name: Deploy Frontend
         run: echo "Frontend deployment process would run here"
+
+  deploy_assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: srcs/apps/Angular/package-lock.json
+      - name: Install dependencies
+        working-directory: srcs/apps/Angular
+        run: npm install
+      - name: Build styles
+        working-directory: srcs/apps/Angular
+        run: npm run gulp:build
+      - name: Deploy Assets
+        run: echo "Asset deployment process would run here"
