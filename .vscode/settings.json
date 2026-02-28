@@ -4,7 +4,7 @@
         "**/.vs": true,
         "**/bin": true,
         "**/obj": true,
-        "**/dist": true,
+        "**/node_modules": true,
         "**/TestResults": true,
     },
     "[typescript]": {

@@ -1,7 +1,7 @@
 ﻿<div id="alert_dialog" class="alert-dialog-overlay d-flex align-items-center justify-content-center" hidden="@(!IsVisible)">
   <div class="alert-dialog">
     <div class="modal-content">
-      <div class="modal-body text-center p-4">
+      <div class="modal-body text-center p-4 pt-8">
         @if (Type == AlertDialogType.Success)
         {
           <div class="alert-icon alert-icon-success">
@@ -45,7 +45,7 @@
         <h2 class="alert-title">@Title</h2>
         <p class="alert-text">@Text</p>
       </div>
-      <div class="modal-footer border-0 justify-content-center pb-4">
+      <div class="modal-footer border-0 justify-content-center pb-8">
         <div class="alert-actions">
           @if (!string.IsNullOrEmpty(CancelButtonText))
           {

@@ -7,7 +7,10 @@
     "test": "ng test",
     "start:ssr": "node dist/server/server.mjs",
     "storybook:start": "ng run .:storybook-start",
-    "storybook:build": "ng run .:storybook-build"
+    "storybook:build": "ng run .:storybook-build",
+    "gulp:build": "gulp build",
+    "gulp:clean": "gulp clean",
+    "gulp:watch": "gulp watch"
   },
   "prettier": {
     "printWidth": 100,
@@ -53,6 +56,10 @@
     "@types/node": "^20.17.19",
     "@vitest/coverage-v8": "^4.0.17",
     "eslint-plugin-storybook": "^10.0.0",
+    "gulp": "^5.0.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^6.0.1",
     "jsdom": "^27.1.0",
     "storybook": "^10.0.0",
     "typescript": "~5.9.2",

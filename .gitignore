@@ -11,6 +11,7 @@
 bin/
 obj/
 dist/
+wwwroot/
 node_modules/
 
 # Test results
