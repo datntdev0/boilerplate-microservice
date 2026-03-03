@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
         - language: csharp
-          build-mode: autobuild
+          build-mode: manual
         - language: javascript
           build-mode: none
         - language: typescript
@@ -32,6 +32,10 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
+
+    - name: Manual build for C#
+      if: matrix.language == 'csharp'
+      run: dotnet build datntdev.Microservice.slnf
 
     - name: Analysis CodeQL 
       uses: github/codeql-action/analyze@v4
