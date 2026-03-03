@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "request": "launch",
+            "name": "Debug Angular App (Edge)",
+            "type": "msedge",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/srcs/apps/Angular"
+        },
+        {
+            "request": "launch",
+            "name": "Debug Angular Test (Vitest)",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}/srcs/apps/Angular",
+            "command": "npm run test:debug -- --include=**/${fileBasename}",
+        },
+    ]
+}

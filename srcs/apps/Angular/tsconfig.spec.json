@@ -8,6 +8,9 @@
       "vitest/globals"
     ]
   },
+  "exclude": [
+    "src/styles/**"
+  ],
   "include": [
     "src/**/*.d.ts",
     "src/**/*.spec.ts"

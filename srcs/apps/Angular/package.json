@@ -5,6 +5,8 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test:ci": "ng test --watch=false",
+    "test:debug": "ng test --debug",
     "start:ssr": "node dist/server/server.mjs",
     "storybook:start": "ng run .:storybook-start",
     "storybook:build": "ng run .:storybook-build",
