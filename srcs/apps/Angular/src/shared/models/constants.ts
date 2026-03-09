@@ -1,10 +1,28 @@
+import { environment } from "envs/environment";
 import { MenuSection } from "./menu";
 
 export const APPLICATION = {
   name: 'datntdev.Microservices',
 };
 
-export const MENU: MenuSection[] = [
+export const AUTH_CONFIGS = {
+  // Identity Server URL - update this to match your environment
+  authority: environment.ssourl,
+  
+  // Client ID registered in OpenIddict
+  client_id: 'datntdev.Microservices.Public',
+  
+  // Redirect URIs
+  redirect_uri: `${environment.appUrl}/auth/callback`,
+  
+  // Scopes to request
+  scope: 'openid',
+  
+  // Response type for authorization code flow with PKCE
+  response_type: 'code',
+};
+
+export const NAVBAR_MENU: MenuSection[] = [
   {
     items: [
       {

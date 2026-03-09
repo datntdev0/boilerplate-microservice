@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "envs/environment";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class LoggerService {
   private logLevel: string;
 

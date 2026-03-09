@@ -4,10 +4,6 @@
       <Build />
       <Deploy />
     </Project>
-    <Project Path="srcs/apps/Storybook/datntdev.Microservice.App.Storybook.esproj">
-      <Build />
-      <Deploy />
-    </Project>
     <Project Path="srcs/apps/Identity/datntdev.Microservice.App.Identity.csproj" />
   </Folder>
   <Folder Name="/infra/">
