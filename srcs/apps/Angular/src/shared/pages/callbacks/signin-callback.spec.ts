@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 
 import { SigninCallbackPage } from './signin-callback';
 import { AuthService } from '@shared/services/auth-service';
@@ -9,51 +10,61 @@ import { LoggerService } from '@shared/services/logger-service';
 describe('Pages.SigninCallback', () => {
   let component: SigninCallbackPage;
   let fixture: ComponentFixture<SigninCallbackPage>;
-  let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
+  let authService: ReturnType<typeof vi.mocked<AuthService>>;
+  let router: ReturnType<typeof vi.mocked<Router>>;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['signinCallback']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const authServiceMock = {
+      signInCallback: vi.fn()
+    } as unknown as AuthService;
+    
+    const routerMock = {
+      navigate: vi.fn()
+    } as unknown as Router;
 
     await TestBed.configureTestingModule({
       declarations: [SigninCallbackPage],
       providers: [
         provideRouter([]),
         { provide: LoggerService },
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock }
       ]
     })
     .compileComponents();
 
-    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    authService = TestBed.inject(AuthService) as any;
+    router = TestBed.inject(Router) as any;
     
     fixture = TestBed.createComponent(SigninCallbackPage);
     component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    sessionStorage.clear();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to root on successful signin', async () => {
+  it('should navigate to protected route on successful signin', async () => {
     sessionStorage.setItem('redirectUrl', '/protected');
-    authService.signinCallback.and.returnValue(Promise.resolve(null as any));
+    vi.mocked(authService.signInCallback).mockResolvedValue(null as any);
 
     await component.ngOnInit();
 
-    expect(authService.signinCallback).toHaveBeenCalled();
+    expect(authService.signInCallback).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/protected']);
   });
 
   it('should navigate to root on signin error', async () => {
-    authService.signinCallback.and.returnValue(Promise.reject('Error'));
+    vi.mocked(authService.signInCallback).mockRejectedValue('Error');
 
     await component.ngOnInit();
 
-    expect(authService.signinCallback).toHaveBeenCalled();
+    expect(authService.signInCallback).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 });
