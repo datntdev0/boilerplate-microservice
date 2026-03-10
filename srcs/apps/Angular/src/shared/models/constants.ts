@@ -6,20 +6,11 @@ export const APPLICATION = {
 };
 
 export const AUTH_CONFIGS = {
-  // Identity Server URL - update this to match your environment
   authority: environment.ssourl,
-  
-  // Client ID registered in OpenIddict
-  client_id: 'datntdev.Microservices.Public',
-  
-  // Redirect URIs
+  client_id: 'datntdev.Microservice.Public',
   redirect_uri: `${environment.appUrl}/auth/callback`,
-  
-  // Scopes to request
-  scope: 'openid',
-  
-  // Response type for authorization code flow with PKCE
   response_type: 'code',
+  scope: 'openid',
 };
 
 export const NAVBAR_MENU: MenuSection[] = [

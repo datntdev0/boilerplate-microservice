@@ -29,11 +29,6 @@
               "sass": {
                 "silenceDeprecations": [ "color-functions", "global-builtin", "import", "mixed-decls" ]
               }
-            },
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
             }
           },
           "configurations": {

@@ -39,8 +39,8 @@ export class AuthService {
     return this.userManager.signinRedirect(args);
   }
 
-  public async signinCallback(): Promise<User> {
-    return await this.userManager.signinRedirectCallback();
+  public signInCallback(): Promise<User> {
+    return this.userManager.signinRedirectCallback();
   }
 
   public signOut(args?: SignoutRedirectArgs): Promise<void> {

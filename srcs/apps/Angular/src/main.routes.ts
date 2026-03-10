@@ -13,14 +13,14 @@ export const routes: Routes = [
       { path: '403', component: Error403Page },
       { path: '404', component: Error404Page },
       { path: '500', component: Error500Page },
-      { path: '**', redirectTo: '/error/404' }
     ]
   },
   {
-    path: 'app', component: MainLayout, children: [
+    path: 'app', component: MainLayout, canActivate: [authGuard], children: [
       { path: 'dashboard', loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
     ]
   },
   { path: 'auth/callback', component: SigninCallbackPage },
   { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: '/error/404' }
 ];
