@@ -79,6 +79,6 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> SignOutAsync()
     {
         await HttpContext.SignOutAsync(Constants.Application.AuthenticationScheme);
-        return Redirect("/");
+        return SignOut(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 }
