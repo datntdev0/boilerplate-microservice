@@ -102,6 +102,8 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
     {
         var defaultAdminEmail = _configuration.GetValue<string>("DefaultAdmin:EmailAddress");
         var defaultAdminPassword = _configuration.GetValue<string>("DefaultAdmin:Password");
+        var defaultAdminFirstName = _configuration.GetValue<string>("DefaultAdmin:FirstName") ?? string.Empty;
+        var defaultAdminLastName = _configuration.GetValue<string>("DefaultAdmin:LastName") ?? string.Empty;
 
         ArgumentNullException.ThrowIfNull(defaultAdminEmail, nameof(defaultAdminEmail));
         ArgumentNullException.ThrowIfNull(defaultAdminPassword, nameof(defaultAdminPassword));
@@ -116,6 +118,8 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
         {
             EmailAddress = defaultAdminEmail,
             PasswordText = defaultAdminPassword,
+            FirstName = defaultAdminFirstName,
+            LastName = defaultAdminLastName,
         };
 
         newIdentity = passwordHasher.SetPassword(newIdentity, defaultAdminPassword);

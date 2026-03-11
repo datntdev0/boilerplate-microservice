@@ -37,7 +37,7 @@ public partial class SignUp
     private async Task HandleValidSubmitAsync()
     {
         var registerResult = await IdentityManager.SignUpWithPassword(
-            Model.Email!, Model.Password!);
+            Model.Email!, Model.Password!, Model.FirstName!, Model.LastName!);
 
         if (registerResult.Status == IdentityResultStatus.Success)
         {

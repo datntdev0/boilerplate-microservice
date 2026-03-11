@@ -26,8 +26,8 @@ public class IdentityManager(IServiceProvider services)
         {
             var claims = new Claim[]
             {
-                new(ClaimTypes.Name, identityEntity.EmailAddress),
                 new(ClaimTypes.NameIdentifier, identityEntity.Id.ToString()),
+                new(ClaimTypes.Name, $"{identityEntity.FirstName} {identityEntity.LastName}"),
                 new(ClaimTypes.Email, identityEntity.EmailAddress ?? string.Empty),
             };
 
@@ -43,7 +43,7 @@ public class IdentityManager(IServiceProvider services)
         };
     }
 
-    public async Task<IdentityResult> SignUpWithPassword(string email, string password)
+    public async Task<IdentityResult> SignUpWithPassword(string email, string password, string firstName, string lastName)
     {
         var identityEntity = await _dbContext.AppIdentities
             .FirstOrDefaultAsync(x => x.EmailAddress == email);
@@ -53,6 +53,8 @@ public class IdentityManager(IServiceProvider services)
         {
             EmailAddress = email,
             PasswordText = password,
+            FirstName = firstName,
+            LastName = lastName,
         };
         identityEntity = _passwordHasher.SetPassword(identityEntity, password);
 

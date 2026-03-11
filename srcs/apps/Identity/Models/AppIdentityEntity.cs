@@ -8,4 +8,6 @@ public class AppIdentityEntity : FullAuditEntity<long>
     public string EmailAddress { get; set; } = default!;
     public string PasswordHash { get; set; } = default!;
     public string PasswordText { get; set; } = default!;
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
 }
