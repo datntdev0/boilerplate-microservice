@@ -23,19 +23,42 @@ jobs:
         run: dotnet build datntdev.Microservice.slnf
       - name: Run unit tests - Gateway
         working-directory: tests/Infra.Gateway
-        run: dotnet test --no-build
+        run: |
+          dotnet test --no-build \
+          --results-directory ../TestResults --collect:"XPlat Code Coverage" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=*.Tests*
       - name: Run unit tests - Srv.Admin
         working-directory: tests/Srv.Admin
-        run: dotnet test --no-build
+        run: |
+          dotnet test --no-build \
+          --results-directory ../TestResults --collect:"XPlat Code Coverage" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=*.Tests*
       - name: Run unit tests - Srv.Identity
         working-directory: tests/Srv.Identity
-        run: dotnet test --no-build
+        run: |
+          dotnet test --no-build \
+          --results-directory ../TestResults --collect:"XPlat Code Coverage" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=*.Tests*
       - name: Run unit tests - Srv.Notify
         working-directory: tests/Srv.Notify
-        run: dotnet test --no-build
+        run: |
+          dotnet test --no-build \
+          --results-directory ../TestResults --collect:"XPlat Code Coverage" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=*.Tests*
       - name: Run unit tests - Srv.Payment
         working-directory: tests/Srv.Payment
-        run: dotnet test --no-build
+        run: |
+          dotnet test --no-build \
+          --results-directory ../TestResults --collect:"XPlat Code Coverage" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=*.Tests*
+      - name: Generate coverage report
+        run: |
+          reportgenerator \
+          -reports:TestResults/**/coverage.cobertura.xml \
+          -targetdir:CoverageReport \
+          -reporttypes:TextSummary \
+          -assemblyfilters:"-*.Tests*"
+          cat CoverageReport/Summary.txt
 
   frontend_tests:
     runs-on: ubuntu-latest
