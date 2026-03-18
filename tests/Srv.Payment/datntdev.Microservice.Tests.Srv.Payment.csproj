@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\srcs\infra\Aspire\datntdev.Microservice.Infra.Aspire.csproj" />
+    <ProjectReference Include="..\..\srcs\services\payment\Web.Host\datntdev.Microservice.Srv.Payment.Web.Host.csproj" />
     <ProjectReference Include="..\Common\datntdev.Microservice.Tests.Common.csproj" />
   </ItemGroup>
 
