@@ -30,3 +30,10 @@ storybook-static
 .datagrip/**/workspace.xml
 .datagrip/**/dataSources/
 .datagrip/**/dataSources.local.xml
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+playwright/.auth/

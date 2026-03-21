@@ -21,3 +21,7 @@ jobs:
   deploy_app:
     needs: unit_test
     uses: ./.github/workflows/sub_deploy.yml
+
+  e2e_test:
+    needs: deploy_app
+    uses: ./.github/workflows/sub_e2e_tests.yml
