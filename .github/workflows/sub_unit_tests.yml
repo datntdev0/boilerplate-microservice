@@ -24,15 +24,15 @@ jobs:
       - name: Build Backend
         run: dotnet build datntdev.Microservice.slnf
       - name: Run unit tests for Solution
-        run: dotnet test --no-build --settings .runsettings -m:2
+        run: dotnet test --no-build --settings .runsettings
       - name: Generate coverage report
         run: |
           reportgenerator \
-          -reports:tests/TestResults/**/*.cobertura.xml \
-          -targetdir:tests/CoverageReport \
+          -reports:tests/**/coverage.cobertura.xml \
+          -targetdir:tests/TestResults \
           -reporttypes:TextSummary \
           -assemblyfilters:"-*.Tests*"
-          cat tests/CoverageReport/Summary.txt
+          cat tests/TestResults/Summary.txt
 
   frontend_tests:
     runs-on: ubuntu-latest

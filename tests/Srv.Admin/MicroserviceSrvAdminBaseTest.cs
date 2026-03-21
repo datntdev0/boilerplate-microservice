@@ -1,10 +1,9 @@
 using datntdev.Microservice.Tests.Common;
-using Projects;
+using AdminProgram = datntdev.Microservice.Srv.Admin.Web.Host.Program;
 
-namespace datntdev.Microservice.Tests.Srv.Admin
+namespace datntdev.Microservice.Tests.Srv.Admin;
+
+public class MicroserviceSrvAdminBaseTest : MicroserviceBaseTest<AdminProgram>
 {
-    public class MicroserviceSrvAdminBaseTest : MicroserviceBaseTest<datntdev_Microservice_Infra_Aspire>
-    {
-        public override HttpClient HttpClient => AppHost.CreateHttpClient("srv-admin");
-    }
+    public override HttpClient HttpClient => AppFactory.CreateClient();
 }

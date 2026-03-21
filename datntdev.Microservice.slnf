@@ -22,7 +22,6 @@
       "srcs\\shared\\Common\\datntdev.Microservice.Shared.Common.csproj",
       "srcs\\shared\\Web.Host\\datntdev.Microservice.Shared.Web.Host.csproj",
       "tests\\Common\\datntdev.Microservice.Tests.Common.csproj",
-      "tests\\Infra.Gateway\\datntdev.Microservice.Tests.Infra.Gateway.csproj",
       "tests\\Srv.Admin\\datntdev.Microservice.Tests.Srv.Admin.csproj",
       "tests\\Srv.Identity\\datntdev.Microservice.Tests.Srv.Identity.csproj",
       "tests\\Srv.Notify\\datntdev.Microservice.Tests.Srv.Notify.csproj",

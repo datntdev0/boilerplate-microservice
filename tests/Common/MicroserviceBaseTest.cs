@@ -1,10 +1,11 @@
-using Aspire.Hosting.Testing;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace datntdev.Microservice.Tests.Common;
 
-public abstract class MicroserviceBaseTest<TAspireApp>
+public abstract class MicroserviceBaseTest<TEntryPoint>
+    where TEntryPoint : class
 {
-    public static AspireTestingAppHost<TAspireApp> AppHost { get; } = new();
+    public static WebApplicationFactory<TEntryPoint> AppFactory { get; } = new();
 
     public TestContext TestContext { get; set; } = default!;
 
@@ -14,12 +15,7 @@ public abstract class MicroserviceBaseTest<TAspireApp>
 
     public static Task StaticAssemblyInitialize(TestContext testContext)
     {
-        Console.WriteLine("Starting Aspire Testing App Host...");
-        var token = testContext.CancellationTokenSource.Token;
-        return AppHost.StartAsync().WaitAsync(TimeSpan.FromSeconds(60), token);
+        Console.WriteLine("Initializing WebApplicationFactory for integration tests...");
+        return Task.CompletedTask;
     }
-}
-
-public class AspireTestingAppHost<TAspireApp>() : DistributedApplicationFactory(typeof(TAspireApp))
-{
 }

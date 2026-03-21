@@ -1,10 +1,9 @@
 using datntdev.Microservice.Tests.Common;
-using Projects;
+using NotifyProgram = datntdev.Microservice.Srv.Notify.Web.Host.Program;
 
-namespace datntdev.Microservice.Tests.Srv.Notify
+namespace datntdev.Microservice.Tests.Srv.Notify;
+
+public class MicroserviceSrvNotifyBaseTest : MicroserviceBaseTest<NotifyProgram>
 {
-    public class MicroserviceSrvNotifyBaseTest : MicroserviceBaseTest<datntdev_Microservice_Infra_Aspire>
-    {
-        public override HttpClient HttpClient => AppHost.CreateHttpClient("srv-notify");
-    }
+    public override HttpClient HttpClient => AppFactory.CreateClient();
 }

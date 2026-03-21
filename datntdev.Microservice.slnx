@@ -39,7 +39,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Common/datntdev.Microservice.Tests.Common.csproj" />
-    <Project Path="tests/Infra.Gateway/datntdev.Microservice.Tests.Infra.Gateway.csproj" />
     <Project Path="tests/Srv.Admin/datntdev.Microservice.Tests.Srv.Admin.csproj" />
     <Project Path="tests/Srv.Identity/datntdev.Microservice.Tests.Srv.Identity.csproj" />
     <Project Path="tests/Srv.Notify/datntdev.Microservice.Tests.Srv.Notify.csproj" />

@@ -1,10 +1,9 @@
 using datntdev.Microservice.Tests.Common;
-using Projects;
+using IdentityProgram = datntdev.Microservice.Srv.Identity.Web.Host.Program;
 
-namespace datntdev.Microservice.Tests.Srv.Identity
+namespace datntdev.Microservice.Tests.Srv.Identity;
+
+public class MicroserviceSrvIdentityBaseTest : MicroserviceBaseTest<IdentityProgram>
 {
-    public class MicroserviceSrvIdentityBaseTest : MicroserviceBaseTest<datntdev_Microservice_Infra_Aspire>
-    {
-        public override HttpClient HttpClient => AppHost.CreateHttpClient("srv-identity");
-    }
+    public override HttpClient HttpClient => AppFactory.CreateClient();
 }
