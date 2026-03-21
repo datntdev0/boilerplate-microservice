@@ -1,11 +1,14 @@
 ﻿using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Web.Host.HealthChecks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
 using System.Reflection;
 
 namespace datntdev.Microservice.Shared.Web.Host.Extensions;
@@ -88,6 +91,20 @@ public static class DefaultServiceExtensions
             Predicate = r => r.Tags.Contains("alive"),
         });
 
+        return app;
+    }
+
+    public static WebApplication MapDefaultScalarOpenApi(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+            app.MapGet("/", () => Results.Redirect("/scalar/v1"))
+                .ExcludeFromApiReference()
+                .ExcludeFromDescription();
+        }
+        
         return app;
     }
 }

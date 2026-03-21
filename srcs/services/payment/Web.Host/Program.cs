@@ -9,6 +9,7 @@ public class Startup : WebStartup<MicroserviceSrvPaymentWebHostModule>
     {
         services.AddDefaultServices(configs);
         services.AddControllers();
+        services.AddOpenApi();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
@@ -20,6 +21,8 @@ public class Startup : WebStartup<MicroserviceSrvPaymentWebHostModule>
         app.MapControllers();
 
         app.MapDefaultHealthChecks();
+
+        app.MapDefaultScalarOpenApi();
     }
 }
 

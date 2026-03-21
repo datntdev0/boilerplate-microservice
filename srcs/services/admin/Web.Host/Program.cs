@@ -10,6 +10,7 @@ public class Startup : WebStartup<MicroserviceSrvAdminWebHostModule>
     {
         services.AddDefaultServices(configs);
         services.AddControllers();
+        services.AddOpenApi();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
@@ -21,6 +22,8 @@ public class Startup : WebStartup<MicroserviceSrvAdminWebHostModule>
         app.MapControllers();
 
         app.MapDefaultHealthChecks();
+
+        app.MapDefaultScalarOpenApi();
     }
 }
 
