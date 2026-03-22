@@ -1,4 +1,3 @@
-
 using datntdev.Microservice.Shared.Web.Host.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Hosting;
 
@@ -9,6 +8,7 @@ public class Startup : WebStartup<MicroserviceSrvAdminWebHostModule>
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultServices(configs);
+        services.AddServiceControllers(_modules);
         services.AddControllers();
         services.AddOpenApi();
     }

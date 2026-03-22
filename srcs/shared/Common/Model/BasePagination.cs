@@ -1,0 +1,39 @@
+﻿namespace datntdev.Microservice.Shared.Common.Model;
+
+public interface IPaginatedRequest
+{
+    public int Offset { get; set; }
+    public int Limit { get; set; }
+}
+
+public interface IPaginatedResult<TData>
+{
+    public int Total { get; set; }
+    public int Limit { get; set; }
+    public int Offset { get; set; }
+    public IEnumerable<TData> Items { get; set; }
+}
+
+public class PaginatedRequest : IPaginatedRequest
+{
+    public int Offset { get; set; } = 0;
+    public int Limit { get; set; } = 10;
+}
+
+public class PaginatedResult<TData> : IPaginatedResult<TData>
+{
+    public int Total { get; set; }
+    public int Limit { get; set; }
+    public int Offset { get; set; }
+    public IEnumerable<TData> Items { get; set; } = [];
+
+    public PaginatedResult() { }
+
+    public PaginatedResult(IEnumerable<TData> full, int limit, int offset)
+    {
+        Items = full.Skip(offset).Take(limit);
+        Total = full.Count();
+        Limit = limit;
+        Offset = offset;
+    }
+}
