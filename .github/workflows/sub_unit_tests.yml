@@ -16,9 +16,9 @@ jobs:
         with: 
           dotnet-version: 9.0.x
       - name: Trust HTTPS development certificate
-        run: dotnet dev-certs https --trust
-        env:
-          WSL_INTEROP: "" # https://github.com/dotnet/aspnetcore/issues/65391
+        run: |
+          export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:$SSL_CERT_DIR"
+          dotnet dev-certs https --trust
       - name: Install ReportGenerator tool
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       - name: Build Backend
