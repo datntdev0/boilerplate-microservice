@@ -1,5 +1,6 @@
 ﻿using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Web.Host.HealthChecks;
+using datntdev.Microservice.Shared.Web.Host.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -105,6 +106,12 @@ public static class DefaultServiceExtensions
                 .ExcludeFromDescription();
         }
         
+        return app;
+    }
+
+    public static WebApplication UseDefaultMiddlewares(this WebApplication app)
+    {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         return app;
     }
 }

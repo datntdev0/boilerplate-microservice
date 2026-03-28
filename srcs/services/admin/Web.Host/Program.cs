@@ -16,6 +16,8 @@ public class Startup : WebStartup<MicroserviceSrvAdminWebHostModule>
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
     {
+        app.UseDefaultMiddlewares();
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
