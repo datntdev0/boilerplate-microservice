@@ -2,33 +2,93 @@
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Admin.Contracts.Tenancy;
 using datntdev.Microservice.Srv.Admin.Contracts.Tenancy.Dto;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace datntdev.Microservice.Srv.Admin.Application.Tenancy;
 
-public class TenantsAppService : BaseAppService, ITenantsAppService
+public class TenantsAppService(IServiceProvider services) : BaseAppService, ITenantsAppService
 {
-    public Task<TenantDto> CreateAsync(TenantCreateDto request)
+    private readonly TenantsManager _manager = services.GetRequiredService<TenantsManager>();
+    private readonly TenantCreatingValidator _creatingValidator = services.GetRequiredService<TenantCreatingValidator>();
+    private readonly TenantUpdatingValidator _updatingValidator = services.GetRequiredService<TenantUpdatingValidator>();
+
+    public async Task<TenantDto> CreateAsync(TenantCreateDto request)
     {
-        throw new NotImplementedException();
+        _creatingValidator.ValidateAndThrow(request);
+
+        var entity = await _manager.CreateAsync(new()
+        {
+            Name = request.Name,
+            Organization = request.Organization
+        });
+        return new TenantDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Organization = entity.Organization,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
     }
 
     public Task DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        return _manager.DeleteAsync(id);
     }
 
-    public Task<PaginatedResult<TenantListDto>> GetAllAsync(PaginatedRequest request)
+    public async Task<PaginatedResult<TenantListDto>> GetAllAsync(PaginatedRequest request)
     {
-        throw new NotImplementedException();
+        var total = await _manager.Queryable.CountAsync();
+        var items = await _manager.Queryable
+            .Skip(request.Offset)
+            .Take(request.Limit)
+            .Select(x => new TenantListDto()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Organization = x.Organization
+            })
+            .ToListAsync();
+        return new PaginatedResult<TenantListDto>()
+        {
+            Total = total,
+            Items = items,
+            Limit = request.Limit,
+            Offset = request.Offset
+        };
     }
 
-    public Task<TenantDto> GetAsync(int id)
+    public async Task<TenantDto> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await _manager.GetAsync(id);
+        return new TenantDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Organization = entity.Organization,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
     }
 
-    public Task<TenantDto> UpdateAsync(int id, TenantUpdateDto request)
+    public async Task<TenantDto> UpdateAsync(int id, TenantUpdateDto request)
     {
-        throw new NotImplementedException();
+        _updatingValidator.ValidateAndThrow(request);
+
+        var entity = await _manager.GetAsync(id);
+        entity.Name = request.Name;
+        entity.Organization = request.Organization;
+
+        entity = await _manager.UpdateAsync(entity);
+        return new TenantDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Organization = entity.Organization,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
     }
 }

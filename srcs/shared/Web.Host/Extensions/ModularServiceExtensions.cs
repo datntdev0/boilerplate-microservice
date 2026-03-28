@@ -1,5 +1,7 @@
-﻿using datntdev.Microservice.Shared.Common.Modular;
+﻿using datntdev.Microservice.Shared.Application.Services;
+using datntdev.Microservice.Shared.Common.Modular;
 using datntdev.Microservice.Shared.Web.Host.Providers;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,21 @@ public static class ModularServiceExtensions
                 manager.FeatureProviders.Add(controllerFeatureProvider);
             });
         services.Configure<MvcOptions>(options => options.Conventions.Add(controllerFeatureProvider));
+        return services;
+    }
+
+    public static IServiceCollection AddDefaultServices(this IServiceCollection services, IEnumerable<BaseModule> modules)
+    {
+        // Find the managers inheriting from BaseManager and register them as scoped services
+        var managerTypes = modules.SelectMany(m => m.GetType().Assembly.GetTypes())
+            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(BaseManager)));
+        managerTypes.ToList().ForEach(type => services.AddScoped(type));
+
+        // Find the validator inheriting from IValidator and register them as scoped services
+        var validatorTypes = modules.SelectMany(m => m.GetType().Assembly.GetTypes())
+            .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IValidator)));
+        validatorTypes.ToList().ForEach(type => services.AddScoped(type));
+
         return services;
     }
 }

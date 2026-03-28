@@ -1,5 +1,9 @@
-﻿namespace datntdev.Microservice.Srv.Admin.Contracts.Tenancy.Dto;
+﻿using datntdev.Microservice.Shared.Common.Model;
 
-public class TenantUpdateDto
+namespace datntdev.Microservice.Srv.Admin.Contracts.Tenancy.Dto;
+
+public class TenantUpdateDto : BaseDto<int>
 {
+    public string Name { get; set; } = default!;
+    public string Organization { get; set; } = default!;
 }

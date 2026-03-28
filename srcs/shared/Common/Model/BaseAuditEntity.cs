@@ -1,11 +1,14 @@
 ﻿namespace datntdev.Microservice.Shared.Common.Model;
 
-public class BaseEntity<TKey> where TKey : IEquatable<TKey>
+public abstract class BaseEntity { }
+
+public abstract class BaseEntity<TKey> : BaseEntity
+    where TKey : IEquatable<TKey>
 {
     public TKey Id { get; set; } = default!;
 }
 
-public class BaseAuditEntity<TKey>
+public abstract class BaseAuditEntity<TKey>
     : BaseEntity<TKey>, ICreated, IUpdated where TKey : IEquatable<TKey>
 {
     public DateTime? CreatedAt { get; set; }
@@ -15,7 +18,7 @@ public class BaseAuditEntity<TKey>
     public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString("N");
 }
 
-public class FullAuditEntity<TKey>
+public abstract class FullAuditEntity<TKey>
     : BaseAuditEntity<TKey>, IDeleted where TKey : IEquatable<TKey>
 {
     public bool IsDeleted { get; set; }

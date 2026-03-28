@@ -2,4 +2,6 @@
 
 public class TenantCreateDto
 {
+    public string Name { get; set; } = default!;
+    public string Organization { get; set; } = default!;
 }

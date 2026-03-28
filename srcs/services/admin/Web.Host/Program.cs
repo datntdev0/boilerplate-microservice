@@ -8,6 +8,7 @@ public class Startup : WebStartup<MicroserviceSrvAdminWebHostModule>
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultServices(configs);
+        services.AddDefaultServices(_modules);
         services.AddServiceControllers(_modules);
         services.AddControllers();
         services.AddOpenApi();
