@@ -8,6 +8,7 @@ public class Startup : WebStartup<MicroserviceSrvIdentityWebHostModule>
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultServices(configs);
+        services.AddDefaultServices(_modules);
         services.AddServiceControllers(_modules);
         services.AddControllers();
         services.AddOpenApi();
@@ -15,6 +16,8 @@ public class Startup : WebStartup<MicroserviceSrvIdentityWebHostModule>
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
     {
+        app.UseDefaultMiddlewares();
+      
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
