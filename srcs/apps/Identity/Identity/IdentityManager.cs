@@ -27,7 +27,6 @@ public class IdentityManager(IServiceProvider services)
             var claims = new Claim[]
             {
                 new(ClaimTypes.NameIdentifier, identityEntity.Id.ToString()),
-                new(ClaimTypes.Name, $"{identityEntity.FirstName} {identityEntity.LastName}"),
                 new(ClaimTypes.Email, identityEntity.EmailAddress ?? string.Empty),
             };
 
@@ -49,12 +48,10 @@ public class IdentityManager(IServiceProvider services)
             .FirstOrDefaultAsync(x => x.EmailAddress == email);
         if (identityEntity != null) return IdentityResult.Duplicated;
 
-        identityEntity = new Models.AppIdentityEntity()
+        identityEntity = new Models.IdentityEntity()
         {
             EmailAddress = email,
             PasswordText = password,
-            FirstName = firstName,
-            LastName = lastName,
         };
         identityEntity = _passwordHasher.SetPassword(identityEntity, password);
 

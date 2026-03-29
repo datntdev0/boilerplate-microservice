@@ -7,12 +7,12 @@ namespace datntdev.Microservice.App.Identity;
 public class MicroserviceAppIdentityDbContext(DbContextOptions<MicroserviceAppIdentityDbContext> options)
     : BaseDbContext(options), IRelationalDbContext
 {
-    public DbSet<AppIdentityEntity> AppIdentities { get; set; }
+    public DbSet<IdentityEntity> AppIdentities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<AppIdentityEntity>(entity =>
+        modelBuilder.Entity<IdentityEntity>(entity =>
         {
             entity.HasIndex(e => e.UserId);
             entity.HasIndex(e => e.EmailAddress);

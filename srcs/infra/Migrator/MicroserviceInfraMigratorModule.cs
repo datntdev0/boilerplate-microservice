@@ -24,6 +24,8 @@ internal class MicroserviceInfraMigratorModule : BaseModule
 
         var migrationsAssembly = GetType().Assembly.GetName().Name;
 
+        // For relational databases, we need to specify the migrations assembly
+        // to ensure that the migrations are applied correctly
         services.ConfigureDbContext<MicroserviceAppIdentityDbContext>(
             opt => opt.UseSqlServer(configs.GetConnectionString("App.Identity"),
                 o => o.MigrationsAssembly(migrationsAssembly)));
@@ -33,6 +35,8 @@ internal class MicroserviceInfraMigratorModule : BaseModule
         services.ConfigureDbContext<MicroserviceSrvPaymentDbContext>(
             opt => opt.UseSqlServer(configs.GetConnectionString("Srv.Payment"),
                 o => o.MigrationsAssembly(migrationsAssembly)));
+
+        // MongoDB doesn't support migrations, so we just need to ensure the connection is valid
         services.ConfigureDbContext<MicroserviceSrvAdminDbContext>(
             opt => opt.UseMongoDB(configs.GetConnectionString("Srv.Admin")!));
         services.ConfigureDbContext<MicroserviceSrvNotifyDbContext>(

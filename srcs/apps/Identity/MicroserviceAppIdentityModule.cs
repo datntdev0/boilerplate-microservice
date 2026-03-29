@@ -1,15 +1,19 @@
 ﻿using datntdev.Microservice.App.Identity.Identity;
 using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Modular;
+using datntdev.Microservice.Srv.Identity.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace datntdev.Microservice.App.Identity;
 
+[DependOn(typeof(MicroserviceSrvIdentityApplicationModule))]
 public class MicroserviceAppIdentityModule : BaseModule
 {
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
+        services.AddDbContext<MicroserviceSrvIdentityDbContext>(opt 
+            => opt.UseSqlServer(configs.GetConnectionString("Srv.Identity")));
         services.AddDbContext<MicroserviceAppIdentityDbContext>(opt 
             => opt.UseSqlServer(configs.GetConnectionString("App.Identity")));
         services.AddOpenIddictServices(configs);

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace datntdev.Microservice.App.Identity.Identity;
 
-public class PasswordHasher : PasswordHasher<AppIdentityEntity>
+public class PasswordHasher : PasswordHasher<IdentityEntity>
 {
-    public AppIdentityEntity SetPassword(AppIdentityEntity identityEntity, string password)
+    public IdentityEntity SetPassword(IdentityEntity identityEntity, string password)
     {
         if (!string.IsNullOrEmpty(password))
         {

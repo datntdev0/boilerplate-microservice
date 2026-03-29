@@ -114,12 +114,10 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
         var existingIdentity = await _dbContext.AppIdentities.FirstOrDefaultAsync(x => x.EmailAddress == defaultAdminEmail);
         if (existingIdentity != null) _dbContext.AppIdentities.Remove(existingIdentity);
 
-        var newIdentity = new AppIdentityEntity
+        var newIdentity = new IdentityEntity
         {
             EmailAddress = defaultAdminEmail,
             PasswordText = defaultAdminPassword,
-            FirstName = defaultAdminFirstName,
-            LastName = defaultAdminLastName,
         };
 
         newIdentity = passwordHasher.SetPassword(newIdentity, defaultAdminPassword);
