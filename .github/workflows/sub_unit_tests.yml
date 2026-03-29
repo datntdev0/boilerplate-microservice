@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with: 
@@ -19,10 +19,15 @@ jobs:
         run: |
           export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:$SSL_CERT_DIR"
           dotnet dev-certs https --trust
+      - name: Start docker-compose infrastructure services.
+        run: docker compose -f .github/docker-compose/localhost-infra.yml -p datntdev_microservices_infra up -d
       - name: Install ReportGenerator tool
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       - name: Build Backend
         run: dotnet build datntdev.Microservice.slnf
+      - name: Run database migrations and seed data
+        working-directory: srcs/infra/Migrator
+        run: dotnet run --no-build
       - name: Run unit tests for Solution
         run: dotnet test --no-build --settings .runsettings
       - name: Generate coverage report
@@ -38,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
