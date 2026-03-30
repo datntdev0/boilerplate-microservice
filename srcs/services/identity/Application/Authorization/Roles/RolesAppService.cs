@@ -1,8 +1,10 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles.Entities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Roles;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Roles.Dto;
 using FluentValidation;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,13 +19,8 @@ public class RolesAppService(IServiceProvider services) : BaseAppService, IRoles
     public async Task<RoleDto> CreateAsync(RoleCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
-
-        var entity = await _manager.CreateAsync(new()
-        {
-            Name = request.Name,
-            Description = request.Description
-        });
-        return MapToDto(entity);
+        var entity = await _manager.CreateAsync(Map<RoleEntity>(request));
+        return Map<RoleDto>(entity);
     }
 
     public Task DeleteAsync(int id)
@@ -37,12 +34,7 @@ public class RolesAppService(IServiceProvider services) : BaseAppService, IRoles
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .Select(x => new RoleListDto()
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description
-            })
+            .ProjectToType<RoleListDto>()
             .ToListAsync();
         return new PaginatedResult<RoleListDto>()
         {
@@ -56,27 +48,15 @@ public class RolesAppService(IServiceProvider services) : BaseAppService, IRoles
     public async Task<RoleDto> GetAsync(int id)
     {
         var entity = await _manager.GetAsync(id);
-        return MapToDto(entity);
+        return Map<RoleDto>(entity);
     }
 
     public async Task<RoleDto> UpdateAsync(int id, RoleUpdateDto request)
     {
         _updatingValidator.ValidateAndThrow(request);
-
         var entity = await _manager.GetAsync(id);
-        entity.Name = request.Name;
-        entity.Description = request.Description;
-
+        MapTo(request, entity);
         entity = await _manager.UpdateAsync(entity);
-        return MapToDto(entity);
+        return Map<RoleDto>(entity);
     }
-
-    private static RoleDto MapToDto(Authorization.Roles.Entities.RoleEntity entity) => new()
-    {
-        Id = entity.Id,
-        Name = entity.Name,
-        Description = entity.Description,
-        CreatedAt = entity.CreatedAt,
-        UpdatedAt = entity.UpdatedAt
-    };
 }

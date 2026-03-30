@@ -1,8 +1,10 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
 using FluentValidation;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,13 +19,8 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
     public async Task<UserDto> CreateAsync(UserCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
-
-        var entity = await _manager.CreateAsync(new()
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-        });
-        return MapToDto(entity);
+        var entity = await _manager.CreateAsync(Map<UserEntity>(request));
+        return Map<UserDto>(entity);
     }
 
     public Task DeleteAsync(long id)
@@ -37,12 +34,7 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .Select(x => new UserListDto()
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-            })
+            .ProjectToType<UserListDto>()
             .ToListAsync();
         return new PaginatedResult<UserListDto>()
         {
@@ -56,27 +48,15 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
     public async Task<UserDto> GetAsync(long id)
     {
         var entity = await _manager.GetAsync(id);
-        return MapToDto(entity);
+        return Map<UserDto>(entity);
     }
 
     public async Task<UserDto> UpdateAsync(long id, UserUpdateDto request)
     {
         _updatingValidator.ValidateAndThrow(request);
-
         var entity = await _manager.GetAsync(id);
-        entity.FirstName = request.FirstName;
-        entity.LastName = request.LastName;
-
+        MapTo(request, entity);
         entity = await _manager.UpdateAsync(entity);
-        return MapToDto(entity);
+        return Map<UserDto>(entity);
     }
-
-    private static UserDto MapToDto(Authorization.Users.Entities.UserEntity entity) => new()
-    {
-        Id = entity.Id,
-        FirstName = entity.FirstName,
-        LastName = entity.LastName,
-        CreatedAt = entity.CreatedAt,
-        UpdatedAt = entity.UpdatedAt
-    };
 }

@@ -1,8 +1,10 @@
 ﻿using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Srv.Admin.Application.Tenancy.Entities;
 using datntdev.Microservice.Srv.Admin.Contracts.Tenancy;
 using datntdev.Microservice.Srv.Admin.Contracts.Tenancy.Dto;
 using FluentValidation;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,20 +19,8 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
     public async Task<TenantDto> CreateAsync(TenantCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
-
-        var entity = await _manager.CreateAsync(new()
-        {
-            Name = request.Name,
-            Organization = request.Organization
-        });
-        return new TenantDto()
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Organization = entity.Organization,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
-        };
+        var entity = await _manager.CreateAsync(Map<TenantEntity>(request));
+        return Map<TenantDto>(entity);
     }
 
     public Task DeleteAsync(int id)
@@ -44,12 +34,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .Select(x => new TenantListDto()
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Organization = x.Organization
-            })
+            .ProjectToType<TenantListDto>()
             .ToListAsync();
         return new PaginatedResult<TenantListDto>()
         {
@@ -63,32 +48,15 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
     public async Task<TenantDto> GetAsync(int id)
     {
         var entity = await _manager.GetAsync(id);
-        return new TenantDto()
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Organization = entity.Organization,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
-        };
+        return Map<TenantDto>(entity);
     }
 
     public async Task<TenantDto> UpdateAsync(int id, TenantUpdateDto request)
     {
         _updatingValidator.ValidateAndThrow(request);
-
         var entity = await _manager.GetAsync(id);
-        entity.Name = request.Name;
-        entity.Organization = request.Organization;
-
+        MapTo(request, entity);
         entity = await _manager.UpdateAsync(entity);
-        return new TenantDto()
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Organization = entity.Organization,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
-        };
+        return Map<TenantDto>(entity);
     }
 }
