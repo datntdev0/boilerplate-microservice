@@ -1,4 +1,5 @@
 using datntdev.Microservice.Shared.Common.Modular;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Identities;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts;
@@ -21,5 +22,9 @@ public class MicroserviceSrvIdentityApplicationModule : BaseModule
         services.AddScoped<RolesManager>();
         services.AddScoped<RoleCreatingValidator>();
         services.AddScoped<RoleUpdatingValidator>();
+
+        services.AddScoped<IdentitiesManager>();
+        services.AddScoped<IdentityCreatingValidator>();
+        services.AddScoped<IdentityUpdatingValidator>();
     }
 }

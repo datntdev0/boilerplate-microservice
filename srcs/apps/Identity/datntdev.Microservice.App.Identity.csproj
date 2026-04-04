@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\services\identity\Application\datntdev.Microservice.Srv.Identity.Application.csproj" />
     <ProjectReference Include="..\..\shared\Web.Host\datntdev.Microservice.Shared.Web.Host.csproj" />
   </ItemGroup>
 

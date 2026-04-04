@@ -1,5 +1,4 @@
 ﻿using datntdev.Microservice.App.Identity;
-using datntdev.Microservice.App.Identity.Identity;
 using datntdev.Microservice.App.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -108,7 +107,7 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
         ArgumentNullException.ThrowIfNull(defaultAdminEmail, nameof(defaultAdminEmail));
         ArgumentNullException.ThrowIfNull(defaultAdminPassword, nameof(defaultAdminPassword));
 
-        var passwordHasher = new PasswordHasher();
+        var passwordHasher = new App.Identity.Identity.PasswordHasher();
 
         // Recreate the default admin user althgough it exists.
         var existingIdentity = await _dbContext.AppIdentities.FirstOrDefaultAsync(x => x.EmailAddress == defaultAdminEmail);

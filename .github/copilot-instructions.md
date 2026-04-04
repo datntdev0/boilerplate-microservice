@@ -20,8 +20,10 @@ This repository is a standardized, reusable boilerplate for launching enterprise
 - **Testing:** MSTest (Backend), Vitest (Frontend), Playwright (E2E).
 
 ## 🏗️ Architectural Principles
+- **Architecture Design:** [docs/2.architecture/](../docs/2.architecture/) provides detailed architectural patterns and design decisions. Always align generated code with these principles.
 - **Multi-tenancy:** Ensure every request context is enriched with a `TenantId`. Data isolation must be enforced at the persistence layer.
 - **Polyglot Persistence:** Choose the right tool for the job (SQL Server for ACID/Auth, MongoDB for high-volume logs/notifications).
+- **Domain-Driven Design:** Each microservice should encapsulate a specific business domain (e.g., Identity, Billing) with clear boundaries.
 - **Event-Driven:** Favor asynchronous communication via Kafka for inter-service updates to ensure decoupling.
 - **API Gateway (YARP):** Centralized routing, rate limiting, and RBAC enforcement happen here.
 - **Shared Libraries:** Common logic (logging, multi-tenancy middleware, service-to-service communication) should reside in [srcs/shared/](../srcs/shared/).
@@ -46,3 +48,7 @@ This repository is a standardized, reusable boilerplate for launching enterprise
 - Follow OWASP Top 10.
 - All sensitive data must be encrypted in transit and at rest.
 - Use Secret Management for all connection strings and API keys.
+
+## 💻 Development Processes
+- **Application Services**: [app-service-design.md](../docs/2.architecture/03.app-service-design.md) guidelines for structuring application services and business logic.
+- **Database Migration**: [database-migration.md](../docs/3.development/02.database-migration.md) instructions for managing database schema changes.
