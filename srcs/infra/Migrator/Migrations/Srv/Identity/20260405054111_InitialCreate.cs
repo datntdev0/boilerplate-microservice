@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
 {
     /// <inheritdoc />
-    public partial class AddingUsersAndRoles : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,11 +49,51 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                 {
                     table.PrimaryKey("PK_AppUsers", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "AppIdentities",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppIdentities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppIdentities_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppIdentities_EmailAddress",
+                table: "AppIdentities",
+                column: "EmailAddress");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppIdentities_UserId",
+                table: "AppIdentities",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppIdentities");
+
             migrationBuilder.DropTable(
                 name: "AppRoles");
 

@@ -9,9 +9,9 @@ namespace datntdev.Microservice.Srv.Identity.Application;
 public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvIdentityDbContext> options)
     : BaseDbContext(options), IRelationalDbContext
 {
+    public DbSet<IdentityEntity> AppIdentities { get; set; }
     public DbSet<UserEntity> AppUsers { get; set; }
     public DbSet<RoleEntity> AppRoles { get; set; }
-    public DbSet<IdentityEntity> AppIdentities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +21,11 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
         {
             entity.HasIndex(e => e.EmailAddress);
             entity.Ignore(e => e.PasswordText);
+        });
+
+        modelBuilder.Entity<UserEntity>(entity =>
+        {
+            entity.HasMany(e => e.Identities).WithOne(e => e.User).HasForeignKey(e => e.UserId);
         });
     }
 }

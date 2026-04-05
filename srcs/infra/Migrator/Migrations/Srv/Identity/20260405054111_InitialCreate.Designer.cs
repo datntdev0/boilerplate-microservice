@@ -12,8 +12,8 @@ using datntdev.Microservice.Srv.Identity.Application;
 namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
 {
     [DbContext(typeof(MicroserviceSrvIdentityDbContext))]
-    [Migration("20260404092624_AddIdentityEntity")]
-    partial class AddIdentityEntity
+    [Migration("20260405054111_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,9 +60,14 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EmailAddress");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AppIdentities");
                 });
@@ -142,6 +147,22 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     b.HasKey("Id");
 
                     b.ToTable("AppUsers");
+                });
+
+            modelBuilder.Entity("datntdev.Microservice.Srv.Identity.Application.Authorization.Identities.Entities.IdentityEntity", b =>
+                {
+                    b.HasOne("datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities.UserEntity", "User")
+                        .WithMany("Identities")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Identities");
                 });
 #pragma warning restore 612, 618
         }
