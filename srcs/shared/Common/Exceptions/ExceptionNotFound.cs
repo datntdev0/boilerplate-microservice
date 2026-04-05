@@ -1,6 +1,6 @@
 ﻿namespace datntdev.Microservice.Shared.Common.Exceptions;
 
-public class ExceptionNotFound : ExceptionBase
+public class ExceptionNotFound : BaseException
 {
     public ExceptionNotFound() { }
 

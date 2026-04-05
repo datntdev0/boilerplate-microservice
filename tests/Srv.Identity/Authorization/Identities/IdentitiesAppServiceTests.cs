@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Http.Json;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;

@@ -1,4 +1,5 @@
 ﻿using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Communication.HttpClients;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,14 @@ public class IdentityManager(IServiceProvider services)
     : MicroserviceAppIdentityBaseManager(services)
 {
     private readonly IHttpContextAccessor _contextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+    private readonly SrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredService<SrvIdentityHttpClient>();
     private readonly PasswordHasher _passwordHasher = services.GetRequiredService<PasswordHasher>();
 
     public async Task<IdentityResult> SignInWithPassword(string email, string password)
     {
+        _srvIdentityHttpClient.ReadResponseAsString = true;
+        var remoteIdentities = await _srvIdentityHttpClient.Identities_GetAllAsync(0, 10);
+
         var identityEntity = await _dbContext.AppIdentities
             .FirstOrDefaultAsync(x => x.EmailAddress == email);
         if (identityEntity == null) return IdentityResult.Failure;

@@ -1,4 +1,5 @@
 using datntdev.Microservice.App.Identity.Components;
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Hosting;
 
@@ -13,6 +14,7 @@ internal class Startup : WebStartup<MicroserviceAppIdentityModule>
         services.AddRazorComponents();
         services.AddControllers();
         services.AddIdentityServices();
+        services.AddHttpProxyService();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)

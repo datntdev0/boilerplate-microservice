@@ -20,6 +20,7 @@
       "srcs\\services\\payment\\Web.Host\\datntdev.Microservice.Srv.Payment.Web.Host.csproj",
       "srcs\\shared\\Application\\datntdev.Microservice.Shared.Application.csproj",
       "srcs\\shared\\Common\\datntdev.Microservice.Shared.Common.csproj",
+      "srcs\\shared\\Communication\\datntdev.Microservice.Shared.Communication.csproj",
       "srcs\\shared\\Web.Host\\datntdev.Microservice.Shared.Web.Host.csproj",
       "tests\\Common\\datntdev.Microservice.Tests.Common.csproj",
       "tests\\Srv.Admin\\datntdev.Microservice.Tests.Srv.Admin.csproj",

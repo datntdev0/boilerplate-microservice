@@ -35,6 +35,7 @@
   <Folder Name="/shared/">
     <Project Path="srcs/shared/Application/datntdev.Microservice.Shared.Application.csproj" />
     <Project Path="srcs/shared/Common/datntdev.Microservice.Shared.Common.csproj" />
+    <Project Path="srcs/shared/Communication/datntdev.Microservice.Shared.Communication.csproj" />
     <Project Path="srcs/shared/Web.Host/datntdev.Microservice.Shared.Web.Host.csproj" />
   </Folder>
   <Folder Name="/tests/">
