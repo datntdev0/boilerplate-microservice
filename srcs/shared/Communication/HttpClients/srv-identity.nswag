@@ -103,7 +103,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": null,
+      "output": "SrvIdentityHttpClient.cs",
       "newLineBehavior": "Auto"
     }
   }

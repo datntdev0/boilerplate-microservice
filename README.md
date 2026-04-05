@@ -23,19 +23,7 @@
 - **Hybrid Communication:** High-performance gRPC for internal service-to-service calls and REST via YARP for edge routing.
 - **Testing-Ready:** A robust TDD environment featuring pre-configured Unit, Integration, and E2E tests using .NET Aspire.
 
-### 🛠️ Tech Stack & Performance Target
-
-Feature | Technology | Performance Target
---------|------------|-------------------
-Database | SQL Server & MongoDB | ACID + Flexible Schemas with EF Core Optimized
-Backend | .NET Aspire with ASP.NET Core | <300ms Response Time, 1000 RPS per Instance
-Frontend | Angular SPA with Bootstrap | Lighthouse 90+ Performance Scores
-API Gateway | Yet Another Reverse Proxy (YARP) | Lightning-fast Routing, 10,000 RPS per Instance
-Messaging | Apache Kafka | Event-Driven, Scalable, Durable Messaging
-Observability | Prometheus & Grafana | 100% Traceability, Real-Time Monitoring & Alerts
-Deployment | GitHub Actions & Docker | Automated CI/CD with Containerization
-
-### High-Level Architecture Diagrams
+### 🛠️ High-Level Architecture Diagrams
 
 <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/9.attachments/02.container-diagram-dark.svg">
