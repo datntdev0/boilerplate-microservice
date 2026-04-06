@@ -1,6 +1,7 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Exceptions;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Identities.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Identities;
 
@@ -11,7 +12,9 @@ public class IdentitiesManager(IServiceProvider services)
 
     public override async Task<IdentityEntity> GetAsync(long id)
     {
-        var entity = await _dbContext.AppIdentities.FindAsync(id);
+        var entity = await _dbContext.AppIdentities
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.Id == id);
         return entity is null ? throw new ExceptionNotFound() : entity;
     }
 

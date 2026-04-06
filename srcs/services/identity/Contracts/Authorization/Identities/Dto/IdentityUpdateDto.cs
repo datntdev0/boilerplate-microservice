@@ -6,4 +6,5 @@ public class IdentityUpdateDto : BaseDto<long>
 {
     public string EmailAddress { get; set; } = default!;
     public string PasswordText { get; set; } = default!;
+    public long UserId { get; set; }
 }

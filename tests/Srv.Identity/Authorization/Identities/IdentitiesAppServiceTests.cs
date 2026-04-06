@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
+using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
 
 namespace datntdev.Microservice.Tests.Srv.Identity.Authorization.Identities;
 
@@ -9,16 +10,26 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
 {
     private const string BaseUrl = "/api/identities";
 
+    private async Task<long> CreateUserAsync()
+    {
+        var createDto = new UserCreateDto { FirstName = "Test", LastName = "User" };
+        using var response = await HttpClient.PostAsJsonAsync("/api/users", createDto, CancellationToken);
+        var user = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
+        return user!.Id;
+    }
+
     #region Create Tests
 
     [TestMethod]
     public async Task CreateAsync_WithValidData_ReturnsCreatedIdentity()
     {
         // Arrange
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = $"test_{Guid.NewGuid():N}@example.com",
-            PasswordText = "SecurePassword123!"
+            PasswordText = "SecurePassword123!",
+            UserId = userId
         };
 
         // Act
@@ -39,10 +50,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task CreateAsync_WithEmptyEmail_ReturnsBadRequest()
     {
         // Arrange
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = string.Empty,
-            PasswordText = "Password123!"
+            PasswordText = "Password123!",
+            UserId = userId
         };
 
         // Act
@@ -60,10 +73,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAsync_WithValidId_ReturnsIdentity()
     {
         // Arrange - Create an identity first
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = $"get_test_{Guid.NewGuid():N}@example.com",
-            PasswordText = "TestPassword123!"
+            PasswordText = "TestPassword123!",
+            UserId = userId
         };
         using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdIdentity = await createResponse.Content.ReadFromJsonAsync<IdentityDto>(CancellationToken);
@@ -101,12 +116,14 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAllAsync_WithDefaultPagination_ReturnsPagedResult()
     {
         // Arrange - Create multiple identities
+        var userId = await CreateUserAsync();
         for (int i = 0; i < 3; i++)
         {
             var createDto = new IdentityCreateDto
             {
                 EmailAddress = $"paged_test_{i}_{Guid.NewGuid():N}@example.com",
-                PasswordText = $"Password{i}123!"
+                PasswordText = $"Password{i}123!",
+                UserId = userId
             };
             await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
@@ -129,12 +146,14 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAllAsync_WithPagination_ReturnsCorrectPage()
     {
         // Arrange - Ensure we have enough identities
+        var userId = await CreateUserAsync();
         for (int i = 0; i < 5; i++)
         {
             var createDto = new IdentityCreateDto
             {
                 EmailAddress = $"pagination_test_{i}_{Guid.NewGuid():N}@example.com",
-                PasswordText = $"Password{i}123!"
+                PasswordText = $"Password{i}123!",
+                UserId = userId
             };
             await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
@@ -159,10 +178,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithValidData_ReturnsUpdatedIdentity()
     {
         // Arrange - Create an identity first
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = $"original_{Guid.NewGuid():N}@example.com",
-            PasswordText = "OriginalPassword123!"
+            PasswordText = "OriginalPassword123!",
+            UserId = userId
         };
         using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdIdentity = await createResponse.Content.ReadFromJsonAsync<IdentityDto>(CancellationToken);
@@ -170,7 +191,8 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
         var updateDto = new IdentityUpdateDto
         {
             EmailAddress = $"updated_{Guid.NewGuid():N}@example.com",
-            PasswordText = "NewPassword123!"
+            PasswordText = "NewPassword123!",
+            UserId = userId
         };
 
         // Act
@@ -189,10 +211,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithEmptyEmail_ReturnsBadRequest()
     {
         // Arrange - Create an identity first
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = $"validation_test_{Guid.NewGuid():N}@example.com",
-            PasswordText = "Password123!"
+            PasswordText = "Password123!",
+            UserId = userId
         };
         using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdIdentity = await createResponse.Content.ReadFromJsonAsync<IdentityDto>(CancellationToken);
@@ -200,7 +224,8 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
         var updateDto = new IdentityUpdateDto
         {
             EmailAddress = string.Empty,
-            PasswordText = "Password123!"
+            PasswordText = "Password123!",
+            UserId = userId
         };
 
         // Act
@@ -215,10 +240,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     {
         // Arrange
         var invalidId = long.MaxValue;
+        var userId = await CreateUserAsync();
         var updateDto = new IdentityUpdateDto
         {
             EmailAddress = $"test_{Guid.NewGuid():N}@example.com",
-            PasswordText = "Password123!"
+            PasswordText = "Password123!",
+            UserId = userId
         };
 
         // Act
@@ -236,10 +263,12 @@ public class IdentitiesAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task DeleteAsync_WithValidId_DeletesIdentity()
     {
         // Arrange - Create an identity first
+        var userId = await CreateUserAsync();
         var createDto = new IdentityCreateDto
         {
             EmailAddress = $"delete_test_{Guid.NewGuid():N}@example.com",
-            PasswordText = "Password123!"
+            PasswordText = "Password123!",
+            UserId = userId
         };
         using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdIdentity = await createResponse.Content.ReadFromJsonAsync<IdentityDto>(CancellationToken);

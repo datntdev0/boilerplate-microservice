@@ -8,6 +8,7 @@ internal class IdentityCreatingValidator : DbValidator<IdentityCreateDto, Micros
 {
     public IdentityCreatingValidator(MicroserviceSrvIdentityDbContext dbContext) : base(dbContext)
     {
+        RuleFor(x => x.UserId).GreaterThan(0);
         RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress().MaximumLength(255);
         RuleFor(x => x.PasswordText).NotEmpty().MinimumLength(6).MaximumLength(100);
     }
@@ -17,6 +18,7 @@ internal class IdentityUpdatingValidator : DbValidator<IdentityUpdateDto, Micros
 {
     public IdentityUpdatingValidator(MicroserviceSrvIdentityDbContext dbContext) : base(dbContext)
     {
+        RuleFor(x => x.UserId).GreaterThan(0);
         RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress().MaximumLength(255);
         RuleFor(x => x.PasswordText).NotEmpty().MinimumLength(6).MaximumLength(100);
     }
