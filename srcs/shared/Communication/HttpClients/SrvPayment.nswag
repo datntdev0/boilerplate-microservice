@@ -3,14 +3,14 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://localhost:7003/openapi/v1.json",
+      "url": "https://localhost:7067/openapi/v1.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
   },
   "codeGenerators": {
     "openApiToCSharpClient": {
-      "clientBaseClass": "SrvHttpClientBase",
+      "clientBaseClass": "BaseSrvHttpClient",
       "configurationClass": null,
       "generateClientClasses": true,
       "suppressClientClassesOutput": false,
@@ -45,16 +45,13 @@
       "useRequestAndResponseSerializationSettings": false,
       "serializeTypeInformation": false,
       "queryNullValue": "",
-      "className": "SrvIdentityHttpClient",
+      "className": "SrvPaymentHttpClient",
       "operationGenerationMode": "SingleClientFromOperationId",
       "includedOperationIds": [],
       "excludedOperationIds": [],
       "additionalNamespaceUsages": [
         "datntdev.Microservice.Shared.Common.Exceptions",
-        "datntdev.Microservice.Shared.Common.Model",
-        "datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto",
-        "datntdev.Microservice.Srv.Identity.Contracts.Authorization.Roles.Dto",
-        "datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto"
+        "datntdev.Microservice.Shared.Common.Model"
       ],
       "additionalContractNamespaceUsages": [],
       "generateOptionalParameters": false,
@@ -103,7 +100,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "SrvIdentityHttpClient.cs",
+      "output": "SrvPaymentHttpClient.cs",
       "newLineBehavior": "Auto"
     }
   }

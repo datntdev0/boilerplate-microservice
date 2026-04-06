@@ -11,7 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\services\admin\Contracts\datntdev.Microservice.Srv.Admin.Contracts.csproj" />
     <ProjectReference Include="..\..\services\identity\Contracts\datntdev.Microservice.Srv.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\services\notify\Contracts\datntdev.Microservice.Srv.Notify.Contracts.csproj" />
+    <ProjectReference Include="..\..\services\payment\Contracts\datntdev.Microservice.Srv.Payment.Contracts.csproj" />
     <ProjectReference Include="..\Common\datntdev.Microservice.Shared.Common.csproj" />
   </ItemGroup>
 

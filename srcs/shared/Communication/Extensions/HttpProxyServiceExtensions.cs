@@ -12,5 +12,23 @@ public static class HttpProxyServiceExtensions
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvIdentityHttpClient(httpClientFactory.CreateClient("srv-identity"));
         });
+
+        services.AddScoped(typeof(SrvAdminHttpClient), (sp) =>
+        {
+            var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+            return new SrvAdminHttpClient(httpClientFactory.CreateClient("srv-admin"));
+        });
+
+        services.AddScoped(typeof(SrvNotifyHttpClient), (sp) =>
+        {
+            var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+            return new SrvNotifyHttpClient(httpClientFactory.CreateClient("srv-notify"));
+        });
+
+        services.AddScoped(typeof(SrvPaymentHttpClient), (sp) =>
+        {
+            var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+            return new SrvPaymentHttpClient(httpClientFactory.CreateClient("srv-payment"));
+        });
     }
 }

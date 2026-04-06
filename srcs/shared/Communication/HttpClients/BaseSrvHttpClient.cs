@@ -2,7 +2,7 @@
 
 namespace datntdev.Microservice.Shared.Communication.HttpClients;
 
-public abstract class SrvHttpClientBase
+public abstract class BaseSrvHttpClient
 {
     protected static void UpdateJsonSerializerSettings(JsonSerializerOptions options)
     {
