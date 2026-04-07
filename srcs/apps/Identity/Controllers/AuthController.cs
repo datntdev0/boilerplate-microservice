@@ -27,9 +27,9 @@ public class AuthController : ControllerBase
 
         var authenticationScheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme;
         var claims = result.Principal.Claims
-            .Append(new Claim(Claims.Subject, result.Principal.GetClaim(ClaimTypes.NameIdentifier)!))
             .Append(new Claim(Claims.Name, result.Principal.GetClaim(ClaimTypes.Name)!))
-            .Append(new Claim(Claims.Email, result.Principal.GetClaim(ClaimTypes.Email)!));
+            .Append(new Claim(Claims.Email, result.Principal.GetClaim(ClaimTypes.Email)!))
+            .Append(new Claim(Claims.Subject, result.Principal.GetClaim(ClaimTypes.NameIdentifier)!));
         var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, authenticationScheme));
 
         // Set requested scopes (this is not done automatically)

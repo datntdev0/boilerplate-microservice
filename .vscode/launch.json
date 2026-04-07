@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "C#: Aspire Orchestrator Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj"
+        },
+        {
             "request": "launch",
             "name": "Debug Angular App (Edge)",
             "type": "msedge",

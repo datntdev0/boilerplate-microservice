@@ -1,8 +1,8 @@
 ﻿using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Common.Exceptions;
 using datntdev.Microservice.Shared.Communication.HttpClients;
+using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using IdentityResult = datntdev.Microservice.App.Identity.Models.IdentityResult;
 
@@ -13,55 +13,44 @@ public class IdentityManager(IServiceProvider services)
 {
     private readonly IHttpContextAccessor _contextAccessor = services.GetRequiredService<IHttpContextAccessor>();
     private readonly SrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredService<SrvIdentityHttpClient>();
-    private readonly PasswordHasher _passwordHasher = services.GetRequiredService<PasswordHasher>();
 
     public async Task<IdentityResult> SignInWithPassword(string email, string password)
     {
-        _srvIdentityHttpClient.ReadResponseAsString = true;
-        var remoteIdentities = await _srvIdentityHttpClient.Identities_GetAllAsync(0, 10);
-
-        var identityEntity = await _dbContext.AppIdentities
-            .FirstOrDefaultAsync(x => x.EmailAddress == email);
-        if (identityEntity == null) return IdentityResult.Failure;
-
-        var passwordVerification = _passwordHasher.VerifyHashedPassword(
-            identityEntity, identityEntity.PasswordHash, password);
-
-        if (passwordVerification == PasswordVerificationResult.Success)
+        try
         {
+            var userDto = await _srvIdentityHttpClient.Identities_CreateSigninAsync(
+                new SigninDto { Email = email, Password = password });
+
             var claims = new Claim[]
             {
-                new(ClaimTypes.NameIdentifier, identityEntity.Id.ToString()),
-                new(ClaimTypes.Email, identityEntity.EmailAddress ?? string.Empty),
+                new(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                new(ClaimTypes.Name, $"{userDto.FirstName} {userDto.LastName}"),
+                new(ClaimTypes.Email, email),
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, Constants.Application.AuthenticationScheme);
             await _contextAccessor.HttpContext!.SignInAsync(new ClaimsPrincipal(claimsIdentity));
-        }
 
-        return passwordVerification switch
+            return IdentityResult.Success;
+        }
+        catch (ExceptionInternalApi)
         {
-            PasswordVerificationResult.Success => IdentityResult.Success,
-            PasswordVerificationResult.Failed => IdentityResult.Failure,
-            _ => throw new NotImplementedException(),
-        };
+            return IdentityResult.Failure;
+        }
     }
 
     public async Task<IdentityResult> SignUpWithPassword(string email, string password, string firstName, string lastName)
     {
-        var identityEntity = await _dbContext.AppIdentities
-            .FirstOrDefaultAsync(x => x.EmailAddress == email);
-        if (identityEntity != null) return IdentityResult.Duplicated;
-
-        identityEntity = new Models.IdentityEntity()
+        try
         {
-            EmailAddress = email,
-            PasswordText = password,
-        };
-        identityEntity = _passwordHasher.SetPassword(identityEntity, password);
+            await _srvIdentityHttpClient.Identities_CreateSignupAsync(
+                new SignupDto { Email = email, Password = password, FirstName = firstName, LastName = lastName });
 
-        _dbContext.AppIdentities.Add(identityEntity);
-        await _dbContext.SaveChangesAsync();
-        return IdentityResult.Success;
+            return IdentityResult.Success;
+        }
+        catch (ExceptionInternalApi)
+        {
+            return IdentityResult.Duplicated;
+        }
     }
 }
