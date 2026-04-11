@@ -24,7 +24,5 @@ public class MicroserviceSrvIdentityApplicationModule : BaseModule
         services.AddScoped<RoleUpdatingValidator>();
 
         services.AddScoped<IdentitiesManager>();
-        services.AddScoped<IdentityCreatingValidator>();
-        services.AddScoped<IdentityUpdatingValidator>();
     }
 }
