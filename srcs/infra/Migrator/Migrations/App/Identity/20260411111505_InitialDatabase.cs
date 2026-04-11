@@ -12,27 +12,6 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AppIdentities",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    EmailAddress = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppIdentities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
@@ -135,16 +114,6 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppIdentities_EmailAddress",
-                table: "AppIdentities",
-                column: "EmailAddress");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppIdentities_UserId",
-                table: "AppIdentities",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId",
@@ -184,9 +153,6 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.App.Identity
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AppIdentities");
-
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 

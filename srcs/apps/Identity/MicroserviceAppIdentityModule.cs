@@ -32,7 +32,6 @@ internal static class MicroserviceAppIdentityModuleExtensions
                 .AddCascadingAuthenticationState();
 
         services.AddScoped<IdentityManager>()
-                .AddSingleton<PasswordHasher>()
                 .AddHttpContextAccessor();
     }
 

@@ -1,7 +1,4 @@
-﻿using datntdev.Microservice.App.Identity;
-using datntdev.Microservice.App.Identity.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
 
@@ -10,12 +7,10 @@ namespace datntdev.Microservice.Infra.Migrator.Seeders;
 internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
 {
     private readonly IConfiguration _configuration = services.GetRequiredService<IConfiguration>();
-    private readonly MicroserviceAppIdentityDbContext _dbContext = services.GetRequiredService<MicroserviceAppIdentityDbContext>();
 
     public async Task SeedAsync()
     {
         await EnsureOpenIddictApplicationExistsAsync();
-        await EnsureDefaultAdminIdentityExistsAsync();
     }
 
     private async Task EnsureOpenIddictApplicationExistsAsync()
@@ -95,33 +90,5 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
         logoutRedirectUris?.Split(";").Select(x => new Uri(x))
             .ToList().ForEach(x => application.PostLogoutRedirectUris.Add(x));
         return application;
-    }
-
-    private async Task EnsureDefaultAdminIdentityExistsAsync()
-    {
-        var defaultAdminEmail = _configuration.GetValue<string>("DefaultAdmin:EmailAddress");
-        var defaultAdminPassword = _configuration.GetValue<string>("DefaultAdmin:Password");
-        var defaultAdminFirstName = _configuration.GetValue<string>("DefaultAdmin:FirstName") ?? string.Empty;
-        var defaultAdminLastName = _configuration.GetValue<string>("DefaultAdmin:LastName") ?? string.Empty;
-
-        ArgumentNullException.ThrowIfNull(defaultAdminEmail, nameof(defaultAdminEmail));
-        ArgumentNullException.ThrowIfNull(defaultAdminPassword, nameof(defaultAdminPassword));
-
-        var passwordHasher = new App.Identity.Identity.PasswordHasher();
-
-        // Recreate the default admin user althgough it exists.
-        var existingIdentity = await _dbContext.AppIdentities.FirstOrDefaultAsync(x => x.EmailAddress == defaultAdminEmail);
-        if (existingIdentity != null) _dbContext.AppIdentities.Remove(existingIdentity);
-
-        var newIdentity = new IdentityEntity
-        {
-            EmailAddress = defaultAdminEmail,
-            PasswordText = defaultAdminPassword,
-        };
-
-        newIdentity = passwordHasher.SetPassword(newIdentity, defaultAdminPassword);
-
-        await _dbContext.AppIdentities.AddAsync(newIdentity);
-        await _dbContext.SaveChangesAsync();
     }
 }
