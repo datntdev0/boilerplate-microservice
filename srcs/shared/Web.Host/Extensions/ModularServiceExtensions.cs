@@ -25,15 +25,20 @@ public static class ModularServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddDefaultServices(this IServiceCollection services, IEnumerable<BaseModule> modules)
+    public static IServiceCollection AddDefaultAppServices(this IServiceCollection services, BaseModule module)
     {
+        // Find the providers inheriting from BaseAppProvider and register them as singleton services
+        var providerTypes = module.GetType().Assembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(BaseAppProvider)));
+        providerTypes.ToList().ForEach(type => services.AddSingleton(type));
+
         // Find the managers inheriting from BaseManager and register them as scoped services
-        var managerTypes = modules.SelectMany(m => m.GetType().Assembly.GetTypes())
+        var managerTypes = module.GetType().Assembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(BaseManager)));
         managerTypes.ToList().ForEach(type => services.AddScoped(type));
 
         // Find the validator inheriting from IValidator and register them as scoped services
-        var validatorTypes = modules.SelectMany(m => m.GetType().Assembly.GetTypes())
+        var validatorTypes = module.GetType().Assembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IValidator)));
         validatorTypes.ToList().ForEach(type => services.AddScoped(type));
 

@@ -24,6 +24,7 @@ public class AppStartup<TBootstrapModule> : IBaseStartup
         builder.Configuration.Load(builder.Environment);
 
         _modules.ForEach(module => module.ConfigureServices(builder.Services, builder.Configuration));
+        _modules.ForEach(module => builder.Services.AddDefaultAppServices(module));
         var app = builder.Build();
         return app;
     }
@@ -61,6 +62,7 @@ public class WebStartup<TBootstrapModule> : AppStartup<TBootstrapModule>
         builder.Configuration.Load(builder.Environment);
 
         _modules.ForEach(module => module.ConfigureServices(builder.Services, builder.Configuration));
+        _modules.ForEach(module => builder.Services.AddDefaultAppServices(module));
         this.ConfigureServices(builder.Services, builder.Configuration);
         var app = builder.Build();
 
