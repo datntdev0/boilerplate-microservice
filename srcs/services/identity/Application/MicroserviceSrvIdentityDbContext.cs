@@ -12,6 +12,7 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
     public DbSet<IdentityEntity> AppIdentities { get; set; }
     public DbSet<UserEntity> AppUsers { get; set; }
     public DbSet<RoleEntity> AppRoles { get; set; }
+    public DbSet<UserRoleEntity> AppUserRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,6 +27,16 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
         modelBuilder.Entity<UserEntity>(entity =>
         {
             entity.HasMany(e => e.Identities).WithOne(e => e.User).HasForeignKey(e => e.UserId);
+        });
+
+        modelBuilder.Entity<RoleEntity>(entity =>
+        {
+            entity.HasMany(e => e.Users).WithMany(e => e.Roles)
+                .UsingEntity<UserRoleEntity>(
+                    r => r.HasOne(ur => ur.User).WithMany().HasForeignKey(ur => ur.UserId),
+                    l => l.HasOne(ur => ur.Role).WithMany().HasForeignKey(ur => ur.RoleId),
+                    i => i.HasIndex(ur => new { ur.UserId, ur.RoleId }).IsUnique()
+                );
         });
     }
 }

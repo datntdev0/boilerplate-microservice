@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Roles.Dto;
 
@@ -18,7 +19,8 @@ public class RolesAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new RoleCreateDto
         {
             Name = $"TestRole_{Guid.NewGuid():N}",
-            Description = "Test Role Description"
+            Description = "Test Role Description",
+            Permissions = [Constants.Permissions.Roles_Read]
         };
 
         // Act
@@ -32,6 +34,30 @@ public class RolesAppServiceTests : MicroserviceSrvIdentityBaseTest
         Assert.AreEqual(createDto.Description, result.Description);
         Assert.IsTrue(result.Id != 0);
         Assert.IsNotNull(result.CreatedAt);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Roles_Read);
+    }
+
+    [TestMethod]
+    public async Task CreateAsync_WithPermissions_ReturnsRoleWithPermissions()
+    {
+        // Arrange
+        var createDto = new RoleCreateDto
+        {
+            Name = $"PermRole_{Guid.NewGuid():N}",
+            Description = "Permissions Test",
+            Permissions = [Constants.Permissions.Users_Read, Constants.Permissions.Roles_Read]
+        };
+
+        // Act
+        using var response = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Permissions.Length);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Users_Read);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Roles_Read);
     }
 
     [TestMethod]
@@ -169,7 +195,8 @@ public class RolesAppServiceTests : MicroserviceSrvIdentityBaseTest
         var updateDto = new RoleUpdateDto
         {
             Name = $"UpdatedRole_{Guid.NewGuid():N}",
-            Description = "Updated Description"
+            Description = "Updated Description",
+            Permissions = [Constants.Permissions.Roles_Read, Constants.Permissions.Roles_Write]
         };
 
         // Act
@@ -183,6 +210,8 @@ public class RolesAppServiceTests : MicroserviceSrvIdentityBaseTest
         Assert.AreEqual(updateDto.Name, result.Name);
         Assert.AreEqual(updateDto.Description, result.Description);
         Assert.IsNotNull(result.UpdatedAt);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Roles_Read);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Roles_Write);
     }
 
     [TestMethod]

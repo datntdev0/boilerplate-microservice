@@ -1,5 +1,6 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
@@ -13,13 +14,16 @@ namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Users;
 public class UsersAppService(IServiceProvider services) : BaseAppService, IUsersAppService
 {
     private readonly UsersManager _manager = services.GetRequiredService<UsersManager>();
+    private readonly RolesManager _rolesManager = services.GetRequiredService<RolesManager>();
     private readonly UserCreatingValidator _creatingValidator = services.GetRequiredService<UserCreatingValidator>();
     private readonly UserUpdatingValidator _updatingValidator = services.GetRequiredService<UserUpdatingValidator>();
 
     public async Task<UserDto> CreateAsync(UserCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
-        var entity = await _manager.CreateAsync(Map<UserEntity>(request));
+        var entity = Map<UserEntity>(request);
+        entity.Roles = await _rolesManager.GetByIdsAsync(request.RoleIds);
+        entity = await _manager.CreateAsync(entity);
         return Map<UserDto>(entity);
     }
 
@@ -55,7 +59,10 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
     {
         _updatingValidator.ValidateAndThrow(request);
         var entity = await _manager.GetAsync(id);
-        MapTo(request, entity);
+        entity.FirstName = request.FirstName;
+        entity.LastName = request.LastName;
+        entity.Permissions = request.Permissions;
+        entity.Roles = await _rolesManager.GetByIdsAsync(request.RoleIds);
         entity = await _manager.UpdateAsync(entity);
         return Map<UserDto>(entity);
     }

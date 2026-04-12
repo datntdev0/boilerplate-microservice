@@ -1,6 +1,7 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Exceptions;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Roles;
 
@@ -32,5 +33,11 @@ public class RolesManager(IServiceProvider services)
         var entity = await GetAsync(id);
         _dbContext.AppRoles.Remove(entity);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<RoleEntity>> GetByIdsAsync(int[] roleIds)
+    {
+        if (roleIds is null || roleIds.Length == 0) return [];
+        return await _dbContext.AppRoles.Where(r => roleIds.Contains(r.Id)).ToListAsync();
     }
 }

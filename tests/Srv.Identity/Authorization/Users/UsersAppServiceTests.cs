@@ -1,5 +1,7 @@
 using System.Net.Http.Json;
+using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Roles.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
 
 namespace datntdev.Microservice.Tests.Srv.Identity.Authorization.Users;
@@ -18,7 +20,8 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = "John",
-            LastName = $"Doe_{Guid.NewGuid():N}"
+            LastName = $"Doe_{Guid.NewGuid():N}",
+            Permissions = [Constants.Permissions.Users_Read]
         };
 
         // Act
@@ -32,6 +35,39 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         Assert.AreEqual(createDto.LastName, result.LastName);
         Assert.IsTrue(result.Id != 0);
         Assert.IsNotNull(result.CreatedAt);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Users_Read);
+    }
+
+    [TestMethod]
+    public async Task CreateAsync_WithRoleIds_ReturnsUserWithAssignedRoles()
+    {
+        // Arrange - Create a role first
+        var roleDto = new RoleCreateDto
+        {
+            Name = $"AssignedRole_{Guid.NewGuid():N}",
+            Description = "Role for user assignment test",
+            Permissions = [Constants.Permissions.Users_Read]
+        };
+        using var roleResponse = await HttpClient.PostAsJsonAsync("/api/roles", roleDto, CancellationToken);
+        var createdRole = await roleResponse.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
+
+        var createDto = new UserCreateDto
+        {
+            FirstName = "RoleUser",
+            LastName = $"Test_{Guid.NewGuid():N}",
+            RoleIds = [createdRole!.Id]
+        };
+
+        // Act
+        using var response = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Roles.Length);
+        Assert.AreEqual(createdRole.Id, result.Roles[0].Id);
+        Assert.AreEqual(createdRole.Name, result.Roles[0].Name);
     }
 
     [TestMethod]
@@ -169,7 +205,8 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var updateDto = new UserUpdateDto
         {
             FirstName = "Updated",
-            LastName = $"Name_{Guid.NewGuid():N}"
+            LastName = $"Name_{Guid.NewGuid():N}",
+            Permissions = [Constants.Permissions.Users_Read, Constants.Permissions.Users_Write]
         };
 
         // Act
@@ -183,6 +220,48 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         Assert.AreEqual(updateDto.FirstName, result.FirstName);
         Assert.AreEqual(updateDto.LastName, result.LastName);
         Assert.IsNotNull(result.UpdatedAt);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Users_Read);
+        CollectionAssert.Contains(result.Permissions, Constants.Permissions.Users_Write);
+    }
+
+    [TestMethod]
+    public async Task UpdateAsync_WithRoleIds_UpdatesUserRoles()
+    {
+        // Arrange - Create two roles
+        var role1Dto = new RoleCreateDto { Name = $"Role1_{Guid.NewGuid():N}", Description = "Role 1" };
+        var role2Dto = new RoleCreateDto { Name = $"Role2_{Guid.NewGuid():N}", Description = "Role 2" };
+        using var r1Res = await HttpClient.PostAsJsonAsync("/api/roles", role1Dto, CancellationToken);
+        using var r2Res = await HttpClient.PostAsJsonAsync("/api/roles", role2Dto, CancellationToken);
+        var role1 = await r1Res.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
+        var role2 = await r2Res.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
+
+        // Create user assigned to role1
+        var createDto = new UserCreateDto
+        {
+            FirstName = "RoleUpdateUser",
+            LastName = $"Test_{Guid.NewGuid():N}",
+            RoleIds = [role1!.Id]
+        };
+        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
+
+        // Update user to be assigned to role2 instead
+        var updateDto = new UserUpdateDto
+        {
+            FirstName = createdUser!.FirstName,
+            LastName = createdUser.LastName,
+            RoleIds = [role2!.Id]
+        };
+
+        // Act
+        using var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}/{createdUser.Id}", updateDto, CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Roles.Length);
+        Assert.AreEqual(role2.Id, result.Roles[0].Id);
     }
 
     [TestMethod]

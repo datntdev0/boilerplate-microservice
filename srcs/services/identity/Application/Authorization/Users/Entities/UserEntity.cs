@@ -1,6 +1,7 @@
 ﻿using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Identities.Entities;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles.Entities;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
 
@@ -11,4 +12,5 @@ public class UserEntity : FullAuditEntity<long>
     public Constants.Permissions[] Permissions { get; set; } = [];
 
     public List<IdentityEntity> Identities { get; set; } = [];
+    public List<RoleEntity> Roles { get; set; } = [];
 }

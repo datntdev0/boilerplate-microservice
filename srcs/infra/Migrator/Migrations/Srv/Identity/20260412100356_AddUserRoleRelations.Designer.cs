@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using datntdev.Microservice.Srv.Identity.Application;
 
@@ -11,9 +12,11 @@ using datntdev.Microservice.Srv.Identity.Application;
 namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
 {
     [DbContext(typeof(MicroserviceSrvIdentityDbContext))]
-    partial class MicroserviceSrvIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260412100356_AddUserRoleRelations")]
+    partial class AddUserRoleRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
