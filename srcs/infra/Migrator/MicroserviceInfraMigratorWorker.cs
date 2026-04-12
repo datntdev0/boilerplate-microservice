@@ -17,6 +17,7 @@ internal class MicroserviceInfraMigratorWorker(IServiceProvider services) : IHos
 
     private readonly ILogger<MicroserviceInfraMigratorWorker> _logger = services
         .GetRequiredService<ILogger<MicroserviceInfraMigratorWorker>>();
+
     private readonly IHostApplicationLifetime _lifetime = services
         .GetRequiredService<IHostApplicationLifetime>();
 

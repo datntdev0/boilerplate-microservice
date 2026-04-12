@@ -1,15 +1,19 @@
 ﻿using datntdev.Microservice.Srv.Identity.Application;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Identities.Entities;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Permissions;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace datntdev.Microservice.Infra.Migrator.Seeders;
+
 internal class MicroserviceSrvIdentitySeeder(IServiceProvider services)
 {
     private readonly IConfiguration _configuration = services.GetRequiredService<IConfiguration>();
     private readonly MicroserviceSrvIdentityDbContext _dbContext = services.GetRequiredService<MicroserviceSrvIdentityDbContext>();
+
+    private readonly PermissionAppProvider _permissionProvider = services.GetRequiredService<PermissionAppProvider>();
 
     public async Task SeedAsync()
     {
@@ -27,7 +31,7 @@ internal class MicroserviceSrvIdentitySeeder(IServiceProvider services)
         ArgumentNullException.ThrowIfNull(defaultAdminPassword, nameof(defaultAdminPassword));
 
         var passwordHasher = new Srv.Identity.Application.Authorization.Identities.PasswordHasher();
-
+        var allPermissions = _permissionProvider.GetAllPermissions().Select(x => x.Permission).ToArray();
         // Recreate the default admin user althgough it exists.
         var existingIdentity = await _dbContext.AppIdentities.FirstOrDefaultAsync(x => x.EmailAddress == defaultAdminEmail);
         if (existingIdentity != null) _dbContext.AppIdentities.Remove(existingIdentity);
@@ -40,6 +44,7 @@ internal class MicroserviceSrvIdentitySeeder(IServiceProvider services)
             {
                 FirstName = defaultAdminFirstName,
                 LastName = defaultAdminLastName,
+                Permissions = allPermissions,
             }
         };
 

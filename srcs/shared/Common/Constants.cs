@@ -19,4 +19,27 @@ public class Constants
         public const string OAuth2Token = "/connect/token";
         public const string OAuth2Authorize = "/connect/authorize";
     }
+
+    public enum Permissions
+    {
+        None = 0,
+
+        Tenancy = 1000,
+        Tenancy_Read = 1001,
+        Tenancy_Write = 1002,
+
+        Users = 2000,
+        Users_Read = 2001,
+        Users_Write = 2002,
+
+        Roles = 3000,
+        Roles_Read = 3001,
+        Roles_Write = 3002,
+    }
+
+    public enum TenancySides
+    {
+        Host = 0x01,
+        Tenant = 0x10,
+    }
 }
