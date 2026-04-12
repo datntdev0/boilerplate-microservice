@@ -22,4 +22,5 @@
     "[scss]": {
         "editor.tabSize": 4
     },
+    "workbench.browser.enableChatTools": true
 }
