@@ -46,7 +46,7 @@ Execute the following commands in the terminal:
 
 ```bash
 # 1. Start Docker to run the required infrastructure services.
-docker compose -f .github/docker-compose/localhost-infra.yml -p datntdev_microservices_infra up -d
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
 # 2. Run the database migrations and start the application.
 dotnet run --project ./srcs/infra/Migrator/datntdev.Microservice.Infra.Migrator.csproj
 # 3. Start the microservices with Aspire Orchestrator.
@@ -59,11 +59,6 @@ cd ./srcs/apps/Angular && npm install && npm start
 ```
 
 ```bash
-# 5. [Optional] To run the storybook for UI components:
-cd ./srcs/app/Storybook && npm install && npm start
-```
-
-```bash
 # To stop and cleanup the infrastructure services
-docker compose -f .github/docker-compose/localhost-infra.yml -p datntdev_microservices_infra down -v
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra down -v
 ```

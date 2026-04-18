@@ -20,7 +20,7 @@ jobs:
           export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:$SSL_CERT_DIR"
           dotnet dev-certs https --trust
       - name: Start docker-compose infrastructure services.
-        run: docker compose -f .github/docker-compose/localhost-infra.yml -p datntdev_microservices_infra up -d
+        run: docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
       - name: Install ReportGenerator tool
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       - name: Build Backend
