@@ -10,6 +10,6 @@ export const mainConfig: ApplicationConfig = {
     provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptorsFromDi()),
-    provideAppInitializer(withRootInitializer)
+    provideAppInitializer(withRootInitializer),
   ]
 };

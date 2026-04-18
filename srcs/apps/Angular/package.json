@@ -11,7 +11,8 @@
     "storybook:build": "ng run .:storybook-build",
     "gulp:build": "gulp build",
     "gulp:clean": "gulp clean",
-    "gulp:watch": "gulp watch"
+    "gulp:watch": "gulp watch",
+    "nswag": "cd src/shared/proxies && nswag run"
   },
   "prettier": {
     "printWidth": 100,
@@ -59,6 +60,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^6.0.1",
     "jsdom": "^27.1.0",
+    "nswag": "^14.7.0",
     "storybook": "^10.0.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

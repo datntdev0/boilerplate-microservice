@@ -11,12 +11,15 @@ public class Startup : WebStartup<MicroserviceInfraGatewayModule>
         var yarpConfig = configs.GetSection("ReverseProxy");
 
         services.AddDefaultServices(configs);
+        services.AddDefaultSecurity(configs);
         services.AddReverseProxy().LoadFromConfig(yarpConfig).AddServiceDiscoveryDestinationResolver();
         services.AddHealthChecks().AddCheck<GatewayHealthCheck>("gateway_health_check", tags: ["alive"]);
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
     {
+        app.UseCors();
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
