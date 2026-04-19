@@ -9,6 +9,7 @@ import { AuthService } from '@shared/services/auth-service';
 @Component({
   selector: 'main-layout',
   imports: [RouterModule, HeaderComponent, SidebarComponent],
+  host: { "class": "d-flex flex-column flex-root" },
   templateUrl: './main-layout.html',
 })
 export class MainLayout implements OnInit {
