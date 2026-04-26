@@ -3,38 +3,33 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { User } from 'oidc-client-ts';
 import { AuthService } from './auth-service';
 
-// Create mock objects that will be shared across tests
-const mockEvents = {
-  addUserLoaded: vi.fn(),
-  addUserUnloaded: vi.fn(),
-  addAccessTokenExpired: vi.fn(),
-  addUserSignedOut: vi.fn(),
-};
+// Use vi.hoisted to ensure these are available in the mock factory
+const { mockEvents, MockUserManager } = vi.hoisted(() => {
+  const mockEvents = {
+    addUserLoaded: vi.fn(),
+    addUserUnloaded: vi.fn(),
+    addAccessTokenExpired: vi.fn(),
+    addUserSignedOut: vi.fn(),
+  };
 
-const mockUserManager = {
-  events: mockEvents,
-  metadataService: { getMetadata: vi.fn().mockResolvedValue({}) },
-  clearStaleState: vi.fn().mockResolvedValue(undefined),
-  getUser: vi.fn().mockResolvedValue(null),
-  signinRedirect: vi.fn().mockResolvedValue(undefined),
-  signinRedirectCallback: vi.fn().mockResolvedValue({} as User),
-  signoutRedirect: vi.fn().mockResolvedValue(undefined),
-};
+  class MockUserManager {
+    events = mockEvents;
+    metadataService = { getMetadata: vi.fn().mockResolvedValue({}) };
+    clearStaleState = vi.fn().mockResolvedValue(undefined);
+    getUser = vi.fn().mockResolvedValue(null);
+    signinRedirect = vi.fn().mockResolvedValue(undefined);
+    signinRedirectCallback = vi.fn().mockResolvedValue({} as any);
+    signoutRedirect = vi.fn().mockResolvedValue(undefined);
+  }
+
+  return { mockEvents, MockUserManager };
+});
 
 // Mock the oidc-client-ts module
-vi.mock('oidc-client-ts', () => {
-  return {
-    UserManager: class {
-      events = mockEvents;
-      clearStaleState = mockUserManager.clearStaleState;
-      metadataService = mockUserManager.metadataService;
-      getUser = mockUserManager.getUser;
-      signinRedirect = mockUserManager.signinRedirect;
-      signinRedirectCallback = mockUserManager.signinRedirectCallback;
-      signoutRedirect = mockUserManager.signoutRedirect;
-    }
-  };
-});
+vi.mock('oidc-client-ts', () => ({
+  UserManager: MockUserManager,
+  User: class User {}
+}));
 
 describe('Services.AuthService', () => {
   let service: AuthService;
@@ -49,6 +44,14 @@ describe('Services.AuthService', () => {
 
     service = TestBed.inject(AuthService);
     userManager = (service as any).userManager;
+    
+    // Reset all mocks to default state
+    userManager.getUser.mockResolvedValue(null);
+    userManager.signinRedirect.mockResolvedValue(undefined);
+    userManager.signinRedirectCallback.mockResolvedValue({} as User);
+    userManager.signoutRedirect.mockResolvedValue(undefined);
+    userManager.clearStaleState.mockResolvedValue(undefined);
+    userManager.metadataService.getMetadata.mockResolvedValue({});
   });
 
   afterEach(() => {

@@ -61,7 +61,11 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "coverage": true,
-            "coverageReporters": ["text","html"],
+            "coverageReporters": ["text","html","json-summary"],
+            "coverageExclude": [
+              "src/shared/proxies/**",
+              "src/testing/**"
+            ],
             "coverageWatermarks": {
               "statements": [50,80],
               "branches": [50,80],

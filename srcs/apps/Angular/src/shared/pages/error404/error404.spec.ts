@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, beforeEach, expect } from 'vitest';
 import { Error404Page } from './error404';
 
 describe('Pages.Error404', () => {

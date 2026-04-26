@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { describe, it, beforeEach, expect } from 'vitest';
 import { DatatableComponent } from './datatable';
-import { ComponentsModule } from '@components/components-module';
+import { ComponentsModule } from '@components/components.module';
 
 describe('Components.Datatable', () => {
   let component: DatatableComponent;
