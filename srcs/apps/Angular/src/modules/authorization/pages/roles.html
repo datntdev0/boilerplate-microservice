@@ -17,7 +17,7 @@
           <i class="bi bi-box-arrow-up"></i> Export
         </button>
 
-        <button type="button" class="btn btn-primary" (click)="createModal.show()">
+        <button type="button" class="btn btn-primary" (click)="onShowCreate(createModal)">
           <i class="bi bi-plus-square-fill"></i> New Role
         </button>
       </div>
@@ -38,7 +38,7 @@
 
 <ng-template #actionsTemplate let-item>
   <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3"
-    (click)="onEdit(item, updateModal)">
+    (click)="onShowUpdate(item, updateModal)">
     <i class="fs-6 bi bi-sliders2-vertical"></i>
   </button>
   <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px" (click)="onDelete(item)">
@@ -47,7 +47,7 @@
 </ng-template>
 
 <div class="modal fade" bsModal #createModal="bs-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="create-role-modal-title" class="modal-title pull-left">Create New Role</h4>
@@ -76,6 +76,45 @@
             <input type="text" class="form-control form-control-lg form-control-solid" formControlName="description" />
           </div>
         </form>
+
+        <div class="separator separator-dashed my-6"></div>
+        <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Permissions</label>
+        <div class="tree tree-line">
+          <div class="tree-node" *ngFor="let node of createPermTree">
+            <div class="tree-content">
+              <div class="tree-section">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="checkbox"
+                    [id]="'create-perm-' + node.value"
+                    [checked]="node.checked"
+                    [indeterminate]="node.indeterminate"
+                    (change)="onPermNodeChange(node, $event)" />
+                  <label class="form-check-label fw-semibold" [for]="'create-perm-' + node.value">
+                    {{ node.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="tree-sub" [hidden]="node.collapsed">
+              <div class="tree-node" *ngFor="let child of node.children">
+                <div class="tree-content">
+                  <div class="tree-section">
+                    <div class="form-check mb-0">
+                      <input class="form-check-input" type="checkbox"
+                        [id]="'create-perm-' + child.value"
+                        [checked]="child.checked"
+                        (change)="onPermChildChange(child, node, $event)" />
+                      <label class="form-check-label" [for]="'create-perm-' + child.value">
+                        {{ child.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center pt-10">
           <button type="reset" class="btn btn-light me-3" (click)="createForm.reset(); createModal.hide()">
             Discard
@@ -94,7 +133,7 @@
 </div>
 
 <div class="modal fade" bsModal #updateModal="bs-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="update-role-modal-title" class="modal-title pull-left">Update Role</h4>
@@ -123,6 +162,45 @@
             <input type="text" class="form-control form-control-lg form-control-solid" formControlName="description" />
           </div>
         </form>
+
+        <div class="separator separator-dashed my-6"></div>
+        <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Permissions</label>
+        <div class="tree tree-line">
+          <div class="tree-node" *ngFor="let node of updatePermTree">
+            <div class="tree-content">
+              <div class="tree-section">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="checkbox"
+                    [id]="'update-perm-' + node.value"
+                    [checked]="node.checked"
+                    [indeterminate]="node.indeterminate"
+                    (change)="onPermNodeChange(node, $event)" />
+                  <label class="form-check-label fw-semibold" [for]="'update-perm-' + node.value">
+                    {{ node.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="tree-sub" [hidden]="node.collapsed">
+              <div class="tree-node" *ngFor="let child of node.children">
+                <div class="tree-content">
+                  <div class="tree-section">
+                    <div class="form-check mb-0">
+                      <input class="form-check-input" type="checkbox"
+                        [id]="'update-perm-' + child.value"
+                        [checked]="child.checked"
+                        (change)="onPermChildChange(child, node, $event)" />
+                      <label class="form-check-label" [for]="'update-perm-' + child.value">
+                        {{ child.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center pt-10">
           <button type="reset" class="btn btn-light me-3" (click)="updateForm.reset(); updateModal.hide()">
             Discard

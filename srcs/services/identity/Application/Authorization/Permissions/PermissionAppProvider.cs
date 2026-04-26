@@ -31,7 +31,7 @@ public class PermissionAppProvider : BaseAppProvider
                 {
                     Constants.Permissions.Tenancy,
                     new PermissionModel(
-                        permissionName: "Multi-tenancy management",
+                        permissionName: "Tenant management",
                         permission: Constants.Permissions.Tenancy,
                         parentPermission: Constants.Permissions.None,
                         tenancySide: TenancySides.Host)
@@ -39,7 +39,7 @@ public class PermissionAppProvider : BaseAppProvider
                 {
                     Constants.Permissions.Tenancy_Read,
                     new PermissionModel(
-                        permissionName: "Multi-tenancy read",
+                        permissionName: "Tenant read",
                         permission: Constants.Permissions.Tenancy_Read,
                         parentPermission: Constants.Permissions.Tenancy,
                         tenancySide: TenancySides.Host)
@@ -47,7 +47,7 @@ public class PermissionAppProvider : BaseAppProvider
                 {
                     Constants.Permissions.Tenancy_Write,
                     new PermissionModel(
-                        permissionName: "Multi-tenancy write",
+                        permissionName: "Tenant write",
                         permission: Constants.Permissions.Tenancy_Write,
                         parentPermission: Constants.Permissions.Tenancy,
                         tenancySide: TenancySides.Host)
