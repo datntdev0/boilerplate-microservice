@@ -22,5 +22,7 @@
     "[scss]": {
         "editor.tabSize": 4
     },
-    "workbench.browser.enableChatTools": true
+    "chat.tools.terminal.autoApprove": {
+        "npm run test:ci": true
+    },
 }
