@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { User } from 'oidc-client-ts';
-import { AuthService } from './auth-service';
+import { AuthService } from './auth.service';
 
 // Use vi.hoisted to ensure these are available in the mock factory
 const { mockEvents, MockUserManager } = vi.hoisted(() => {

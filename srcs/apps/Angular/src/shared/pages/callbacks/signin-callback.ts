@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@shared/services/auth-service';
-import { LoggerService } from '@shared/services/logger-service';
+import { AuthService } from '@shared/services/auth.service';
+import { LoggerService } from '@shared/services/logger.service';
 
 @Component({
   selector: 'app-signin-callback',

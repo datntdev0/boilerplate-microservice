@@ -4,7 +4,7 @@ import { APPLICATION, NAVBAR_MENU } from '@shared/models/constants';
 import { MenuSection } from '@shared/models/menu';
 import { HeaderComponent } from './header/header';
 import { SidebarComponent } from './sidebar/sidebar';
-import { AuthService } from '@shared/services/auth-service';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'main-layout',

@@ -5,7 +5,7 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { DatatableComponent } from './datatable/datatable';
 import { DialogComponent } from './dialog/dialog';
 import { PaginatorComponent } from './paginator/paginator';
-import { DialogService } from './dialog/dialog-service';
+import { DialogService } from './dialog/dialog.service';
 
 @NgModule({
   declarations: [

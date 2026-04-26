@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
-import { ToastService, ToastConfig } from './toast-service';
+import { ToastService, ToastConfig } from './toast.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 

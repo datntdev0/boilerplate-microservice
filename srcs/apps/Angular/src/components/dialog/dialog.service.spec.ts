@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
-import { DialogService } from './dialog-service';
+import { DialogService } from './dialog.service';
 import { DialogComponent } from './dialog';
 
 interface DialogConfigWithCallbacks {

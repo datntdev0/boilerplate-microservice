@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { AuthService } from '@shared/services/auth-service';
-import { LoggerService } from '@shared/services/logger-service';
+import { AuthService } from '@shared/services/auth.service';
+import { LoggerService } from '@shared/services/logger.service';
 
 /**
  * Auth Guard - Protects routes that require authentication

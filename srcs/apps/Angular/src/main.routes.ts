@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@shared/guards/auth-guard';
+import { authGuard } from '@shared/guards/auth.guard';
 import { SigninCallbackPage } from '@shared/pages/callbacks/signin-callback';
 import { ErrorLayout } from './layout/error-layout';
 import { MainLayout } from './layout/main-layout';

@@ -1,4 +1,4 @@
-import { LoggerService } from './logger-service';
+import { LoggerService } from './logger.service';
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 
 describe('Services.LoggerService', () => {

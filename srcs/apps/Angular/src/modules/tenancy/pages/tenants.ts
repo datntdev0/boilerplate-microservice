@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatatableColumn } from '@components/datatable/datatable';
-import { DialogService } from '@components/dialog/dialog-service';
+import { DialogService } from '@components/dialog/dialog.service';
 import { Datatable } from '@shared/models/datatable';
 import { LocalDateTimePipe } from '@shared/pipes/local-datetime.pipe';
 import { SrvAdminClientProxy, TenantCreateDto, TenantListDto, TenantUpdateDto } from '@shared/proxies/srv-admin-proxies';

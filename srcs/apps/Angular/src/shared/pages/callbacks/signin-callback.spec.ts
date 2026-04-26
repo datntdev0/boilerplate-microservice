@@ -4,8 +4,8 @@ import { provideRouter } from '@angular/router';
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 
 import { SigninCallbackPage } from './signin-callback';
-import { AuthService } from '@shared/services/auth-service';
-import { LoggerService } from '@shared/services/logger-service';
+import { AuthService } from '@shared/services/auth.service';
+import { LoggerService } from '@shared/services/logger.service';
 import { MockLoggerService } from 'src/testing';
 
 describe('Pages.SigninCallback', () => {

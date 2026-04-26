@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
-import { DialogService } from '@components/dialog/dialog-service';
+import { DialogService } from '@components/dialog/dialog.service';
 import { PaginatedResultOfTenantListDto, SrvAdminClientProxy, TenantListDto } from '@shared/proxies/srv-admin-proxies';
 import { of, throwError } from 'rxjs';
 import { TenancyModule } from '../tenancy.module';

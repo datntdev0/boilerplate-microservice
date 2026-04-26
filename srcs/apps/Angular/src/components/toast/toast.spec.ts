@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { ToastComponent } from './toast';
-import { ToastService } from './toast-service';
+import { ToastService } from './toast.service';
 
 describe('Components.Toast', () => {
   let component: ToastComponent;
