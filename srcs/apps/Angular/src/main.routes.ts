@@ -19,6 +19,7 @@ export const routes: Routes = [
     path: 'app', component: MainLayout, canActivate: [authGuard], children: [
       { path: 'dashboard', loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
       { path: 'tenancy', loadChildren: () => import('./modules/tenancy/tenancy.module').then(m => m.TenancyModule) },
+      { path: 'authorization', loadChildren: () => import('./modules/authorization/authorization.module').then(m => m.AuthorizationModule) },
     ]
   },
   { path: 'auth/callback', component: SigninCallbackPage },
