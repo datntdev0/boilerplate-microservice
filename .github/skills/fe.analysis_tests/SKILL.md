@@ -3,7 +3,7 @@ name: fe.analysis_tests
 description: Analysis and provide insight for frontend test coverage and suggest test cases to implement.
 ---
 
-# PROMPT - Frontend Test Analysis and Suggestions
+# SKILL - Frontend Test Analysis and Suggestions
 
 This prompt is designed to ONLY perform:
   1. Run the frontend unit test and generate coverage report.

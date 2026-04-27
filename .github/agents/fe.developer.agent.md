@@ -21,7 +21,3 @@ This agent is responsible for implementing frontend features and writing unit te
 
 1. **Perform Tasks**: The agent will perform the tasks based on the user request and the defined capabilities. The agent will execute the corresponding prompt for each task.
 
-## References
-
-- [Project Guidelines](../../AGENTS.md)
-- [Frontend Unit Test Conventions](../instructions/fe.test.instructions.md)

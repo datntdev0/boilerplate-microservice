@@ -3,7 +3,7 @@ name: fe.write_tests
 description: Implement frontend unit tests for Angular components and pages using Vitest.
 ---
 
-# PROMPT - Frontend Test Implementation
+# SKILL - Frontend Test Implementation
 
 This prompt is designed to ONLY perform:
   1. Determine test cases for user requested components or pages.
