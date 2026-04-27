@@ -23,7 +23,7 @@ export class SrvIdentityClientProxy {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL_IDENTITY) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://localhost:7121/srv-identity";
+        this.baseUrl = baseUrl ?? "https://localhost:7003/";
     }
 
     /**
@@ -1316,6 +1316,10 @@ export interface IRoleDto {
 export class RoleListDto implements IRoleListDto {
     name?: string;
     description?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;
@@ -1337,6 +1341,10 @@ export class RoleListDto implements IRoleListDto {
             }
             this.name = _data["name"];
             this.description = _data["description"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.createdBy = _data["createdBy"];
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
+            this.updatedBy = _data["updatedBy"];
             this.id = _data["id"];
         }
     }
@@ -1356,6 +1364,10 @@ export class RoleListDto implements IRoleListDto {
         }
         data["name"] = this.name;
         data["description"] = this.description;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["createdBy"] = this.createdBy;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
+        data["updatedBy"] = this.updatedBy;
         data["id"] = this.id;
         return data;
     }
@@ -1364,6 +1376,10 @@ export class RoleListDto implements IRoleListDto {
 export interface IRoleListDto {
     name?: string;
     description?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;
@@ -1724,6 +1740,10 @@ export interface IUserDto {
 export class UserListDto implements IUserListDto {
     firstName?: string;
     lastName?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;
@@ -1745,6 +1765,10 @@ export class UserListDto implements IUserListDto {
             }
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.createdBy = _data["createdBy"];
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
+            this.updatedBy = _data["updatedBy"];
             this.id = _data["id"];
         }
     }
@@ -1764,6 +1788,10 @@ export class UserListDto implements IUserListDto {
         }
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["createdBy"] = this.createdBy;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
+        data["updatedBy"] = this.updatedBy;
         data["id"] = this.id;
         return data;
     }
@@ -1772,6 +1800,10 @@ export class UserListDto implements IUserListDto {
 export interface IUserListDto {
     firstName?: string;
     lastName?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;

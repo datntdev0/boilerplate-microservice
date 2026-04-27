@@ -23,7 +23,7 @@ export class SrvAdminClientProxy {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL_ADMIN) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://localhost:7121/srv-admin";
+        this.baseUrl = baseUrl ?? "https://localhost:7039/";
     }
 
     /**
@@ -698,6 +698,10 @@ export interface ITenantDto {
 export class TenantListDto implements ITenantListDto {
     name?: string;
     organization?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;
@@ -719,6 +723,10 @@ export class TenantListDto implements ITenantListDto {
             }
             this.name = _data["name"];
             this.organization = _data["organization"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.createdBy = _data["createdBy"];
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
+            this.updatedBy = _data["updatedBy"];
             this.id = _data["id"];
         }
     }
@@ -738,6 +746,10 @@ export class TenantListDto implements ITenantListDto {
         }
         data["name"] = this.name;
         data["organization"] = this.organization;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["createdBy"] = this.createdBy;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
+        data["updatedBy"] = this.updatedBy;
         data["id"] = this.id;
         return data;
     }
@@ -746,6 +758,10 @@ export class TenantListDto implements ITenantListDto {
 export interface ITenantListDto {
     name?: string;
     organization?: string;
+    createdAt?: Date | undefined;
+    createdBy?: string | undefined;
+    updatedAt?: Date | undefined;
+    updatedBy?: string | undefined;
     id?: number;
 
     [key: string]: any;
