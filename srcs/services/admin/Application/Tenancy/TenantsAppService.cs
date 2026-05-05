@@ -34,12 +34,12 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .ProjectToType<TenantListDto>()
             .ToListAsync();
+
         return new PaginatedResult<TenantListDto>()
         {
             Total = total,
-            Items = items,
+            Items = items.Adapt<List<TenantListDto>>(),
             Limit = request.Limit,
             Offset = request.Offset
         };

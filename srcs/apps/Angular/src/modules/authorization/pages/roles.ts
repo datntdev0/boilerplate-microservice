@@ -139,6 +139,7 @@ export class RolesPage implements OnInit, AfterViewInit {
 
     this.isLoadingSignal.set(true);
     const data = new RoleUpdateDto({
+      id: this.editingRole.id,
       name: this.updateForm.value.name,
       description: this.updateForm.value.description,
       permissions: this.permissionSrv.extractPermissions(this.updatePermTree),

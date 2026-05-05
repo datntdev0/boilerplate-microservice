@@ -121,6 +121,7 @@ export class UsersPage implements OnInit, AfterViewInit {
 
     this.isLoadingSignal.set(true);
     const data = new UserUpdateDto({
+      id: this.editingUser.id,
       firstName: this.updateForm.value.firstName,
       lastName: this.updateForm.value.lastName,
     });

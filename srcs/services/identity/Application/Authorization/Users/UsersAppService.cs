@@ -38,12 +38,12 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .ProjectToType<UserListDto>()
             .ToListAsync();
+
         return new PaginatedResult<UserListDto>()
         {
             Total = total,
-            Items = items,
+            Items = items.Adapt<List<UserListDto>>(),
             Limit = request.Limit,
             Offset = request.Offset
         };

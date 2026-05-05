@@ -34,12 +34,12 @@ public class RolesAppService(IServiceProvider services) : BaseAppService, IRoles
         var items = await _manager.Queryable
             .Skip(request.Offset)
             .Take(request.Limit)
-            .ProjectToType<RoleListDto>()
             .ToListAsync();
+
         return new PaginatedResult<RoleListDto>()
         {
             Total = total,
-            Items = items,
+            Items = items.Adapt<List<RoleListDto>>(),
             Limit = request.Limit,
             Offset = request.Offset
         };

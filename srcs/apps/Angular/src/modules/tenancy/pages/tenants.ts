@@ -121,6 +121,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
 
     this.isLoadingSignal.set(true);
     const data = new TenantUpdateDto({
+      id: this.editingTenant.id,
       name: this.updateForm.value.name,
       organization: this.updateForm.value.organization,
     });
