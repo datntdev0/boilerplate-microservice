@@ -1,0 +1,35 @@
+<div class="tree tree-line">
+  <div class="tree-node" *ngFor="let node of permissionTree">
+    <div class="tree-content">
+      <div class="tree-section">
+        <div class="form-check mb-0">
+          <input class="form-check-input" type="checkbox"
+            [id]="idPrefix + '-' + node.value"
+            [checked]="node.checked"
+            [indeterminate]="node.indeterminate"
+            (change)="onNodeChange(node, $event)" />
+          <label class="form-check-label fw-semibold" [for]="idPrefix + '-' + node.value">
+            {{ node.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="tree-sub" [hidden]="node.collapsed">
+      <div class="tree-node" *ngFor="let child of node.children">
+        <div class="tree-content">
+          <div class="tree-section">
+            <div class="form-check mb-0">
+              <input class="form-check-input" type="checkbox"
+                [id]="idPrefix + '-' + child.value"
+                [checked]="child.checked"
+                (change)="onChildChange(child, node, $event)" />
+              <label class="form-check-label" [for]="idPrefix + '-' + child.value">
+                {{ child.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,8 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { DatatableComponent } from './datatable/datatable';
 import { DialogComponent } from './dialog/dialog';
 import { PaginatorComponent } from './paginator/paginator';
+import { SelectorPermissionsComponent } from './selector-permissions/selector-permissions';
+import { SelectorRolesComponent } from './selector-roles/selector-roles';
 import { DialogService } from './dialog/dialog.service';
 
 @NgModule({
@@ -12,6 +14,8 @@ import { DialogService } from './dialog/dialog.service';
     DatatableComponent,
     PaginatorComponent,
     DialogComponent,
+    SelectorPermissionsComponent,
+    SelectorRolesComponent,
   ],
   imports: [
     CommonModule,
@@ -22,6 +26,8 @@ import { DialogService } from './dialog/dialog.service';
     DatatableComponent,
     PaginatorComponent,
     DialogComponent,
+    SelectorPermissionsComponent,
+    SelectorRolesComponent,
     ModalModule,
   ],
   providers: [

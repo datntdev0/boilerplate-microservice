@@ -1,0 +1,12 @@
+<div class="d-flex flex-column gap-2">
+  <div class="form-check" *ngFor="let role of roles">
+    <input class="form-check-input" type="checkbox"
+      [id]="idPrefix + '-' + role.id"
+      [checked]="isSelected(role.id)"
+      (change)="onRoleToggle(role.id!, $any($event.target).checked)" />
+    <label class="form-check-label" [for]="idPrefix + '-' + role.id">
+      {{ role.name }}
+      <span class="text-muted ms-1" *ngIf="role.description">({{ role.description }})</span>
+    </label>
+  </div>
+</div>

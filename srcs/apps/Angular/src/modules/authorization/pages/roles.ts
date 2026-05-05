@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatatableColumn } from '@components/datatable/datatable';
 import { DialogService } from '@components/dialog/dialog.service';
@@ -17,6 +17,7 @@ export class RolesPage implements OnInit, AfterViewInit {
   private readonly dialogSrv = inject(DialogService);
   private readonly fb = inject(FormBuilder);
   private readonly permissionSrv = inject(PermissionService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly dateTimePipe = new DateTimePipe();
 
   public datatableSignal = signal(new Datatable<RoleListDto>());
@@ -100,6 +101,7 @@ export class RolesPage implements OnInit, AfterViewInit {
     this.editingRole = await this.clientIdentitySrv.roles_Get(item.id).toPromise();
     this.updateForm.patchValue({ name: item.name, description: item.description });
     this.updatePermTree = this.permissionSrv.buildTree(this.editingRole!.permissions ?? []);
+    this.cdr.detectChanges();
     modal.show();
   }
 
@@ -158,16 +160,6 @@ export class RolesPage implements OnInit, AfterViewInit {
           throw err;
         }
       });
-  }
-
-  protected onPermNodeChange(node: PermissionNode, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.permissionSrv.onNodeChange(node, checked);
-  }
-
-  protected onPermChildChange(child: PermissionNode, parent: PermissionNode, event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.permissionSrv.onChildChange(child, parent, checked);
   }
 
   protected onDelete(item: any): void {

@@ -17,7 +17,7 @@
           <i class="bi bi-box-arrow-up"></i> Export
         </button>
 
-        <button type="button" class="btn btn-primary" (click)="createModal.show()">
+        <button type="button" class="btn btn-primary" (click)="onShowCreate(createModal)">
           <i class="bi bi-plus-square-fill"></i> New User
         </button>
       </div>
@@ -47,7 +47,7 @@
 </ng-template>
 
 <div class="modal fade" bsModal #createModal="bs-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="create-user-modal-title" class="modal-title pull-left">Create New User</h4>
@@ -82,6 +82,27 @@
             </div>
           </div>
         </form>
+
+        <div class="separator separator-dashed my-6"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Assign Roles</label>
+            <app-selector-roles
+              [roles]="allRolesSignal().items"
+              [selectedRoleIds]="selectedRoleIds"
+              [idPrefix]="'create-role'"
+              (roleToggle)="onRoleToggle($event.roleId, $event.checked)">
+            </app-selector-roles>
+          </div>
+          <div class="col-md-6">
+            <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Direct Permissions</label>
+            <app-selector-permissions
+              [permissionTree]="createPermTree"
+              [idPrefix]="'create-user-perm'">
+            </app-selector-permissions>
+          </div>
+        </div>
+
         <div class="text-center pt-10">
           <button type="reset" class="btn btn-light me-3" (click)="createForm.reset(); createModal.hide()">
             Discard
@@ -100,7 +121,7 @@
 </div>
 
 <div class="modal fade" bsModal #updateModal="bs-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 id="update-user-modal-title" class="modal-title pull-left">Update User</h4>
@@ -135,6 +156,27 @@
             </div>
           </div>
         </form>
+
+        <div class="separator separator-dashed my-6"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Assign Roles</label>
+            <app-selector-roles
+              [roles]="allRolesSignal().items"
+              [selectedRoleIds]="selectedRoleIds"
+              [idPrefix]="'update-role'"
+              (roleToggle)="onRoleToggle($event.roleId, $event.checked)">
+            </app-selector-roles>
+          </div>
+          <div class="col-md-6">
+            <label class="d-flex align-items-center fs-5 fw-semibold mb-3">Direct Permissions</label>
+            <app-selector-permissions
+              [permissionTree]="updatePermTree"
+              [idPrefix]="'update-user-perm'">
+            </app-selector-permissions>
+          </div>
+        </div>
+
         <div class="text-center pt-10">
           <button type="reset" class="btn btn-light me-3" (click)="updateForm.reset(); updateModal.hide()">
             Discard

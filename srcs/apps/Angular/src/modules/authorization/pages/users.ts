@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatatableColumn } from '@components/datatable/datatable';
 import { DialogService } from '@components/dialog/dialog.service';
 import { Datatable } from '@shared/models/datatable';
 import { DateTimePipe } from '@shared/pipes/datetime.pipe';
-import { SrvIdentityClientProxy, UserCreateDto, UserListDto, UserUpdateDto } from '@shared/proxies/srv-identity-proxies';
+import { PermissionNode, PermissionService } from '@shared/services/permission.service';
+import { RoleListDto, SrvIdentityClientProxy, UserCreateDto, UserListDto, UserUpdateDto } from '@shared/proxies/srv-identity-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -15,14 +16,20 @@ export class UsersPage implements OnInit, AfterViewInit {
   private readonly clientIdentitySrv = inject(SrvIdentityClientProxy);
   private readonly dialogSrv = inject(DialogService);
   private readonly fb = inject(FormBuilder);
+  private readonly permissionSrv = inject(PermissionService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly dateTimePipe = new DateTimePipe();
 
   public datatableSignal = signal(new Datatable<UserListDto>());
+  public allRolesSignal = signal(new Datatable<RoleListDto>());
   public isLoadingSignal = signal(false);
 
   editingUser: any = null;
   createForm!: FormGroup;
   updateForm!: FormGroup;
+  createPermTree: PermissionNode[] = [];
+  updatePermTree: PermissionNode[] = [];
+  selectedRoleIds: number[] = [];
 
   columns: DatatableColumn[] = [
     {
@@ -56,16 +63,26 @@ export class UsersPage implements OnInit, AfterViewInit {
       lastName: ['', [Validators.required, Validators.minLength(3)]],
     });
 
-    this.clientIdentitySrv.users_GetAll(0, 10).subscribe(
-      users => {
-        this.datatableSignal.set(new Datatable<UserListDto>(users));
-        setTimeout(() => this.initializeTooltips(), 0);
+    this.loadUsers();
+
+    this.clientIdentitySrv.roles_GetAll(0, 100).subscribe(
+      roles => {
+        this.allRolesSignal.set(new Datatable<RoleListDto>(roles));
       }
     );
   }
 
   ngAfterViewInit(): void {
     this.initializeTooltips();
+  }
+
+  private loadUsers(): void {
+    this.clientIdentitySrv.users_GetAll(0, 10).subscribe(
+      users => {
+        this.datatableSignal.set(new Datatable<UserListDto>(users));
+        setTimeout(() => this.initializeTooltips(), 0);
+      }
+    );
   }
 
   private renderDateColumn(date: Date | string | null | undefined): string {
@@ -86,6 +103,12 @@ export class UsersPage implements OnInit, AfterViewInit {
     });
   }
 
+  protected onShowCreate(modal: ModalDirective): void {
+    this.createPermTree = this.permissionSrv.buildTree([]);
+    this.selectedRoleIds = [];
+    modal.show();
+  }
+
   protected onCreate(modal: ModalDirective): void {
     if (this.createForm.invalid) {
       this.createForm.markAllAsTouched();
@@ -96,6 +119,8 @@ export class UsersPage implements OnInit, AfterViewInit {
     const data = new UserCreateDto({
       firstName: this.createForm.value.firstName,
       lastName: this.createForm.value.lastName,
+      roleIds: this.selectedRoleIds,
+      permissions: this.permissionSrv.extractPermissions(this.createPermTree),
     });
 
     this.clientIdentitySrv.users_Create(data)
@@ -103,7 +128,7 @@ export class UsersPage implements OnInit, AfterViewInit {
         next: () => {
           this.createForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.loadUsers();
           modal.hide();
         },
         error: (err) => {
@@ -124,6 +149,8 @@ export class UsersPage implements OnInit, AfterViewInit {
       id: this.editingUser.id,
       firstName: this.updateForm.value.firstName,
       lastName: this.updateForm.value.lastName,
+      roleIds: this.selectedRoleIds,
+      permissions: this.permissionSrv.extractPermissions(this.updatePermTree),
     });
 
     this.clientIdentitySrv.users_Update(this.editingUser.id, data)
@@ -131,7 +158,7 @@ export class UsersPage implements OnInit, AfterViewInit {
         next: () => {
           this.updateForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.loadUsers();
           modal.hide();
         },
         error: (err) => {
@@ -141,10 +168,23 @@ export class UsersPage implements OnInit, AfterViewInit {
       });
   }
 
-  protected onEdit(item: any, modal: ModalDirective): void {
-    this.editingUser = item;
-    this.updateForm.patchValue({ firstName: item.firstName, lastName: item.lastName });
+  protected async onEdit(item: any, modal: ModalDirective): Promise<void> {
+    this.editingUser = await this.clientIdentitySrv.users_Get(item.id).toPromise();
+    this.updateForm.patchValue({ firstName: this.editingUser!.firstName, lastName: this.editingUser!.lastName });
+    this.selectedRoleIds = this.editingUser!.roles?.map((r: any) => r.id) ?? [];
+    this.updatePermTree = this.permissionSrv.buildTree(this.editingUser!.permissions ?? []);
+    this.cdr.detectChanges();
     modal.show();
+  }
+
+  protected onRoleToggle(roleId: number, checked: boolean): void {
+    if (checked) {
+      if (!this.selectedRoleIds.includes(roleId)) {
+        this.selectedRoleIds.push(roleId);
+      }
+    } else {
+      this.selectedRoleIds = this.selectedRoleIds.filter(id => id !== roleId);
+    }
   }
 
   protected onDelete(item: any): void {
@@ -153,7 +193,7 @@ export class UsersPage implements OnInit, AfterViewInit {
         if (!confirmed) return;
 
         this.clientIdentitySrv.users_Delete(item.id)
-          .subscribe({ next: () => this.ngOnInit() });
+          .subscribe({ next: () => this.loadUsers() });
       });
   }
 }
