@@ -22,9 +22,11 @@ public class Startup : WebStartup<MicroserviceInfraGatewayModule>
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
+
         app.UseAuthorization();
 
-        app.MapReverseProxy();
+        app.MapReverseProxy().RequireAuthorization();
 
         app.MapDefaultHealthChecks();
     }
