@@ -24,4 +24,10 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
         var user = await _manager.SignupAsync(request.Email, request.Password, request.FirstName, request.LastName);
         return Map<UserDto>(user);
     }
+
+    [Route("session")]
+    public Task GetSessionAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

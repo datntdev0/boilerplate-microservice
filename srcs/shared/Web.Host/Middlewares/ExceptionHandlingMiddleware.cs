@@ -29,6 +29,7 @@ internal class ExceptionHandlingMiddleware(RequestDelegate next)
         {
             ExceptionNotFound => (int)HttpStatusCode.NotFound,
             ValidationException => (int)HttpStatusCode.BadRequest,
+            ExceptionUnauthorized => (int)HttpStatusCode.Unauthorized,
             _ => (int)HttpStatusCode.InternalServerError
         };
 

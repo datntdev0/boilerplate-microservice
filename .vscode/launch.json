@@ -11,6 +11,18 @@
             "projectPath": "${workspaceFolder}/srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj"
         },
         {
+            "name": "C#: Srv.Admin Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/srcs/services/admin/Web.Host/datntdev.Microservice.Srv.Admin.Web.Host.csproj"
+        },
+        {
+            "name": "C#: Srv.Identity Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/srcs/services/identity/Web.Host/datntdev.Microservice.Srv.Identity.Web.Host.csproj"
+        },
+        {
             "request": "launch",
             "name": "Debug Angular App (Edge)",
             "type": "msedge",

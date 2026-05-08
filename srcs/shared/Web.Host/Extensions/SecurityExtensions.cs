@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Validation.AspNetCore;
 
 namespace datntdev.Microservice.Shared.Web.Host.Extensions;
 
@@ -8,6 +9,24 @@ public static class SecurityExtensions
     public static IServiceCollection AddDefaultSecurity(this IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddCorsPolicy(configs);
+        return services;
+    }
+
+    public static IServiceCollection AddOpenIddictJwtValidation(this IServiceCollection services, IConfigurationRoot configs)
+    {
+        var authority = configs["OpenIddict:Authority"];
+        ArgumentException.ThrowIfNullOrEmpty(authority);
+
+        services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+
+        services.AddOpenIddict()
+            .AddValidation(options =>
+            {
+                options.SetIssuer(authority);
+                options.UseSystemNetHttp();
+                options.UseAspNetCore();
+            });
+
         return services;
     }
 

@@ -8,13 +8,19 @@ public class Startup : WebStartup<MicroserviceSrvPaymentWebHostModule>
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultServices(configs);
+        services.AddOpenIddictJwtValidation(configs);
+        services.AddServiceControllers(_modules);
         services.AddControllers();
         services.AddOpenApi();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
     {
+        app.UseDefaultMiddlewares();
+      
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

@@ -1,4 +1,6 @@
 ﻿using datntdev.Microservice.Shared.Common.Application;
+using datntdev.Microservice.Shared.Common.Authorization;
+using datntdev.Microservice.Shared.Common.Extensions;
 using datntdev.Microservice.Shared.Common.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
@@ -37,6 +39,10 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 404));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 409));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 500));
+
+                // Check for AppAuthorizationAttribute on interface method
+                var authorizationAttribute = GetAuthorizationAttributeFromInterface(action);
+                action.Filters.AddIf(authorizationAttribute != null, authorizationAttribute!);
             }
         }
     }
@@ -116,6 +122,40 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
             return "POST";
 
         throw new InvalidOperationException($"No conventional HTTP verb found for action '{actionName}'");
+    }
+
+    private static AppAuthorizationAttribute? GetAuthorizationAttributeFromInterface(ActionModel action)
+    {
+        var controllerType = action.Controller.ControllerType;
+        var actionMethod = action.ActionMethod;
+
+        // Get all interfaces implemented by the controller that inherit from IAppService
+        var interfaces = controllerType.GetInterfaces()
+            .Where(i => i.IsAssignableTo(typeof(IAppService)));
+
+        foreach (var interfaceType in interfaces)
+        {
+            // Get the interface map to match concrete method to interface method
+            var interfaceMap = controllerType.GetInterfaceMap(interfaceType);
+
+            for (int i = 0; i < interfaceMap.TargetMethods.Length; i++)
+            {
+                // Check if this is the matching method
+                if (interfaceMap.TargetMethods[i] == actionMethod)
+                {
+                    // Found the matching interface method, check for the attribute
+                    var interfaceMethod = interfaceMap.InterfaceMethods[i];
+                    var authAttribute = interfaceMethod.GetCustomAttribute<AppAuthorizationAttribute>();
+
+                    if (authAttribute != null)
+                    {
+                        return authAttribute;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     [GeneratedRegex("([a-z])([A-Z])")]
