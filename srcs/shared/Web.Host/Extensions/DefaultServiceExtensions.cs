@@ -21,6 +21,7 @@ public static class DefaultServiceExtensions
         services.AddDefaultOpenTelemetry();
         services.AddDefaultServiceDiscovery(configs);
         services.AddDefaultHealthChecks();
+        services.AddHttpContextAccessor();
         return services;
     }
 

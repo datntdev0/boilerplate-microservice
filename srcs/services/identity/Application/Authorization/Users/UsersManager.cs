@@ -11,8 +11,20 @@ public class UsersManager(IServiceProvider services)
     public override async Task<UserEntity> GetAsync(long id)
     {
         var entity = await _dbContext.AppUsers
+            .Where(x => x.Id == id)
             .Include(x => x.Roles)
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .Include(x => x.Identities)
+            .FirstOrDefaultAsync();
+        return entity is null ? throw new ExceptionNotFound() : entity;
+    }
+
+    public async Task<UserEntity> GetAsync(string emailAddress)
+    {
+        var entity = await _dbContext.AppUsers
+            .Where(x => x.Identities.Any(i => i.EmailAddress == emailAddress))
+            .Include(x => x.Roles)
+            .Include(x => x.Identities)
+            .FirstOrDefaultAsync();
         return entity is null ? throw new ExceptionNotFound() : entity;
     }
 

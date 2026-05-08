@@ -1,15 +1,21 @@
 using datntdev.Microservice.Shared.Application.Services;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Identities;
 
 public class IdentitiesAppService(IServiceProvider services) : BaseAppService, IIdentitiesAppService
 {
     private readonly IdentitiesManager _manager = services.GetRequiredService<IdentitiesManager>();
+    private readonly UsersManager _userManager = services.GetRequiredService<UsersManager>();
+    private readonly HttpContext _httpContext = services.GetRequiredService<IHttpContextAccessor>().HttpContext!;
 
     [Route("signin")]
     public async Task<UserDto> CreateSigninAsync(SigninDto request)
@@ -26,8 +32,16 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
     }
 
     [Route("session")]
-    public Task GetSessionAsync()
+    public async Task<SessionDto> GetSessionAsync()
     {
-        throw new NotImplementedException();
+        if (_httpContext.User.Identity?.IsAuthenticated ?? false)
+        {
+            var emailAddress = _httpContext.User.GetClaim(Claims.Email);
+            if (string.IsNullOrEmpty(emailAddress)) return new SessionDto();
+
+            var userEntity = await _userManager.GetAsync(emailAddress);
+            return new SessionDto() { User = Map<SessionUserDto>(userEntity) };
+        }
+        return new SessionDto();
     }
 }

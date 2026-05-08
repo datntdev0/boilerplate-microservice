@@ -25,6 +25,7 @@ public class AppStartup<TBootstrapModule> : IBaseStartup
 
         _modules.ForEach(module => module.ConfigureServices(builder.Services, builder.Configuration));
         _modules.ForEach(module => builder.Services.AddDefaultAppServices(module));
+        _modules.ForEach(module => builder.Services.AddMapsterRegisters(module));
         var app = builder.Build();
         return app;
     }
@@ -63,6 +64,7 @@ public class WebStartup<TBootstrapModule> : AppStartup<TBootstrapModule>
 
         _modules.ForEach(module => module.ConfigureServices(builder.Services, builder.Configuration));
         _modules.ForEach(module => builder.Services.AddDefaultAppServices(module));
+        _modules.ForEach(module => builder.Services.AddMapsterRegisters(module));
         this.ConfigureServices(builder.Services, builder.Configuration);
         var app = builder.Build();
 

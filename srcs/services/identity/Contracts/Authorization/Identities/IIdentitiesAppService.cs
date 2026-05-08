@@ -1,5 +1,4 @@
 using datntdev.Microservice.Shared.Common.Application;
-using datntdev.Microservice.Shared.Common.Authorization;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
 
@@ -9,7 +8,5 @@ public interface IIdentitiesAppService : IAppService
 {
     Task<UserDto> CreateSigninAsync(SigninDto request);
     Task<UserDto> CreateSignupAsync(SignupDto request);
-    
-    [AppAuthorization]
-    Task GetSessionAsync();
+    Task<SessionDto> GetSessionAsync();
 }

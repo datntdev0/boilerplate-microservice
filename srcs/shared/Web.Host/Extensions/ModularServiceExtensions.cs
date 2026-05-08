@@ -2,6 +2,7 @@
 using datntdev.Microservice.Shared.Common.Modular;
 using datntdev.Microservice.Shared.Web.Host.Providers;
 using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,12 @@ public static class ModularServiceExtensions
             .Where(t => t.IsClass && !t.IsAbstract && t.IsAssignableTo(typeof(IValidator)));
         validatorTypes.ToList().ForEach(type => services.AddScoped(type));
 
+        return services;
+    }
+
+    public static IServiceCollection AddMapsterRegisters(this IServiceCollection services, BaseModule module)
+    {
+        TypeAdapterConfig.GlobalSettings.Scan(module.GetType().Assembly);
         return services;
     }
 }

@@ -6,6 +6,8 @@ public class Constants
 {
     public class Application 
     {
+        public const string Name = "datntdev.Microservice";
+        public const string Version = "0.1.0";
         public const string AuthenticationScheme = "Cookies";
     }
 

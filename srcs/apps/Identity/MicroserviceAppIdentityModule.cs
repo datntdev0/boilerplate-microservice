@@ -50,7 +50,7 @@ internal static class MicroserviceAppIdentityModuleExtensions
                 options.DisableAccessTokenEncryption();
 
                 options
-                    .AddEphemeralSigningKey()
+                    .AddDevelopmentSigningCertificate()
                     .AddEncryptionKey(new SymmetricSecurityKey(encryptionKey));
 
                 options
