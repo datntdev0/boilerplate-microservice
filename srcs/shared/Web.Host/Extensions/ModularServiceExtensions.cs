@@ -1,7 +1,6 @@
 ﻿using datntdev.Microservice.Shared.Application.Authorization;
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Modular;
-using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Filters;
 using datntdev.Microservice.Shared.Web.Host.Providers;
 using FluentValidation;
@@ -20,7 +19,6 @@ public static class ModularServiceExtensions
         services.AddScoped<PropertyInjectionFilter>();
 
         // Register default app services from all modules
-        services.AddHttpProxyService();
         services.AddScoped<SessionAppProvider>();
         
         var controllerFeatureProvider = new AppServiceFeatureProvider();

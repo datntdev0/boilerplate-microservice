@@ -19,7 +19,7 @@ public static class DefaultServiceExtensions
     public static IServiceCollection AddDefaultServices(this IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultOpenTelemetry();
-        services.AddDefaultServiceDiscovery(configs);
+        services.AddDefaultServiceDiscovery();
         services.AddDefaultHealthChecks();
         services.AddHttpContextAccessor();
         return services;
@@ -52,7 +52,7 @@ public static class DefaultServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddDefaultServiceDiscovery(this IServiceCollection services, IConfigurationRoot configs)
+    public static IServiceCollection AddDefaultServiceDiscovery(this IServiceCollection services)
     {
         services.AddServiceDiscovery();
 
@@ -62,15 +62,6 @@ public static class DefaultServiceExtensions
             http.AddStandardResilienceHandler();
             // Turn on service discovery by default
             http.AddServiceDiscovery();
-        });
-
-        var httpClientSection = configs.GetSection("HttpClients");
-        httpClientSection.GetChildren().ToList().ForEach(kv =>
-        {
-            services.AddHttpClient(kv.Key, client =>
-            {
-                client.BaseAddress = new Uri(kv.Value!);
-            });
         });
 
         return services;

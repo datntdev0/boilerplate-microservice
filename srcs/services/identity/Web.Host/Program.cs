@@ -1,3 +1,4 @@
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Hosting;
 
@@ -8,6 +9,7 @@ public class Startup : WebStartup<MicroserviceSrvIdentityWebHostModule>
     public override void ConfigureServices(IServiceCollection services, IConfigurationRoot configs)
     {
         services.AddDefaultServices(configs);
+        services.AddHttpProxyService(configs);
         services.AddOpenIddictJwtValidation(configs);
         services.AddServiceControllers(_modules);
         services.AddControllers();

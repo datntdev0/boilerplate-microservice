@@ -1,4 +1,5 @@
 using datntdev.Microservice.Infra.Gateway.HealthChecks;
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Extensions;
 using datntdev.Microservice.Shared.Web.Host.Hosting;
 
@@ -12,6 +13,7 @@ public class Startup : WebStartup<MicroserviceInfraGatewayModule>
 
         services.AddDefaultServices(configs);
         services.AddDefaultSecurity(configs);
+        services.AddHttpProxyService(configs);
         services.AddReverseProxy().LoadFromConfig(yarpConfig).AddServiceDiscoveryDestinationResolver();
         services.AddHealthChecks().AddCheck<GatewayHealthCheck>("gateway_health_check", tags: ["alive"]);
     }

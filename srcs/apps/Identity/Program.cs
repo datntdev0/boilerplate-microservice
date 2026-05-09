@@ -11,10 +11,10 @@ internal class Startup : WebStartup<MicroserviceAppIdentityModule>
     {
         services.AddDefaultServices(configs);
         services.AddDefaultSecurity(configs);
+        services.AddHttpProxyService(configs);
+        services.AddIdentityServices();
         services.AddRazorComponents();
         services.AddControllers();
-        services.AddIdentityServices();
-        services.AddHttpProxyService();
     }
 
     public override void Configure(WebApplication app, IConfigurationRoot configs)
