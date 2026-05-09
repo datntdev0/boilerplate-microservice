@@ -8,7 +8,7 @@ using static datntdev.Microservice.Shared.Common.Constants;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Permissions;
 
-public class PermissionAppProvider : BaseAppProvider
+public class PermissionAppProvider : BaseSingletonAppProvider
 {
     private readonly ImmutableDictionary<Constants.Permissions, PermissionModel> _permissions;
 

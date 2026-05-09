@@ -2,6 +2,7 @@
 using datntdev.Microservice.Shared.Common.Authorization;
 using datntdev.Microservice.Shared.Common.Extensions;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Shared.Web.Host.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -39,6 +40,9 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 404));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 409));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 500));
+
+                // Add property injection filter to inject [AppInject] properties before action execution
+                action.Filters.Add(new ServiceFilterAttribute(typeof(PropertyInjectionFilter)));
 
                 // Check for AppAuthorizationAttribute on interface method
                 var authorizationAttribute = GetAuthorizationAttributeFromInterface(action);
