@@ -3,7 +3,7 @@ using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Extensions;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Permissions.Models;
 using System.Collections.Immutable;
-
+using System.Reflection.Metadata;
 using static datntdev.Microservice.Shared.Common.Constants;
 
 namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Permissions;
@@ -22,6 +22,11 @@ public class PermissionAppProvider : BaseSingletonAppProvider
         return _permissions.Values
             .WhereIf(tenancySide != null, x => (x.TenancySides & tenancySide) == tenancySide)
             .ToArray();
+    }
+
+    public Constants.Permissions[] GetAllPermissionValues(TenancySides? tenancySide = null)
+    {
+        return [.. GetAllPermissions(tenancySide).Select(p => p.Permission)];
     }
 
     private static ImmutableDictionary<Constants.Permissions, PermissionModel> LoadPermissions()

@@ -13,6 +13,7 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
     public DbSet<UserEntity> AppUsers { get; set; }
     public DbSet<RoleEntity> AppRoles { get; set; }
     public DbSet<UserRoleEntity> AppUserRoles { get; set; }
+    public DbSet<UserTenantEntity> AppUserTenants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +28,7 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
         modelBuilder.Entity<UserEntity>(entity =>
         {
             entity.HasMany(e => e.Identities).WithOne(e => e.User).HasForeignKey(e => e.UserId);
+            entity.HasMany(e => e.Tenants).WithOne(e => e.User).HasForeignKey(e => e.UserId);
         });
 
         modelBuilder.Entity<RoleEntity>(entity =>
@@ -37,6 +39,13 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
                     l => l.HasOne(ur => ur.Role).WithMany().HasForeignKey(ur => ur.RoleId),
                     i => i.HasIndex(ur => new { ur.UserId, ur.RoleId }).IsUnique()
                 );
+        });
+
+        modelBuilder.Entity<UserTenantEntity>(entity =>
+        {
+            entity.HasKey(ut => new { ut.UserId, ut.TenantId });
+            entity.HasIndex(ut => new { ut.UserId, ut.TenantId }).IsUnique();
+            entity.HasOne(ut => ut.User).WithMany().HasForeignKey(ut => ut.UserId);
         });
     }
 }

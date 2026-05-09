@@ -22,6 +22,20 @@ public class Constants
         public const string OAuth2Authorize = "/connect/authorize";
     }
 
+    public class DefaultTenant
+    {
+        public const string Name = "Default Tenant";
+        public const string Organization = "Default Organization";
+    }
+
+    public class DefaultRoles
+    {
+        public const string HostAdmin = "Admin (Host)";
+        public const string HostUser = "User (Host)";
+        public const string TenantAdmin = "Admin";
+        public const string TenantUser = "User";
+    }
+
     public enum Permissions
     {
         None = 0,

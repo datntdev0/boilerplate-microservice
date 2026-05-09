@@ -13,4 +13,5 @@ public class UserEntity : FullAuditEntity<long>
 
     public List<IdentityEntity> Identities { get; set; } = [];
     public List<RoleEntity> Roles { get; set; } = [];
+    public List<UserTenantEntity> Tenants { get; set; } = [];
 }
