@@ -10,7 +10,7 @@ public class Startup : WebStartup<MicroserviceSrvIdentityWebHostModule>
     {
         services.AddDefaultServices(configs);
         services.AddHttpProxyService(configs);
-        services.AddOpenIddictJwtValidation(configs);
+        services.AddCustomAuthorization(configs);
         services.AddServiceControllers(_modules);
         services.AddControllers();
         services.AddOpenApi();

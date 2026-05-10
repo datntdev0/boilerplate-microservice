@@ -1,3 +1,6 @@
+using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Common.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace datntdev.Microservice.Srv.Admin.Web.Host.Controllers;
@@ -18,6 +21,8 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
+    [AppAuthorize(Constants.Permissions.Tenancy_Read, Constants.Permissions.Tenancy_Write)]
+    [AppAuthorize(Constants.Permissions.Users)]
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {

@@ -9,9 +9,13 @@ public class SessionAppProvider(SrvIdentityHttpClient httpClient) : BaseScopedAp
 {
     private readonly SrvIdentityHttpClient _httpClient = httpClient;
 
+    private SessionModel? _currentSession;
+
     public async Task<SessionModel> GetSessionAsync()
     {
+        if (_currentSession != null) return _currentSession;
         var sessionDto = await _httpClient.Identities_GetSessionAsync();
-        return sessionDto.Adapt<SessionModel>();
+        _currentSession = sessionDto.Adapt<SessionModel>();
+        return _currentSession;
     }
 }

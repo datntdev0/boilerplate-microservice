@@ -1,5 +1,4 @@
-﻿using datntdev.Microservice.Shared.Application.Authorization;
-using datntdev.Microservice.Shared.Common.Application;
+﻿using datntdev.Microservice.Shared.Common.Application;
 using datntdev.Microservice.Shared.Common.Model;
 using Mapster;
 
@@ -20,13 +19,6 @@ public abstract class BaseAppService : IAppService
                 nameof(BaseAuditEntity<int>.UpdatedBy),
                 nameof(FullAuditEntity<int>.IsDeleted));
     }
-
-    /// <summary>
-    /// Provides access to session information (app metadata and authenticated user data).
-    /// Automatically injected by PropertyInjectionFilter before action execution.
-    /// </summary>
-    [AppInject]
-    protected SessionAppProvider SessionProvider { get; set; } = default!;
 
     protected static TDestination Map<TDestination>(object source)
         => source.Adapt<TDestination>();

@@ -1,8 +1,6 @@
 ﻿using datntdev.Microservice.Shared.Common.Application;
 using datntdev.Microservice.Shared.Common.Authorization;
-using datntdev.Microservice.Shared.Common.Extensions;
 using datntdev.Microservice.Shared.Common.Model;
-using datntdev.Microservice.Shared.Web.Host.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -41,12 +39,10 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 409));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 500));
 
-                // Add property injection filter to inject [AppInject] properties before action execution
-                action.Filters.Add(new ServiceFilterAttribute(typeof(PropertyInjectionFilter)));
-
                 // Check for AppAuthorizationAttribute on interface method
-                var authorizationAttribute = GetAuthorizationAttributeFromInterface(action);
-                action.Filters.AddIf(authorizationAttribute != null, authorizationAttribute!);
+                //var authorizationAttribute = GetAuthorizationAttributeFromInterface(action);
+                //var authorizationFilter = new ServiceFilterAttribute(typeof(AppAuthorizationFilter));
+                //action.Filters.AddIf(authorizationAttribute != null, authorizationFilter!);
             }
         }
     }
@@ -71,6 +67,9 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
 
         var selector = new SelectorModel() { AttributeRouteModel = routeAttributeModel };
         selector.ActionConstraints.Add(httpMethodConstraint);
+
+        var appAuthorizeAttribute = action.Attributes.OfType<AppAuthorizeAttribute>().FirstOrDefault();
+        if (appAuthorizeAttribute != null) selector.EndpointMetadata.Add(appAuthorizeAttribute);
         return selector;
     }
 
@@ -102,8 +101,8 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
         var controllerName = action.Controller.ControllerName;
         var baseRoute = $"api/{KebabCaseRegex().Replace(controllerName, "$1-$2").ToLower()}";
 
-        var routeAttribute = action.Attributes.SingleOrDefault(x => x is RouteAttribute);
-        if (routeAttribute != null) return $"{baseRoute}/{((RouteAttribute)routeAttribute).Template}";
+        var appRouteAttribute = action.Attributes.SingleOrDefault(x => x is AppRouteAttribute);
+        if (appRouteAttribute != null) return $"{baseRoute}/{((AppRouteAttribute)appRouteAttribute).Template}";
 
         if (action.ActionName == "Get") return $"{baseRoute}/{{id}}";
         if (action.ActionName == "Update") return $"{baseRoute}/{{id}}";
@@ -126,40 +125,6 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
             return "POST";
 
         throw new InvalidOperationException($"No conventional HTTP verb found for action '{actionName}'");
-    }
-
-    private static AppAuthorizationAttribute? GetAuthorizationAttributeFromInterface(ActionModel action)
-    {
-        var controllerType = action.Controller.ControllerType;
-        var actionMethod = action.ActionMethod;
-
-        // Get all interfaces implemented by the controller that inherit from IAppService
-        var interfaces = controllerType.GetInterfaces()
-            .Where(i => i.IsAssignableTo(typeof(IAppService)));
-
-        foreach (var interfaceType in interfaces)
-        {
-            // Get the interface map to match concrete method to interface method
-            var interfaceMap = controllerType.GetInterfaceMap(interfaceType);
-
-            for (int i = 0; i < interfaceMap.TargetMethods.Length; i++)
-            {
-                // Check if this is the matching method
-                if (interfaceMap.TargetMethods[i] == actionMethod)
-                {
-                    // Found the matching interface method, check for the attribute
-                    var interfaceMethod = interfaceMap.InterfaceMethods[i];
-                    var authAttribute = interfaceMethod.GetCustomAttribute<AppAuthorizationAttribute>();
-
-                    if (authAttribute != null)
-                    {
-                        return authAttribute;
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     [GeneratedRegex("([a-z])([A-Z])")]

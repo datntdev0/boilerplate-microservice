@@ -2,6 +2,7 @@
 using FluentValidation;
 
 namespace datntdev.Microservice.Shared.Application.Validations;
+
 public abstract class DbValidator<TContract, TDbContext>(TDbContext dbContext) : AbstractValidator<TContract>
      where TDbContext : BaseDbContext
 {

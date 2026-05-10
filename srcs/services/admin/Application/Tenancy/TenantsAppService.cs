@@ -1,4 +1,5 @@
 ﻿using datntdev.Microservice.Shared.Application.Services;
+using datntdev.Microservice.Shared.Common.Authorization;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Admin.Application.Tenancy.Entities;
 using datntdev.Microservice.Srv.Admin.Contracts.Tenancy;
@@ -45,6 +46,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
         };
     }
 
+    [AppAuthorize]
     public async Task<TenantDto> GetAsync(int id)
     {
         var entity = await _manager.GetAsync(id);

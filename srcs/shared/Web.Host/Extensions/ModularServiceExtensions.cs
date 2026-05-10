@@ -1,7 +1,5 @@
-﻿using datntdev.Microservice.Shared.Application.Authorization;
-using datntdev.Microservice.Shared.Application.Services;
+﻿using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Modular;
-using datntdev.Microservice.Shared.Web.Host.Filters;
 using datntdev.Microservice.Shared.Web.Host.Providers;
 using FluentValidation;
 using Mapster;
@@ -15,12 +13,8 @@ public static class ModularServiceExtensions
 {
     public static IServiceCollection AddServiceControllers(this IServiceCollection services, IEnumerable<BaseModule> modules)
     {
-        // Register PropertyInjectionFilter for automatic property injection
-        services.AddScoped<PropertyInjectionFilter>();
+        //services.AddScoped<AppAuthorizationFilter>();
 
-        // Register default app services from all modules
-        services.AddScoped<SessionAppProvider>();
-        
         var controllerFeatureProvider = new AppServiceFeatureProvider();
         services.AddControllers()
             .ConfigureApplicationPartManager(manager =>
