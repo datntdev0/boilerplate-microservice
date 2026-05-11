@@ -21,6 +21,7 @@ public class SessionUserDto
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public Constants.Permissions[] Permissions { get; set; } = [];
+    public SessionRoleDto[] Roles { get; set; } = [];
 }
 
 public class SessionRoleDto

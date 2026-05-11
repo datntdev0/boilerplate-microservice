@@ -1,4 +1,5 @@
 ﻿using datntdev.Microservice.Shared.Application.Services;
+using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Authorization;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Admin.Application.Tenancy.Entities;
@@ -17,6 +18,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
     private readonly TenantCreatingValidator _creatingValidator = services.GetRequiredService<TenantCreatingValidator>();
     private readonly TenantUpdatingValidator _updatingValidator = services.GetRequiredService<TenantUpdatingValidator>();
 
+    [AppAuthorize(Constants.Permissions.Tenancy_Write)]
     public async Task<TenantDto> CreateAsync(TenantCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
@@ -24,11 +26,13 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
         return Map<TenantDto>(entity);
     }
 
+    [AppAuthorize(Constants.Permissions.Tenancy_Write)]
     public Task DeleteAsync(int id)
     {
         return _manager.DeleteAsync(id);
     }
 
+    [AppAuthorize(Constants.Permissions.Tenancy_Read)]
     public async Task<PaginatedResult<TenantListDto>> GetAllAsync(PaginatedRequest request)
     {
         var total = await _manager.Queryable.CountAsync();
@@ -46,13 +50,14 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
         };
     }
 
-    [AppAuthorize]
+    [AppAuthorize(Constants.Permissions.Tenancy_Read)]
     public async Task<TenantDto> GetAsync(int id)
     {
         var entity = await _manager.GetAsync(id);
         return Map<TenantDto>(entity);
     }
 
+    [AppAuthorize(Constants.Permissions.Tenancy_Write)]
     public async Task<TenantDto> UpdateAsync(int id, TenantUpdateDto request)
     {
         _updatingValidator.ValidateAndThrow(request);

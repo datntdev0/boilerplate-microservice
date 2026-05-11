@@ -1,4 +1,6 @@
 using datntdev.Microservice.Shared.Application.Services;
+using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Common.Authorization;
 using datntdev.Microservice.Shared.Common.Model;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
@@ -18,6 +20,7 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
     private readonly UserCreatingValidator _creatingValidator = services.GetRequiredService<UserCreatingValidator>();
     private readonly UserUpdatingValidator _updatingValidator = services.GetRequiredService<UserUpdatingValidator>();
 
+    [AppAuthorize(Constants.Permissions.Users_Write)]
     public async Task<UserDto> CreateAsync(UserCreateDto request)
     {
         _creatingValidator.ValidateAndThrow(request);
@@ -27,11 +30,13 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
         return Map<UserDto>(entity);
     }
 
+    [AppAuthorize(Constants.Permissions.Users_Write)]
     public Task DeleteAsync(long id)
     {
         return _manager.DeleteAsync(id);
     }
 
+    [AppAuthorize(Constants.Permissions.Users_Read)]
     public async Task<PaginatedResult<UserListDto>> GetAllAsync(PaginatedRequest request)
     {
         var total = await _manager.Queryable.CountAsync();
@@ -49,12 +54,14 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
         };
     }
 
+    [AppAuthorize(Constants.Permissions.Users_Read)]
     public async Task<UserDto> GetAsync(long id)
     {
         var entity = await _manager.GetAsync(id);
         return Map<UserDto>(entity);
     }
 
+    [AppAuthorize(Constants.Permissions.Users_Write)]
     public async Task<UserDto> UpdateAsync(long id, UserUpdateDto request)
     {
         _updatingValidator.ValidateAndThrow(request);

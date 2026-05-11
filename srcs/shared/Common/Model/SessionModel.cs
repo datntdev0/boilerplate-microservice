@@ -19,6 +19,7 @@ public class SessionUserModel
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public Constants.Permissions[] Permissions { get; set; } = [];
+    public SessionRoleModel[] Roles { get; set; } = [];
 }
 
 public class SessionRoleModel
