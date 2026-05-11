@@ -19,7 +19,12 @@ internal class MicroserviceSrvAdminSeeder(IServiceProvider services)
     {
         var existingTenant = await _dbContext.AppTenants.FirstOrDefaultAsync(t
             => t.Name == Constants.DefaultTenant.Name);
-        if (existingTenant != null) _dbContext.AppTenants.Remove(existingTenant);
+            
+        if (existingTenant != null)
+        {
+            _dbContext.AppTenants.Remove(existingTenant);
+            await _dbContext.SaveChangesAsync();
+        }
 
         var newTenant = new TenantEntity
         {

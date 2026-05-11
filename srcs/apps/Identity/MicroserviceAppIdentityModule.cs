@@ -56,7 +56,8 @@ internal static class MicroserviceAppIdentityModuleExtensions
                 options
                     .RequireProofKeyForCodeExchange()
                     .AllowAuthorizationCodeFlow()
-                    .AllowClientCredentialsFlow();
+                    .AllowClientCredentialsFlow()
+                    .AllowPasswordFlow();
 
                 options
                     .SetTokenEndpointUris(Constants.Endpoints.OAuth2Token)

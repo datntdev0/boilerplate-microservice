@@ -135,3 +135,14 @@ This skill set is designed to ONLY perform:
     # Finally, run the migrator to apply all migrations to the new databases
     dotnet run --project srcs/infra/Migrator/datntdev.Microservice.Infra.Migrator.csproj
     ```
+
+### Request access token from Identity Provider
+
+1. Request access token from Identity Provider using password grant type for testing purposes (not recommended for production use):
+    ```bash
+    curl -X POST "https://localhost:7240/connect/token" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        --data "grant_type=password&username=<username>&password=<password>" \
+        --data "client_id=datntdev.Microservice.Public" \
+        --insecure
+    ```

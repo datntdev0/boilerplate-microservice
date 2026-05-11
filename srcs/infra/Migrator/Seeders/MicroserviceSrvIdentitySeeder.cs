@@ -27,6 +27,7 @@ internal class MicroserviceSrvIdentitySeeder(IServiceProvider services)
         await EnsureDefaultHostRolesExistAsync();
         await EnsureDefaultTenantRolesExistAsync();
         await EnsureDefaultAdminIdentityExistsAsync();
+        await EnsureTestingIdentityExistsAsync();
         await AssignDefaultAdminUserToTenantsAsync();
         await AssignDefaultAdminUserToRolesAsync();
     }
@@ -137,6 +138,42 @@ internal class MicroserviceSrvIdentitySeeder(IServiceProvider services)
 
         await _dbContext.AppIdentities.AddAsync(newIdentity);
 
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private async Task EnsureTestingIdentityExistsAsync()
+    {
+        var testUserEmail = "test@datntdev.com";
+        var testUserPassword = "Test@123";
+        var testUserFirstName = "Test";
+        var testUserLastName = "User";
+
+        var passwordHasher = new Srv.Identity.Application.Authorization.Identities.PasswordHasher();
+        var basicPermissions = _permissionProvider.GetAllPermissions()
+            .Where(p => p.TenancySides == Constants.TenancySides.Host)
+            .Select(p => p.Permission).ToArray();
+
+        // Recreate the test user if it exists
+        var existingIdentity = await _dbContext.AppIdentities.FirstOrDefaultAsync(x => x.EmailAddress == testUserEmail);
+        if (existingIdentity != null) _dbContext.AppIdentities.Remove(existingIdentity);
+
+        var testUserEntity = new UserEntity
+        {
+            FirstName = testUserFirstName,
+            LastName = testUserLastName,
+            Permissions = basicPermissions,
+        };
+
+        var testIdentity = new IdentityEntity
+        {
+            EmailAddress = testUserEmail,
+            PasswordText = testUserPassword,
+            User = testUserEntity
+        };
+
+        testIdentity = passwordHasher.SetPassword(testIdentity, testUserPassword);
+
+        await _dbContext.AppIdentities.AddAsync(testIdentity);
         await _dbContext.SaveChangesAsync();
     }
 

@@ -82,6 +82,7 @@ internal class MicroserviceAppIdentitySeeder(IServiceProvider services)
                     OpenIddictConstants.Permissions.Endpoints.EndSession,
                     OpenIddictConstants.Permissions.Endpoints.Authorization,
                     OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                    OpenIddictConstants.Permissions.GrantTypes.Password,
                     OpenIddictConstants.Permissions.ResponseTypes.Code,
                 }
         };
