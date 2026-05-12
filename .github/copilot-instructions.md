@@ -11,6 +11,7 @@ applyTo: '**'
 - DO NOT violate or skip any insutructions or constraints in related instruction files.
 - ALWAYS read the instruction files related to the task FIRSTLY, before reading to codebase.
 - ALWAYS read to the backlinks of the relevant instructions to have a complete understanding.
+- ALWAYS close or terminate your terminal or command line interface after executing any command.
 
 ## Project Structure and Architecture
 

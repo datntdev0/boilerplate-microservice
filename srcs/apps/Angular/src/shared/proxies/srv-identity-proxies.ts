@@ -15,8 +15,67 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL_IDENTITY = new InjectionToken<string>('API_BASE_URL_IDENTITY');
 
+export interface ISrvIdentityClientProxy {
+    /**
+     * @return OK
+     */
+    users_Create(body: UserCreateDto): Observable<UserDto>;
+    /**
+     * @param offset (optional) 
+     * @param limit (optional) 
+     * @return OK
+     */
+    users_GetAll(offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfUserListDto>;
+    /**
+     * @return OK
+     */
+    users_Delete(id: number): Observable<void>;
+    /**
+     * @return OK
+     */
+    users_Get(id: number): Observable<UserDto>;
+    /**
+     * @return OK
+     */
+    users_Update(id: number, body: UserUpdateDto): Observable<UserDto>;
+    /**
+     * @return OK
+     */
+    roles_Create(body: RoleCreateDto): Observable<RoleDto>;
+    /**
+     * @param offset (optional) 
+     * @param limit (optional) 
+     * @return OK
+     */
+    roles_GetAll(offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfRoleListDto>;
+    /**
+     * @return OK
+     */
+    roles_Delete(id: number): Observable<void>;
+    /**
+     * @return OK
+     */
+    roles_Get(id: number): Observable<RoleDto>;
+    /**
+     * @return OK
+     */
+    roles_Update(id: number, body: RoleUpdateDto): Observable<RoleDto>;
+    /**
+     * @return OK
+     */
+    identities_CreateSignin(body: SigninDto): Observable<UserDto>;
+    /**
+     * @return OK
+     */
+    identities_CreateSignup(body: SignupDto): Observable<UserDto>;
+    /**
+     * @return OK
+     */
+    identities_GetSession(): Observable<SessionDto>;
+}
+
 @Injectable()
-export class SrvIdentityClientProxy {
+export class SrvIdentityClientProxy implements ISrvIdentityClientProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1027,6 +1086,85 @@ export class SrvIdentityClientProxy {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    identities_GetSession(): Observable<SessionDto> {
+        let url_ = this.baseUrl + "/api/identities/session";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processIdentities_GetSession(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processIdentities_GetSession(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SessionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SessionDto>;
+        }));
+    }
+
+    protected processIdentities_GetSession(response: HttpResponseBase): Observable<SessionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SessionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("Internal Server Error", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export class PaginatedResultOfRoleListDto implements IPaginatedResultOfRoleListDto {
@@ -1449,6 +1587,258 @@ export interface IRoleUpdateDto {
     description?: string;
     permissions?: number[];
     id?: number;
+
+    [key: string]: any;
+}
+
+export class SessionAppDto implements ISessionAppDto {
+    name?: string;
+    version?: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISessionAppDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+            this.version = _data["version"];
+        }
+    }
+
+    static fromJS(data: any): SessionAppDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionAppDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        data["version"] = this.version;
+        return data;
+    }
+}
+
+export interface ISessionAppDto {
+    name?: string;
+    version?: string;
+
+    [key: string]: any;
+}
+
+export class SessionDto implements ISessionDto {
+    app?: SessionAppDto;
+    user?: SessionUserDto | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: ISessionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.app = _data["app"] ? SessionAppDto.fromJS(_data["app"]) : undefined as any;
+            this.user = _data["user"] ? SessionUserDto.fromJS(_data["user"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): SessionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["app"] = this.app ? this.app.toJSON() : undefined as any;
+        data["user"] = this.user ? this.user.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface ISessionDto {
+    app?: SessionAppDto;
+    user?: SessionUserDto | undefined;
+
+    [key: string]: any;
+}
+
+export class SessionRoleDto implements ISessionRoleDto {
+    id?: number;
+    name?: string;
+    permissions?: number[];
+
+    [key: string]: any;
+
+    constructor(data?: ISessionRoleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): SessionRoleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionRoleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ISessionRoleDto {
+    id?: number;
+    name?: string;
+    permissions?: number[];
+
+    [key: string]: any;
+}
+
+export class SessionUserDto implements ISessionUserDto {
+    id?: number;
+    emailAddress?: string;
+    firstName?: string;
+    lastName?: string;
+    permissions?: number[];
+    roles?: SessionRoleDto[];
+
+    [key: string]: any;
+
+    constructor(data?: ISessionUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.emailAddress = _data["emailAddress"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(item);
+            }
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(SessionRoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SessionUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["emailAddress"] = this.emailAddress;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface ISessionUserDto {
+    id?: number;
+    emailAddress?: string;
+    firstName?: string;
+    lastName?: string;
+    permissions?: number[];
+    roles?: SessionRoleDto[];
 
     [key: string]: any;
 }

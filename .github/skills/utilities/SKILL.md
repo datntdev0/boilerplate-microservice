@@ -66,7 +66,7 @@ This skill set is designed to ONLY perform:
     - The command will read the OpenAPI specification from the url and generate C# client code in `srcs\shared\Communication\HttpClients` directory.
 
 4. **Update Generic Response Types**: 
-    - **Important:** Since DTO generation is disabled, manually update generic response types in the generated client code.
+    - **Important:** Since DTO generation is disabled, you need to update generic response types in the generated client code.
     - Replace NSwag-generated types with shared DTOs:
         ```csharp
         // Before (NSwag generated)
@@ -87,7 +87,7 @@ This skill set is designed to ONLY perform:
     - Open the generated client file in `srcs/shared/Communication/HttpClients/` and search for these patterns to find all occurrences that need updating.
 
 5. **Verify generated code**: Check the generated C# client code for correctness and completeness.
-    - Build the solution to ensure that the generated client code does not cause any compilation errors.
+    - MUST build the solution to ensure that the generated client code does not cause any compilation errors.
 
 ### Generate new database migration and update database
 

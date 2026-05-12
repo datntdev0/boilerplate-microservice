@@ -15,8 +15,37 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL_ADMIN = new InjectionToken<string>('API_BASE_URL_ADMIN');
 
+export interface ISrvAdminClientProxy {
+    /**
+     * @return OK
+     */
+    getWeatherForecast(): Observable<WeatherForecast[]>;
+    /**
+     * @return OK
+     */
+    tenants_Create(body: TenantCreateDto): Observable<TenantDto>;
+    /**
+     * @param offset (optional) 
+     * @param limit (optional) 
+     * @return OK
+     */
+    tenants_GetAll(offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfTenantListDto>;
+    /**
+     * @return OK
+     */
+    tenants_Delete(id: number): Observable<void>;
+    /**
+     * @return OK
+     */
+    tenants_Get(id: number): Observable<TenantDto>;
+    /**
+     * @return OK
+     */
+    tenants_Update(id: number, body: TenantUpdateDto): Observable<TenantDto>;
+}
+
 @Injectable()
-export class SrvAdminClientProxy {
+export class SrvAdminClientProxy implements ISrvAdminClientProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
