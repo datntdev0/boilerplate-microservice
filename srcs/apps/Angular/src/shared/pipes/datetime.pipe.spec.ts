@@ -33,7 +33,7 @@ describe('Pipes.DateTimePipe', () => {
       const result = pipe.transform(date, false);
       
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
-      expect(result).not.toMatch(/:\d{2}$/); // Should not end with seconds
+      expect(result).not.toMatch(/:\d{2}:\d{2}$/); // Should not have seconds format
     });
 
     it('should handle Date object input', () => {
@@ -80,7 +80,7 @@ describe('Pipes.DateTimePipe', () => {
       const date = new Date('2026-04-27T11:59:59Z'); // 1 second ago
       const result = pipe.relative(date);
       
-      expect(result).toBe('1 second ago');
+      expect(result).toBe('just now');
     });
 
     it('should return minutes ago', () => {

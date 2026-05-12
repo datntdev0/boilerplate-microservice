@@ -16,7 +16,7 @@ describe('Pages.Tenants', () => {
     mockSrvAdminClient = {
       tenants_GetAll: vi.fn().mockReturnValue(of(new PaginatedResultOfTenantListDto({
         items: [
-          new TenantListDto({ id: 1, name: 'Tenant 1', organization: 'Org 1', createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' })
+          new TenantListDto({ id: 1, name: 'Tenant 1', organization: 'Org 1', createdAt: new Date('2024-01-01T00:00:00Z'), updatedAt: new Date('2024-01-01T00:00:00Z') })
         ],
         total: 1,
         offset: 0,

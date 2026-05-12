@@ -12,25 +12,25 @@ public static class HttpProxyServiceExtensions
         // Register AuthorizationHeaderHandler for propagating auth headers in inter-service communication
         services.AddTransient<AuthorizationHeaderHandler>();
         
-        services.AddScoped(typeof(SrvIdentityHttpClient), (sp) =>
+        services.AddScoped(typeof(ISrvIdentityHttpClient), (sp) =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvIdentityHttpClient(httpClientFactory.CreateClient("srv-identity"));
         });
 
-        services.AddScoped(typeof(SrvAdminHttpClient), (sp) =>
+        services.AddScoped(typeof(ISrvAdminHttpClient), (sp) =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvAdminHttpClient(httpClientFactory.CreateClient("srv-admin"));
         });
 
-        services.AddScoped(typeof(SrvNotifyHttpClient), (sp) =>
+        services.AddScoped(typeof(ISrvNotifyHttpClient), (sp) =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvNotifyHttpClient(httpClientFactory.CreateClient("srv-notify"));
         });
 
-        services.AddScoped(typeof(SrvPaymentHttpClient), (sp) =>
+        services.AddScoped(typeof(ISrvPaymentHttpClient), (sp) =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvPaymentHttpClient(httpClientFactory.CreateClient("srv-payment"));

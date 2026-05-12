@@ -17,6 +17,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task CreateAsync_WithValidData_ReturnsCreatedUser()
     {
         // Arrange
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = "John",
@@ -25,7 +26,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var response = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Assert
@@ -42,13 +43,14 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task CreateAsync_WithRoleIds_ReturnsUserWithAssignedRoles()
     {
         // Arrange - Create a role first
+        var client = await GetAuthenticatedClientAsync();
         var roleDto = new RoleCreateDto
         {
             Name = $"AssignedRole_{Guid.NewGuid():N}",
             Description = "Role for user assignment test",
             Permissions = [Constants.Permissions.Users_Read]
         };
-        using var roleResponse = await HttpClient.PostAsJsonAsync("/api/roles", roleDto, CancellationToken);
+        using var roleResponse = await client.PostAsJsonAsync("/api/roles", roleDto, CancellationToken);
         var createdRole = await roleResponse.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
 
         var createDto = new UserCreateDto
@@ -59,7 +61,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var response = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Assert
@@ -74,6 +76,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task CreateAsync_WithEmptyFirstName_ReturnsBadRequest()
     {
         // Arrange
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = string.Empty,
@@ -81,7 +84,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var response = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -95,16 +98,17 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAsync_WithValidId_ReturnsUser()
     {
         // Arrange - Create a user first
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = "Get",
             LastName = $"Test_{Guid.NewGuid():N}"
         };
-        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Act
-        using var response = await HttpClient.GetAsync($"{BaseUrl}/{createdUser!.Id}", CancellationToken);
+        using var response = await client.GetAsync($"{BaseUrl}/{createdUser!.Id}", CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Assert
@@ -119,10 +123,11 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAsync_WithInvalidId_ReturnsNotFound()
     {
         // Arrange
+        var client = await GetAuthenticatedClientAsync();
         var invalidId = long.MaxValue;
 
         // Act
-        using var response = await HttpClient.GetAsync($"{BaseUrl}/{invalidId}", CancellationToken);
+        using var response = await client.GetAsync($"{BaseUrl}/{invalidId}", CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -136,6 +141,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAllAsync_WithDefaultPagination_ReturnsPagedResult()
     {
         // Arrange - Create multiple users
+        var client = await GetAuthenticatedClientAsync();
         for (int i = 0; i < 3; i++)
         {
             var createDto = new UserCreateDto
@@ -143,11 +149,11 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
                 FirstName = "Paged",
                 LastName = $"User{i}_{Guid.NewGuid():N}"
             };
-            await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+            await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
 
         // Act
-        using var response = await HttpClient.GetAsync($"{BaseUrl}?offset=0&limit=10", CancellationToken);
+        using var response = await client.GetAsync($"{BaseUrl}?offset=0&limit=10", CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<PaginatedResult<UserListDto>>(CancellationToken);
 
         // Assert
@@ -164,6 +170,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task GetAllAsync_WithPagination_ReturnsCorrectPage()
     {
         // Arrange - Ensure we have enough users
+        var client = await GetAuthenticatedClientAsync();
         for (int i = 0; i < 5; i++)
         {
             var createDto = new UserCreateDto
@@ -171,11 +178,11 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
                 FirstName = "Pagination",
                 LastName = $"User{i}_{Guid.NewGuid():N}"
             };
-            await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+            await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
 
         // Act
-        using var response = await HttpClient.GetAsync($"{BaseUrl}?offset=2&limit=3", CancellationToken);
+        using var response = await client.GetAsync($"{BaseUrl}?offset=2&limit=3", CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<PaginatedResult<UserListDto>>(CancellationToken);
 
         // Assert
@@ -194,12 +201,13 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithValidData_ReturnsUpdatedUser()
     {
         // Arrange - Create a user first
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = "Original",
             LastName = $"Name_{Guid.NewGuid():N}"
         };
-        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         var updateDto = new UserUpdateDto
@@ -210,7 +218,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}/{createdUser!.Id}", updateDto, CancellationToken);
+        using var response = await client.PutAsJsonAsync($"{BaseUrl}/{createdUser!.Id}", updateDto, CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Assert
@@ -228,10 +236,11 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithRoleIds_UpdatesUserRoles()
     {
         // Arrange - Create two roles
+        var client = await GetAuthenticatedClientAsync();
         var role1Dto = new RoleCreateDto { Name = $"Role1_{Guid.NewGuid():N}", Description = "Role 1" };
         var role2Dto = new RoleCreateDto { Name = $"Role2_{Guid.NewGuid():N}", Description = "Role 2" };
-        using var r1Res = await HttpClient.PostAsJsonAsync("/api/roles", role1Dto, CancellationToken);
-        using var r2Res = await HttpClient.PostAsJsonAsync("/api/roles", role2Dto, CancellationToken);
+        using var r1Res = await client.PostAsJsonAsync("/api/roles", role1Dto, CancellationToken);
+        using var r2Res = await client.PostAsJsonAsync("/api/roles", role2Dto, CancellationToken);
         var role1 = await r1Res.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
         var role2 = await r2Res.Content.ReadFromJsonAsync<RoleDto>(CancellationToken);
 
@@ -242,7 +251,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
             LastName = $"Test_{Guid.NewGuid():N}",
             RoleIds = [role1!.Id]
         };
-        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Update user to be assigned to role2 instead
@@ -254,7 +263,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}/{createdUser.Id}", updateDto, CancellationToken);
+        using var response = await client.PutAsJsonAsync($"{BaseUrl}/{createdUser.Id}", updateDto, CancellationToken);
         var result = await response.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Assert
@@ -268,12 +277,13 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithEmptyFirstName_ReturnsBadRequest()
     {
         // Arrange - Create a user first
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = "Validation",
             LastName = $"Test_{Guid.NewGuid():N}"
         };
-        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         var updateDto = new UserUpdateDto
@@ -283,7 +293,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}/{createdUser!.Id}", updateDto, CancellationToken);
+        using var response = await client.PutAsJsonAsync($"{BaseUrl}/{createdUser!.Id}", updateDto, CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -293,6 +303,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task UpdateAsync_WithNonExistentId_ReturnsNotFound()
     {
         // Arrange
+        var client = await GetAuthenticatedClientAsync();
         var invalidId = long.MaxValue;
         var updateDto = new UserUpdateDto
         {
@@ -301,7 +312,7 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         };
 
         // Act
-        using var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}/{invalidId}", updateDto, CancellationToken);
+        using var response = await client.PutAsJsonAsync($"{BaseUrl}/{invalidId}", updateDto, CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -315,22 +326,23 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task DeleteAsync_WithValidId_DeletesUser()
     {
         // Arrange - Create a user first
+        var client = await GetAuthenticatedClientAsync();
         var createDto = new UserCreateDto
         {
             FirstName = "Delete",
             LastName = $"Test_{Guid.NewGuid():N}"
         };
-        using var createResponse = await HttpClient.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+        using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
 
         // Act
-        using var deleteResponse = await HttpClient.DeleteAsync($"{BaseUrl}/{createdUser!.Id}", CancellationToken);
+        using var deleteResponse = await client.DeleteAsync($"{BaseUrl}/{createdUser!.Id}", CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, deleteResponse.StatusCode);
 
         // Verify user is deleted
-        using var getResponse = await HttpClient.GetAsync($"{BaseUrl}/{createdUser.Id}", CancellationToken);
+        using var getResponse = await client.GetAsync($"{BaseUrl}/{createdUser.Id}", CancellationToken);
         Assert.AreEqual(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
@@ -338,10 +350,11 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
     public async Task DeleteAsync_WithInvalidId_ReturnsNotFound()
     {
         // Arrange
+        var client = await GetAuthenticatedClientAsync();
         var invalidId = long.MaxValue;
 
         // Act
-        using var response = await HttpClient.DeleteAsync($"{BaseUrl}/{invalidId}", CancellationToken);
+        using var response = await client.DeleteAsync($"{BaseUrl}/{invalidId}", CancellationToken);
 
         // Assert
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);

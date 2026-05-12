@@ -13,13 +13,23 @@ const { mockEvents, MockUserManager } = vi.hoisted(() => {
   };
 
   class MockUserManager {
-    events = mockEvents;
-    metadataService = { getMetadata: vi.fn().mockResolvedValue({}) };
-    clearStaleState = vi.fn().mockResolvedValue(undefined);
-    getUser = vi.fn().mockResolvedValue(null);
-    signinRedirect = vi.fn().mockResolvedValue(undefined);
-    signinRedirectCallback = vi.fn().mockResolvedValue({} as any);
-    signoutRedirect = vi.fn().mockResolvedValue(undefined);
+    events: any;
+    metadataService: any;
+    clearStaleState: any;
+    getUser: any;
+    signinRedirect: any;
+    signinRedirectCallback: any;
+    signoutRedirect: any;
+
+    constructor() {
+      this.events = mockEvents;
+      this.metadataService = { getMetadata: vi.fn() };
+      this.clearStaleState = vi.fn();
+      this.getUser = vi.fn();
+      this.signinRedirect = vi.fn();
+      this.signinRedirectCallback = vi.fn();
+      this.signoutRedirect = vi.fn();
+    }
   }
 
   return { mockEvents, MockUserManager };

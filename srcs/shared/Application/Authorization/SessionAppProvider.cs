@@ -5,9 +5,9 @@ using Mapster;
 
 namespace datntdev.Microservice.Shared.Application.Authorization;
 
-public class SessionAppProvider(SrvIdentityHttpClient httpClient) : BaseScopedAppProvider
+public class SessionAppProvider(ISrvIdentityHttpClient httpClient) : BaseScopedAppProvider
 {
-    private readonly SrvIdentityHttpClient _httpClient = httpClient;
+    private readonly ISrvIdentityHttpClient _httpClient = httpClient;
 
     private SessionModel? _currentSession;
 

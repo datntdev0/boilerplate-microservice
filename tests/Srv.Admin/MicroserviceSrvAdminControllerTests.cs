@@ -9,7 +9,8 @@ namespace datntdev.Microservice.Tests.Srv.Admin
         public async Task GetWeatherForecast_ReturnOk()
         {
             // Act
-            using var response = await HttpClient.GetAsync("/WeatherForecast", CancellationToken);
+            var client = await GetAuthenticatedClientAsync();
+            using var response = await client.GetAsync("/WeatherForecast", CancellationToken);
             var content = await response.Content.ReadFromJsonAsync<List<object>>();
 
             // Assert
