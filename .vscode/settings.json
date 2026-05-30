@@ -29,4 +29,5 @@
         "dotnet test": true,
         "dotnet run": true,
     },
+    "dotnet.defaultSolution": "datntdev.Microservice.slnf"
 }

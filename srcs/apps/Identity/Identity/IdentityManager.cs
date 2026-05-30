@@ -14,7 +14,7 @@ public class IdentityManager(IServiceProvider services)
     : MicroserviceAppIdentityBaseManager(services)
 {
     private readonly IHttpContextAccessor _contextAccessor = services.GetRequiredService<IHttpContextAccessor>();
-    private readonly SrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredService<SrvIdentityHttpClient>();
+    private readonly ISrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredService<ISrvIdentityHttpClient>();
 
     /// <summary>
     /// Validates user credentials against the Identity Service.
