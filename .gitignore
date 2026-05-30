@@ -17,6 +17,8 @@ node_modules/
 # Test results
 coverage/
 TestResults/
+test-results/
+e2e/playwright-report/
 
 # User-specific files
 *.user
@@ -31,9 +33,5 @@ storybook-static
 .datagrip/**/dataSources/
 .datagrip/**/dataSources.local.xml
 
-# Playwright
-test-results/
-playwright-report/
-blob-report/
-playwright/.cache/
-playwright/.auth/
+# Agentic Workflow artifacts
+.scrumai/

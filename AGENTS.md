@@ -36,6 +36,13 @@
 10. Testing - Playwright for end-to-end tests.
 </technicalStack>
 
+<documents>
+  <requirements>
+    - docs/1.requirements/application-sitemap.md
+  </requirements>
+</documents>
+
 <instructions>
 - DO NOT violate the instructions or constraints defined in agents, skills, instructions, and tools.
+- PREFER using the `bash` terminal than the `powershell` terminal for executing commands.
 </instructions>
