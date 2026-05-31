@@ -14,8 +14,13 @@
       </div>
       <div class="app-navbar flex-shrink-0">
         <div class="app-navbar-item ms-1 ms-md-4">
-          <div class="cursor-pointer symbol w-35px h-35px bgi-size-cover" [style]="`background-image: url(${avatarUrl});`"
-            [popover]="templatePopoverContent" [placement]="'bottom right'" [adaptivePosition]="false" [outsideClick]="true" [containerClass]="'w-275px'">
+          <div class="cursor-pointer symbol w-35px h-35px bgi-size-cover" data-testid="user-profile-menu"
+            [style]="`background-image: url(${avatarUrl});`"
+            [popover]="templatePopoverContent" 
+            [placement]="'bottom right'" 
+            [adaptivePosition]="false" 
+            [outsideClick]="true" 
+            [containerClass]="'w-275px'">
           </div>
         </div>
       </div>

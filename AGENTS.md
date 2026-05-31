@@ -46,3 +46,9 @@
 - DO NOT violate the instructions or constraints defined in agents, skills, instructions, and tools.
 - PREFER using the `bash` terminal than the `powershell` terminal for executing commands.
 </instructions>
+
+<agents>
+- `scrumai.product-owner`: `.github/agents/scrumai.product-owner.agent.md`
+- `scrumai.leader.test`: `.github/agents/scrumai.leader.test.agent.md`
+- `scrumai.tester`: `.github/agents/scrumai.tester.agent.md`
+</agents>

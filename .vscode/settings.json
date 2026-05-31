@@ -28,6 +28,7 @@
         "dotnet build": true,
         "dotnet test": true,
         "dotnet run": true,
+        "playwright-cli": true
     },
     "dotnet.defaultSolution": "datntdev.Microservice.slnf"
 }
