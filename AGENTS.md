@@ -49,6 +49,9 @@
 
 <agents>
 - `scrumai.product-owner`: `.github/agents/scrumai.product-owner.agent.md`
+- `scrumai.leader.tech`: `.github/agents/scrumai.leader.tech.agent.md`
 - `scrumai.leader.test`: `.github/agents/scrumai.leader.test.agent.md`
+- `scrumai.developer.backend`: `.github/agents/scrumai.developer.backend.agent.md`
+- `scrumai.developer.frontend`: `.github/agents/scrumai.developer.frontend.agent.md`
 - `scrumai.tester`: `.github/agents/scrumai.tester.agent.md`
 </agents>

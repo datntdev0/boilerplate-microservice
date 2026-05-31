@@ -69,6 +69,18 @@ Define and execute the verification and testing plan for the new feature or repo
       </step>
     </subtask>
   </taskflow>
+  <taskflow name="create-verification-plan">
+    <subtask order="1" name="design-test-cases">
+      <step id="1.1" name="collect-information">
+        <trigger>Received the specification ID</trigger>
+        <action>Collect context and relevant information from specification.md and implementation.md files.</action>
+      </step>
+      <step id="1.2" name="design-test-cases">
+        <trigger>Explored specification and implementation context</trigger>
+        <action>Design the test cases based on the provided specification and create the `verification.md` file.</action>
+      </step>
+    </subtask>
+  </taskflow>
 </taskflows>
 
 <output_format>
@@ -95,4 +107,51 @@ Define and execute the verification and testing plan for the new feature or repo
     {actual_result}
     ```
   </format>
+  <format name="verification.md">
+    ```markdown
+    # {issue_id or feature_id} Verification Plan
+
+    ## Frontend Unit Tests
+
+    ### Test Case 1: {test_case_1_title}
+    - **Description:** {test_case_1_description}
+    - **Steps:**
+      1. {test_case_1_step_1}
+      2. {test_case_1_step_2}
+      3. ...
+    - **Expected Result:** {test_case_1_expected_result}
+
+    ### Test Case 2: {test_case_2_title}
+    - **Description:** {test_case_2_description}
+    - **Steps:**
+      1. {test_case_2_step_1}
+      2. {test_case_2_step_2}
+      3. ...
+    - **Expected Result:** {test_case_2_expected_result}
+
+    ## Backend Unit Tests
+
+    ### Test Case 1: {test_case_1_title}
+    - **Description:** {test_case_1_description}
+    - **Steps:**
+      1. {test_case_1_step_1}
+      2. {test_case_1_step_2}
+      3. ...
+    - **Expected Result:** {test_case_1_expected_result}
+
+    ## Manual Tests (Playwright CLI)
+
+    ### Test Case 1: {test_case_1_title}
+    - **Description:** {test_case_1_description}
+    - **Steps:**
+      1. {test_case_1_step_1}
+      2. {test_case_1_step_2}
+      3. ...
+    - **Expected Result:** {test_case_1_expected_result}
+
+    ## Test Execution Results
+    - **Test Case 1:** {test_case_1_execution_result}
+    - **Test Case 2:** {test_case_2_execution_result}
+    
+    ```
 </output_format>
