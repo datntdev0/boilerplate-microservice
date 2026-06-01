@@ -1,7 +1,7 @@
 ---
 name: Frontend Instructions
 description: This file describes the frontend code style and best practices for the project.
-applyTo: 'srcs/apps/Angular/**/*.ts, srcs/apps/Angular/**/*.html, srcs/apps/Angular/**/*.scss'
+applyTo: 'srcs/apps/Angular/**/*.ts,srcs/apps/Angular/**/*.html,srcs/apps/Angular/**/*.scss'
 ---
 
 <instructions>

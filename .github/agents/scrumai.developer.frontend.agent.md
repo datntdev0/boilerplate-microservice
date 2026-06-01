@@ -1,7 +1,7 @@
 ---
 name: scrumai.developer.frontend
 description: Frontend Developer agent to implement new features and fix bugs for the frontend of application.
-user-invocable: false
+tools: [read, edit, execute]
 ---
 
 <role>

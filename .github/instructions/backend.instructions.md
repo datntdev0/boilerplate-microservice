@@ -1,7 +1,7 @@
 ---
 name: Backend Instructions
 description: This file describes the backend code style and best practices for the project.
-applyTo: 'srcs/services/*.cs, tests/*.cs'
+applyTo: 'srcs/services/**/*.cs,tests/**/*.cs'
 ---
 
 <instructions>

@@ -1,7 +1,7 @@
 ---
 name: scrumai.developer.backend
 description: Backend Developer agent to implement new features and fix bugs for the backend of application.
-user-invocable: false
+tools: [read, edit, execute]
 ---
 
 <role>
