@@ -193,6 +193,32 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         Assert.IsTrue(result.Items.Count() <= 3);
     }
 
+    [TestMethod]
+    public async Task GetAllAsync_WithSignedUpUser_ReturnsEmailAddress()
+    {
+        // Arrange - Sign up a user with a known email address
+        var expectedEmail = $"email_{Guid.NewGuid():N}@test.com";
+        var signupClient = AppFactory.CreateClient();
+        var signupDto = new { Email = expectedEmail, Password = "Test@12345", FirstName = "Email", LastName = "User" };
+        using var signupResponse = await signupClient.PostAsJsonAsync("/api/identities/signup", signupDto, CancellationToken);
+        Assert.AreEqual(HttpStatusCode.OK, signupResponse.StatusCode);
+        var signedUpUser = await signupResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
+        Assert.IsNotNull(signedUpUser);
+
+        var authClient = await GetAuthenticatedClientAsync();
+
+        // Act - fetch enough items to include the signed-up user
+        using var response = await authClient.GetAsync($"{BaseUrl}?offset=0&limit=1000", CancellationToken);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedResult<UserListDto>>(CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(result);
+        var match = result.Items.FirstOrDefault(x => x.Id == signedUpUser.Id);
+        Assert.IsNotNull(match);
+        Assert.AreEqual(expectedEmail, match.EmailAddress);
+    }
+
     #endregion
 
     #region Update Tests

@@ -41,6 +41,7 @@ public class UsersAppService(IServiceProvider services) : BaseAppService, IUsers
     {
         var total = await _manager.Queryable.CountAsync();
         var items = await _manager.Queryable
+            .Include(x => x.Identities)
             .Skip(request.Offset)
             .Take(request.Limit)
             .ToListAsync();

@@ -33,13 +33,17 @@ export class UsersPage implements OnInit, AfterViewInit {
 
   columns: DatatableColumn[] = [
     {
-      key: 'firstName',
-      title: 'First Name',
-      template: (item) => `<span class="text-gray-800 text-hover-primary mb-1">${item.firstName}</span>`,
+      key: 'emailAddress',
+      title: 'Email Address',
+      template: (item) => `<span class="text-gray-800 text-hover-primary mb-1">${item.emailAddress || ""}</span>`,
     },
     {
       key: 'lastName',
       title: 'Last Name',
+    },
+    {
+      key: 'firstName',
+      title: 'First Name',
     },
     {
       key: 'createdAt',
