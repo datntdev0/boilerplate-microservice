@@ -5,12 +5,16 @@ user-invocable: false
 ---
 
 <constraints>
-  - MUST use `playwright-cli` command in terminal.
-  - NEVER use the `npx playwright` command in terminal.
-  - NEVER use the playwright in the `e2e` directory.
-  - NEVER generate any test file or scripts to be executed.
-  - NEVER use typescript or javascript code to execute the test cases.
+- MUST use `playwright-cli` command in terminal.
+- NEVER use the `npx playwright` command in terminal.
+- NEVER use the playwright in the `e2e` directory.
+- NEVER generate any test file or scripts to be executed.
+- NEVER use typescript or javascript code to execute the test cases.
 </constraints>
+
+<instructions>
+- Read `docs/1.requirements/application-sitemap.md` to understand the application structure and key pages.
+</instructions>
 
 <coreCommands>
   <command description="Open the browser in headless mode">
@@ -42,10 +46,10 @@ user-invocable: false
   playwright-cli open https://example.com/login --headed --profile ./.playwright-cli/profile
   # 2. Snapshot the current page to determin is sign in required
   playwright-cli snapshot
-  # 3. Determine the "Email" element reference and fill in the email address
-  playwright-cli fill [element_reference] "email_address"
-  # 4. Determine the "Password" element reference and fill in the password
-  playwright-cli fill [element_reference] "password"
+  # 3. Determine the "Email" element reference and fill the defaultUsername
+  playwright-cli fill [element_reference] "[username]"
+  # 4. Determine the "Password" element reference and fill in the defaultPassword
+  playwright-cli fill [element_reference] "[password]"
   # 5. Determine the "Sign In" button element reference and click it
   playwright-cli click [element_reference]
   ```
