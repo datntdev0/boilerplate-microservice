@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { DialogService } from '@components/dialog/dialog.service';
 import { PaginatedResultOfTenantListDto, SrvAdminClientProxy, TenantListDto } from '@shared/proxies/srv-admin-proxies';
+import { Datatable } from '@shared/models/datatable';
 import { of, throwError } from 'rxjs';
 import { TenancyModule } from '../tenancy.module';
 import { TenantsPage } from './tenants';
@@ -200,5 +201,40 @@ describe('Pages.Tenants', () => {
 
   it('should initialize isLoadingSignal as false', () => {
     expect(component.isLoadingSignal()).toBe(false);
+  });
+
+  describe('onPageChange', () => {
+    it('should call tenants_GetAll with offset=10 when page=2 and limit=10', () => {
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 10, limit: 10 });
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(2);
+      expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(10, 10);
+    });
+
+    it('should call tenants_GetAll with offset=20 when page=3 and limit=10', () => {
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 20, limit: 10 });
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(3);
+      expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(20, 10);
+    });
+
+    it('should call tenants_GetAll with offset=0 when page=1 and limit=10', () => {
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 0, limit: 10 });
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(1);
+      expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(0, 10);
+    });
+
+    it('should update datatableSignal after onPageChange resolves', () => {
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      const newTenant = new TenantListDto({ id: 2, name: 'Tenant 2', organization: 'Org 2' });
+      const mockResponse = new PaginatedResultOfTenantListDto({ items: [newTenant], total: 1, offset: 10, limit: 10 });
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(2);
+      expect(component.datatableSignal().items).toEqual([newTenant]);
+    });
   });
 });

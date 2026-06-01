@@ -91,6 +91,14 @@ export class RolesPage implements OnInit, AfterViewInit {
     });
   }
 
+  onPageChange(page: number): void {
+    const limit = this.datatableSignal().limit;
+    const offset = (page - 1) * limit;
+    this.clientIdentitySrv.roles_GetAll(offset, limit).subscribe(
+      roles => this.datatableSignal.set(new Datatable<RoleListDto>(roles))
+    );
+  }
+
   protected onShowCreate(modal: ModalDirective): void {
     this.createPermTree = this.permissionSrv.buildTree([]);
     modal.show();

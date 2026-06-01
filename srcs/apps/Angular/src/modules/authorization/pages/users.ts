@@ -181,6 +181,14 @@ export class UsersPage implements OnInit, AfterViewInit {
     modal.show();
   }
 
+  onPageChange(page: number): void {
+    const limit = this.datatableSignal().limit;
+    const offset = (page - 1) * limit;
+    this.clientIdentitySrv.users_GetAll(offset, limit).subscribe(
+      users => this.datatableSignal.set(new Datatable<UserListDto>(users))
+    );
+  }
+
   protected onRoleToggle(roleId: number, checked: boolean): void {
     if (checked) {
       if (!this.selectedRoleIds.includes(roleId)) {

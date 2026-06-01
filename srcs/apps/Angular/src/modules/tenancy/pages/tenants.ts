@@ -141,6 +141,14 @@ export class TenantsPage implements OnInit, AfterViewInit {
       });
   }
 
+  onPageChange(page: number): void {
+    const limit = this.datatableSignal().limit;
+    const offset = (page - 1) * limit;
+    this.clientAdminSrv.tenants_GetAll(offset, limit).subscribe(
+      tenants => this.datatableSignal.set(new Datatable<TenantListDto>(tenants))
+    );
+  }
+
   protected onEdit(item: any, modal: ModalDirective): void {
     this.editingTenant = item;
     this.updateForm.patchValue({ name: item.name });

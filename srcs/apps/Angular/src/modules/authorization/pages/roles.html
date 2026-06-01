@@ -31,7 +31,8 @@
       [actionsTemplate]="actionsTemplate"
       [data]="datatableSignal().items"
       [currentPage]="datatableSignal().currentPage"
-      [totalPages]="datatableSignal().totalPages">
+      [totalPages]="datatableSignal().totalPages"
+      (pageChange)="onPageChange($event)">
     </app-datatable>
   </div>
 </div>
