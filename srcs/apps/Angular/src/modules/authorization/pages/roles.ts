@@ -20,6 +20,7 @@ export class RolesPage implements OnInit, AfterViewInit {
 
   public datatableSignal = signal(new Datatable<RoleListDto>());
   public isLoadingSignal = signal(false);
+  public isDataLoadingSignal = signal(false);
 
   editingRole: any = null;
   createForm!: FormGroup;
@@ -60,11 +61,21 @@ export class RolesPage implements OnInit, AfterViewInit {
       description: [''],
     });
 
-    this.clientIdentitySrv.roles_GetAll(0, 10).subscribe(
-      roles => {
+    this.fetchRoles(0, 10);
+  }
+
+  private fetchRoles(offset: number, limit: number): void {
+    this.isDataLoadingSignal.set(true);
+    this.clientIdentitySrv.roles_GetAll(offset, limit).subscribe({
+      next: roles => {
         this.datatableSignal.set(new Datatable<RoleListDto>(roles));
+        this.isDataLoadingSignal.set(false);
+      },
+      error: (err) => {
+        this.isDataLoadingSignal.set(false);
+        throw err;
       }
-    );
+    });
   }
 
   ngAfterViewInit(): void {
@@ -74,9 +85,7 @@ export class RolesPage implements OnInit, AfterViewInit {
   onPageChange(page: number): void {
     const limit = this.datatableSignal().limit;
     const offset = (page - 1) * limit;
-    this.clientIdentitySrv.roles_GetAll(offset, limit).subscribe(
-      roles => this.datatableSignal.set(new Datatable<RoleListDto>(roles))
-    );
+    this.fetchRoles(offset, limit);
   }
 
   protected onShowCreate(modal: ModalDirective): void {
@@ -111,7 +120,7 @@ export class RolesPage implements OnInit, AfterViewInit {
         next: () => {
           this.createForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.fetchRoles(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -140,7 +149,7 @@ export class RolesPage implements OnInit, AfterViewInit {
         next: () => {
           this.updateForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.fetchRoles(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -156,7 +165,7 @@ export class RolesPage implements OnInit, AfterViewInit {
         if (!confirmed) return;
 
         this.clientIdentitySrv.roles_Delete(item.id)
-          .subscribe({ next: () => this.ngOnInit() });
+          .subscribe({ next: () => this.fetchRoles(0, 10) });
       });
   }
 }

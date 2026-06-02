@@ -3,7 +3,7 @@ import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { DialogService } from '@components/dialog/dialog.service';
 import { PaginatedResultOfTenantListDto, SrvAdminClientProxy, TenantListDto } from '@shared/proxies/srv-admin-proxies';
 import { Datatable } from '@shared/models/datatable';
-import { of, throwError } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { TenancyModule } from '../tenancy.module';
 import { TenantsPage } from './tenants';
 
@@ -235,6 +235,36 @@ describe('Pages.Tenants', () => {
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
       component.onPageChange(2);
       expect(component.datatableSignal().items).toEqual([newTenant]);
+    });
+  });
+
+  describe('isDataLoadingSignal', () => {
+    it('should be true while data is being fetched', () => {
+      const subject = new Subject<any>();
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(subject.asObservable());
+      component.onPageChange(1);
+      expect(component.isDataLoadingSignal()).toBe(true);
+      subject.complete();
+    });
+
+    it('should be false after data fetch completes successfully', () => {
+      const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 0, limit: 10 });
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(1);
+      expect(component.isDataLoadingSignal()).toBe(false);
+    });
+
+    it('should be false after data fetch fails', () => {
+      vi.useFakeTimers();
+      const subject = new Subject<any>();
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(subject.asObservable());
+      component.onPageChange(1);
+      subject.error(new Error('Network error'));
+      expect(component.isDataLoadingSignal()).toBe(false);
+      vi.useRealTimers();
     });
   });
 });

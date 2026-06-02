@@ -20,6 +20,7 @@ export class UsersPage implements OnInit {
   public datatableSignal = signal(new Datatable<UserListDto>());
   public allRolesSignal = signal(new Datatable<RoleListDto>());
   public isLoadingSignal = signal(false);
+  public isDataLoadingSignal = signal(false);
 
   editingUser: any = null;
   createForm!: FormGroup;
@@ -66,7 +67,7 @@ export class UsersPage implements OnInit {
       lastName: ['', [Validators.required, Validators.minLength(3)]],
     });
 
-    this.loadUsers();
+    this.fetchUsers(0, 10);
 
     this.clientIdentitySrv.roles_GetAll(0, 100).subscribe(
       roles => {
@@ -75,12 +76,18 @@ export class UsersPage implements OnInit {
     );
   }
 
-  private loadUsers(): void {
-    this.clientIdentitySrv.users_GetAll(0, 10).subscribe(
-      users => {
+  private fetchUsers(offset: number, limit: number): void {
+    this.isDataLoadingSignal.set(true);
+    this.clientIdentitySrv.users_GetAll(offset, limit).subscribe({
+      next: users => {
         this.datatableSignal.set(new Datatable<UserListDto>(users));
+        this.isDataLoadingSignal.set(false);
+      },
+      error: (err) => {
+        this.isDataLoadingSignal.set(false);
+        throw err;
       }
-    );
+    });
   }
 
   protected onShowCreate(modal: ModalDirective): void {
@@ -108,7 +115,7 @@ export class UsersPage implements OnInit {
         next: () => {
           this.createForm.reset();
           this.isLoadingSignal.set(false);
-          this.loadUsers();
+          this.fetchUsers(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -138,7 +145,7 @@ export class UsersPage implements OnInit {
         next: () => {
           this.updateForm.reset();
           this.isLoadingSignal.set(false);
-          this.loadUsers();
+          this.fetchUsers(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -159,9 +166,7 @@ export class UsersPage implements OnInit {
   onPageChange(page: number): void {
     const limit = this.datatableSignal().limit;
     const offset = (page - 1) * limit;
-    this.clientIdentitySrv.users_GetAll(offset, limit).subscribe(
-      users => this.datatableSignal.set(new Datatable<UserListDto>(users))
-    );
+    this.fetchUsers(offset, limit);
   }
 
   protected onRoleToggle(roleId: number, checked: boolean): void {
@@ -180,7 +185,7 @@ export class UsersPage implements OnInit {
         if (!confirmed) return;
 
         this.clientIdentitySrv.users_Delete(item.id)
-          .subscribe({ next: () => this.loadUsers() });
+          .subscribe({ next: () => this.fetchUsers(0, 10) });
       });
   }
 }

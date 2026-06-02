@@ -4,7 +4,7 @@ import { DialogService } from '@components/dialog/dialog.service';
 import { PermissionService } from '@shared/services/permission.service';
 import { PaginatedResultOfRoleListDto, RoleListDto, SrvIdentityClientProxy } from '@shared/proxies/srv-identity-proxies';
 import { Datatable } from '@shared/models/datatable';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { AuthorizationModule } from '../authorization.module';
 import { RolesPage } from './roles';
 
@@ -111,6 +111,36 @@ describe('Pages.Roles', () => {
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
       component.onPageChange(2);
       expect(component.datatableSignal().items).toEqual([newRole]);
+    });
+  });
+
+  describe('isDataLoadingSignal', () => {
+    it('should be true while data is being fetched', () => {
+      const subject = new Subject<any>();
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(subject.asObservable());
+      component.onPageChange(1);
+      expect(component.isDataLoadingSignal()).toBe(true);
+      subject.complete();
+    });
+
+    it('should be false after data fetch completes successfully', () => {
+      const mockResponse = new PaginatedResultOfRoleListDto({ items: [], total: 0, offset: 0, limit: 10 });
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
+      component.onPageChange(1);
+      expect(component.isDataLoadingSignal()).toBe(false);
+    });
+
+    it('should be false after data fetch fails', () => {
+      vi.useFakeTimers();
+      const subject = new Subject<any>();
+      component.datatableSignal.set(new Datatable({ limit: 10 }));
+      (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(subject.asObservable());
+      component.onPageChange(1);
+      subject.error(new Error('Network error'));
+      expect(component.isDataLoadingSignal()).toBe(false);
+      vi.useRealTimers();
     });
   });
 });

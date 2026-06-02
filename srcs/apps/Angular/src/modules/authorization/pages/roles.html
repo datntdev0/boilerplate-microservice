@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [class.blockui]="isDataLoadingSignal()">
   <div class="card-header border-0 pt-6">
     <div class="card-title">
       <div class="d-flex align-items-center position-relative">
@@ -43,6 +43,12 @@
       </ng-template>
     </app-datatable>
   </div>
+
+  @if (isDataLoadingSignal()) {
+    <div class="blockui-overlay">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+  }
 </div>
 
 <div class="modal fade" bsModal #createModal="bs-modal" tabindex="-1" role="dialog">

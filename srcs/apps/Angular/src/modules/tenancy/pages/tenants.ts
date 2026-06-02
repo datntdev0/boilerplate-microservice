@@ -17,6 +17,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
 
   public datatableSignal = signal(new Datatable<TenantListDto>());
   public isLoadingSignal = signal(false);
+  public isDataLoadingSignal = signal(false);
 
   editingTenant: any = null;
   createForm!: FormGroup;
@@ -55,11 +56,21 @@ export class TenantsPage implements OnInit, AfterViewInit {
       organization: [''],
     });
 
-    this.clientAdminSrv.tenants_GetAll(0, 10).subscribe(
-      tenants => {
+    this.fetchTenants(0, 10);
+  }
+
+  private fetchTenants(offset: number, limit: number): void {
+    this.isDataLoadingSignal.set(true);
+    this.clientAdminSrv.tenants_GetAll(offset, limit).subscribe({
+      next: tenants => {
         this.datatableSignal.set(new Datatable<TenantListDto>(tenants));
+        this.isDataLoadingSignal.set(false);
+      },
+      error: (err) => {
+        this.isDataLoadingSignal.set(false);
+        throw err;
       }
-    );
+    });
   }
 
   ngAfterViewInit(): void {
@@ -83,7 +94,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
         next: () => {
           this.createForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.fetchTenants(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -111,7 +122,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
         next: () => {
           this.updateForm.reset();
           this.isLoadingSignal.set(false);
-          this.ngOnInit();
+          this.fetchTenants(0, 10);
           modal.hide();
         },
         error: (err) => {
@@ -124,9 +135,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
   onPageChange(page: number): void {
     const limit = this.datatableSignal().limit;
     const offset = (page - 1) * limit;
-    this.clientAdminSrv.tenants_GetAll(offset, limit).subscribe(
-      tenants => this.datatableSignal.set(new Datatable<TenantListDto>(tenants))
-    );
+    this.fetchTenants(offset, limit);
   }
 
   protected onEdit(item: any, modal: ModalDirective): void {
@@ -141,7 +150,7 @@ export class TenantsPage implements OnInit, AfterViewInit {
         if (!confirmed) return;
 
         this.clientAdminSrv.tenants_Delete(item.id)
-          .subscribe({ next: () => this.ngOnInit() });
+          .subscribe({ next: () => this.fetchTenants(0, 10) });
       });
   }
 }
