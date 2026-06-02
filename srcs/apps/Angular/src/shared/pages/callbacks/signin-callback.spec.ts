@@ -6,7 +6,7 @@ import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { SigninCallbackPage } from './signin-callback';
 import { AuthService } from '@shared/services/auth.service';
 import { LoggerService } from '@shared/services/logger.service';
-import { MockLoggerService } from 'src/testing';
+import { MockLoggerService } from '@testing';
 
 describe('Pages.SigninCallback', () => {
   let component: SigninCallbackPage;

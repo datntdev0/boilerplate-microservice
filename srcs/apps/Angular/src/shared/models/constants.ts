@@ -1,4 +1,4 @@
-import { environment } from "envs/environment";
+import { environment } from "@envs/environment";
 import { MenuSection } from "./menu";
 import { PermissionItem } from "./permission";
 

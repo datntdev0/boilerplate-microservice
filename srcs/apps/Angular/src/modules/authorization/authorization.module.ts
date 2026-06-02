@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ComponentsModule } from '@components/components.module';
-import { provideSrvIdentityProxy } from 'src/root.initializer';
+import { provideSrvIdentityProxy } from '@shared/proxies/proxy-providers';
 import { RolesPage } from './pages/roles';
 import { UsersPage } from './pages/users';
 

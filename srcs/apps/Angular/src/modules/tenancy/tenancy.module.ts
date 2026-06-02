@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ComponentsModule } from '@components/components.module';
-import { provideSrvAdminProxy } from 'src/root.initializer';
+import { provideSrvAdminProxy } from '@shared/proxies/proxy-providers';
 import { TenantsPage } from './pages/tenants';
 
 const routes: Routes = [

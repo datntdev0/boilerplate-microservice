@@ -6,7 +6,7 @@ import { API_BASE_URL_ADMIN, SrvAdminClientProxy } from "@shared/proxies/srv-adm
 import { API_BASE_URL_IDENTITY, SrvIdentityClientProxy } from "@shared/proxies/srv-identity-proxies";
 import { AuthService } from "@shared/services/auth.service";
 import { LoggerService } from "@shared/services/logger.service";
-import { environment } from "envs/environment";
+import { environment } from "@envs/environment";
 
 @Injectable({ providedIn: 'root' })
 class GlobalErrorHandler implements ErrorHandler {
@@ -43,19 +43,7 @@ export async function withRootInitializer(): Promise<void> {
   }
 };
 
-export function provideSrvIdentityProxy(): Provider[] {
-  return [
-    SrvIdentityClientProxy, 
-    { provide: API_BASE_URL_IDENTITY, useValue: `${environment.apiUrl}/srv-identity` }
-  ];
-}
 
-export function provideSrvAdminProxy(): Provider[] {
-  return [
-    SrvAdminClientProxy,
-    { provide: API_BASE_URL_ADMIN, useValue: `${environment.apiUrl}/srv-admin` }
-  ];
-}
 
 export function provideGlobalErrorHandler() {
   return [
