@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { DatatableComponent } from './datatable/datatable';
+import { DatatableTemplateDirective } from './datatable/datatable-template.directive';
 import { DialogComponent } from './dialog/dialog';
 import { PaginatorComponent } from './paginator/paginator';
 import { SelectorPermissionsComponent } from './selector-permissions/selector-permissions';
@@ -12,6 +13,7 @@ import { DialogService } from './dialog/dialog.service';
 @NgModule({
   declarations: [
     DatatableComponent,
+    DatatableTemplateDirective,
     PaginatorComponent,
     DialogComponent,
     SelectorPermissionsComponent,
@@ -24,6 +26,7 @@ import { DialogService } from './dialog/dialog.service';
   ],
   exports: [
     DatatableComponent,
+    DatatableTemplateDirective,
     PaginatorComponent,
     DialogComponent,
     SelectorPermissionsComponent,

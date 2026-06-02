@@ -28,24 +28,22 @@
     <app-datatable
       [columns]="columns"
       [checkboxEnabled]="true"
-      [actionsTemplate]="actionsTemplate"
       [data]="datatableSignal().items"
       [currentPage]="datatableSignal().currentPage"
       [totalPages]="datatableSignal().totalPages"
       (pageChange)="onPageChange($event)">
+      <ng-template appDatatableTemplate column="actions" let-item>
+        <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3"
+          (click)="onShowUpdate(item, updateModal)">
+          <i class="fs-6 bi bi-sliders2-vertical"></i>
+        </button>
+        <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px" (click)="onDelete(item)">
+          <i class="fs-6 bi bi-x-octagon"></i>
+        </button>
+      </ng-template>
     </app-datatable>
   </div>
 </div>
-
-<ng-template #actionsTemplate let-item>
-  <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3"
-    (click)="onShowUpdate(item, updateModal)">
-    <i class="fs-6 bi bi-sliders2-vertical"></i>
-  </button>
-  <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px" (click)="onDelete(item)">
-    <i class="fs-6 bi bi-x-octagon"></i>
-  </button>
-</ng-template>
 
 <div class="modal fade" bsModal #createModal="bs-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-lg">

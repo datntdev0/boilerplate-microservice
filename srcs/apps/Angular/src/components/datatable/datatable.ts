@@ -1,11 +1,14 @@
-import { Component, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, TemplateRef, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
+import { DatatableTemplateDirective } from './datatable-template.directive';
 
 export interface DatatableColumn {
   key: string;
   title: string;
   minWidth?: string;
   sortable?: boolean;
+  datatype?: 'string' | 'date' | 'numeric';
   template?: (item: any) => string;
+  cellTemplate?: TemplateRef<{ $implicit: any }>;
 }
 
 @Component({
@@ -13,17 +16,34 @@ export interface DatatableColumn {
   selector: 'app-datatable',
   templateUrl: './datatable.html',
 })
-export class DatatableComponent {
+export class DatatableComponent implements AfterContentInit {
   @Input() data: any[] = [];
   @Input() columns: DatatableColumn[] = [];
-  @Input() actionsTemplate?: TemplateRef<any>;
   @Input() checkboxEnabled: boolean = true;
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
   @Output() pageChange = new EventEmitter<number>();
+  @ContentChildren(DatatableTemplateDirective, { descendants: true }) contentTemplates!: QueryList<DatatableTemplateDirective>;
+  
+  actionsTemplate?: TemplateRef<any>;
   
   selectedItems: Set<any> = new Set();
   allSelected: boolean = false;
+
+  ngAfterContentInit(): void {
+    // Map content templates to columns by key
+    this.contentTemplates?.forEach(templateDirective => {
+      if (templateDirective.column === 'actions') {
+        // Special handling for actions template
+        this.actionsTemplate = templateDirective.template;
+      } else {
+        const col = this.columns.find(c => c.key === templateDirective.column);
+        if (col) {
+          col.cellTemplate = templateDirective.template;
+        }
+      }
+    });
+  }
 
   toggleSelectAll() {
     if (this.allSelected) {
@@ -46,11 +66,27 @@ export class DatatableComponent {
     return this.selectedItems.has(item);
   }
 
+  hasCellTemplate(column: DatatableColumn): boolean {
+    return !!column.cellTemplate;
+  }
+
+  shouldUseDateTimeTemplate(column: DatatableColumn): boolean {
+    return column.datatype === 'date' && !this.hasCellTemplate(column);
+  }
+
+  shouldUseDefaultCellTemplate(column: DatatableColumn): boolean {
+    return !this.hasCellTemplate(column) && column.datatype !== 'date';
+  }
+
   getCellValue(item: any, column: DatatableColumn): string {
     if (column.template) {
       return column.template(item);
     }
     return item[column.key] || '';
+  }
+
+  getDateValue(item: any, column: DatatableColumn): any {
+    return item[column.key];
   }
 
   getColspan(): number {

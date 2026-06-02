@@ -1,9 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatatableColumn } from '@components/datatable/datatable';
 import { DialogService } from '@components/dialog/dialog.service';
 import { Datatable } from '@shared/models/datatable';
-import { DateTimePipe } from '@shared/pipes/datetime.pipe';
 import { PermissionNode, PermissionService } from '@shared/services/permission.service';
 import { RoleListDto, SrvIdentityClientProxy, UserCreateDto, UserListDto, UserUpdateDto } from '@shared/proxies/srv-identity-proxies';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -12,13 +11,11 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
   standalone: false,
   templateUrl: './users.html',
 })
-export class UsersPage implements OnInit, AfterViewInit {
+export class UsersPage implements OnInit {
   private readonly clientIdentitySrv = inject(SrvIdentityClientProxy);
   private readonly dialogSrv = inject(DialogService);
   private readonly fb = inject(FormBuilder);
   private readonly permissionSrv = inject(PermissionService);
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly dateTimePipe = new DateTimePipe();
 
   public datatableSignal = signal(new Datatable<UserListDto>());
   public allRolesSignal = signal(new Datatable<RoleListDto>());
@@ -35,25 +32,27 @@ export class UsersPage implements OnInit, AfterViewInit {
     {
       key: 'emailAddress',
       title: 'Email Address',
-      template: (item) => `<span class="text-gray-800 text-hover-primary mb-1">${item.emailAddress || ""}</span>`,
+      datatype: 'string'
     },
     {
       key: 'lastName',
       title: 'Last Name',
+      datatype: 'string'
     },
     {
       key: 'firstName',
       title: 'First Name',
+      datatype: 'string'
     },
     {
       key: 'createdAt',
       title: 'Created',
-      template: (item) => this.renderDateColumn(item.createdAt)
+      datatype: 'date'
     },
     {
       key: 'updatedAt',
       title: 'Updated',
-      template: (item) => this.renderDateColumn(item.updatedAt)
+      datatype: 'date'
     }
   ];
 
@@ -76,35 +75,12 @@ export class UsersPage implements OnInit, AfterViewInit {
     );
   }
 
-  ngAfterViewInit(): void {
-    this.initializeTooltips();
-  }
-
   private loadUsers(): void {
     this.clientIdentitySrv.users_GetAll(0, 10).subscribe(
       users => {
         this.datatableSignal.set(new Datatable<UserListDto>(users));
-        setTimeout(() => this.initializeTooltips(), 0);
       }
     );
-  }
-
-  private renderDateColumn(date: Date | string | null | undefined): string {
-    if (!date) return '';
-    const relativeTime = this.dateTimePipe.relative(date);
-    const fullDate = this.dateTimePipe.readable(date);
-    return `<span data-bs-toggle="tooltip" data-bs-placement="top" title="${fullDate}">${relativeTime}</span>`;
-  }
-
-  private initializeTooltips(): void {
-    // Initialize Bootstrap tooltips using vanilla JavaScript
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    tooltipTriggerList.forEach(tooltipTriggerEl => {
-      // Use Bootstrap's native tooltip via data attributes
-      // Bootstrap 5 tooltips are initialized automatically if bootstrap.js is loaded
-      // or we can initialize them programmatically without importing Tooltip class
-      const tooltip = (window as any).bootstrap?.Tooltip?.getOrCreateInstance(tooltipTriggerEl);
-    });
   }
 
   protected onShowCreate(modal: ModalDirective): void {
@@ -177,7 +153,6 @@ export class UsersPage implements OnInit, AfterViewInit {
     this.updateForm.patchValue({ firstName: this.editingUser!.firstName, lastName: this.editingUser!.lastName });
     this.selectedRoleIds = this.editingUser!.roles?.map((r: any) => r.id) ?? [];
     this.updatePermTree = this.permissionSrv.buildTree(this.editingUser!.permissions ?? []);
-    this.cdr.detectChanges();
     modal.show();
   }
 
