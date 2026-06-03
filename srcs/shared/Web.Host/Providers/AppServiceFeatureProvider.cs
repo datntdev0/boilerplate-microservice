@@ -35,14 +35,10 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
 
                 action.Filters.Add(NormalizeSuccessResponseType(action));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 400));
+                action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 403));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 404));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 409));
                 action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponse), 500));
-
-                // Check for AppAuthorizationAttribute on interface method
-                //var authorizationAttribute = GetAuthorizationAttributeFromInterface(action);
-                //var authorizationFilter = new ServiceFilterAttribute(typeof(AppAuthorizationFilter));
-                //action.Filters.AddIf(authorizationAttribute != null, authorizationFilter!);
             }
         }
     }
