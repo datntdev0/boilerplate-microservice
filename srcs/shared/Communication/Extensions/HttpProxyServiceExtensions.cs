@@ -12,6 +12,19 @@ public static class HttpProxyServiceExtensions
         // Register AuthorizationHeaderHandler for propagating auth headers in inter-service communication
         services.AddTransient<AuthorizationHeaderHandler>();
         
+        // Register named HttpClients with HttpClientFactory
+        var apiKey = configs.GetValue<string>("HttpClients:ApiKey");
+        var httpClientSection = configs.GetSection("HttpClients");
+        httpClientSection.GetChildren().ToList().ForEach(kv =>
+        {
+            services.AddHttpClient(kv.Key, client =>
+            {
+                client.BaseAddress = new Uri(kv.Value!);
+                client.DefaultRequestHeaders.Add("Authorization", $"ApiKey {apiKey}");
+            }).AddHttpMessageHandler<AuthorizationHeaderHandler>();
+        });
+
+        // Register typed wrapper for each service HttpClient
         services.AddScoped(typeof(ISrvIdentityHttpClient), (sp) =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
@@ -34,15 +47,6 @@ public static class HttpProxyServiceExtensions
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             return new SrvPaymentHttpClient(httpClientFactory.CreateClient("srv-payment"));
-        });
-
-        var httpClientSection = configs.GetSection("HttpClients");
-        httpClientSection.GetChildren().ToList().ForEach(kv =>
-        {
-            services.AddHttpClient(kv.Key, client =>
-            {
-                client.BaseAddress = new Uri(kv.Value!);
-            }).AddHttpMessageHandler<AuthorizationHeaderHandler>();
         });
     }
 }

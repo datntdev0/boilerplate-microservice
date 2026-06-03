@@ -5,6 +5,7 @@ using datntdev.Microservice.Shared.Common.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace datntdev.Microservice.Shared.Web.Host.Handlers;
@@ -13,6 +14,30 @@ public class AuthorizationMiddlewareHandler : IAuthorizationMiddlewareResultHand
 {
     public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
     {
+        // Step 0: Check for ApiKey authentication (bypasses permission checks for internal API calls)
+        var authHeader = context.Request.Headers.Authorization.ToString();
+        if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("ApiKey ", StringComparison.OrdinalIgnoreCase))
+        {
+            var configuration = context.RequestServices.GetRequiredService<IConfiguration>();
+            var configuredApiKey = configuration.GetValue<string>("HttpClients:ApiKey");
+
+            // If ApiKey is not configured (empty or null), treat as disabled
+            if (!string.IsNullOrEmpty(configuredApiKey))
+            {
+                var providedApiKey = authHeader.Substring("ApiKey ".Length).Trim();
+                
+                if (providedApiKey == configuredApiKey)
+                {
+                    // Valid API key - bypass all permission checks
+                    await next(context);
+                    return;
+                }
+            }
+            
+            // Invalid or disabled API key
+            throw ExceptionUnauthorized.Default();
+        }
+
         // Step 1: Verify user is authenticated
         if (!(context.User.Identity?.IsAuthenticated ?? false)) 
             throw ExceptionUnauthorized.Default();
