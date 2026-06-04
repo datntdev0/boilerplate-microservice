@@ -6,10 +6,10 @@ var srvNotify = builder.AddProject<Projects.datntdev_Microservice_Srv_Notify_Web
 var srvPayment = builder.AddProject<Projects.datntdev_Microservice_Srv_Payment_Web_Host>("srv-payment");
 
 // Configure inter-service references for service discovery
-srvIdentity.WithReference(srvAdmin).WithReference(srvNotify).WithReference(srvPayment);
-srvAdmin.WithReference(srvIdentity).WithReference(srvNotify).WithReference(srvPayment);
-srvNotify.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvPayment);
-srvPayment.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvNotify);
+srvIdentity.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvNotify).WithReference(srvPayment);
+srvAdmin.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvNotify).WithReference(srvPayment);
+srvNotify.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvNotify).WithReference(srvPayment);
+srvPayment.WithReference(srvIdentity).WithReference(srvAdmin).WithReference(srvNotify).WithReference(srvPayment);
 
 // Configure Identity Provider references to Identity microservice
 builder.AddProject<Projects.datntdev_Microservice_App_Identity>("app-identity")

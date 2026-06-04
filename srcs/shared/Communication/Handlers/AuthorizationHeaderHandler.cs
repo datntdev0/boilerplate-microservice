@@ -1,3 +1,4 @@
+using datntdev.Microservice.Shared.Common.Helpers;
 using Microsoft.AspNetCore.Http;
 
 namespace datntdev.Microservice.Shared.Communication.Handlers;
@@ -20,7 +21,7 @@ public class AuthorizationHeaderHandler(IHttpContextAccessor httpContextAccessor
         {
             if (authHeaderValue.Count > 0 && !string.IsNullOrWhiteSpace(authHeaderValue[0]))
             {
-                request.Headers.TryAddWithoutValidation("Authorization", authHeaderValue.ToString());
+                request.Headers.Authorization = StringHelper.ParseAuthenticationHeader(authHeaderValue[0]);
             }
         }
 

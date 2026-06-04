@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace datntdev.Microservice.Shared.Common.Helpers;
@@ -25,5 +26,15 @@ public static class StringHelper
         if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(prefix)) return input;
         return input.StartsWith(prefix, StringComparison.InvariantCulture) ?
             input[prefix.Length..].Trim() : input;
+    }
+
+    public static AuthenticationHeaderValue? ParseAuthenticationHeader(string? headerValue)
+    {
+        if (string.IsNullOrEmpty(headerValue)) return null;
+
+        var parts = headerValue.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length != 2) return null;
+
+        return new AuthenticationHeaderValue(parts[0], parts[1]);
     }
 }
