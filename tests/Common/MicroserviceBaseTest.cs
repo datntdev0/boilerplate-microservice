@@ -1,9 +1,10 @@
 using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Common.Helpers;
+using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 
 namespace datntdev.Microservice.Tests.Common;
 
-public abstract class MicroserviceBaseTest<TEntryPoint>
-    where TEntryPoint : class
+public abstract class MicroserviceBaseTest<TEntryPoint> where TEntryPoint : class
 {
     public static TestWebApplicationFactory<TEntryPoint> AppFactory { get; } = new();
 
@@ -27,15 +28,14 @@ public abstract class MicroserviceBaseTest<TEntryPoint>
     ];
 
     /// <summary>
-    /// Creates an isolated test client authenticated with the specified user ID and permissions.
-    /// Uses test-only headers (X-Test-Sub, X-Test-Permissions) — no live Identity service required.
+    /// Creates an authenticated HTTP client using a SessionDto.
+    /// Serializes the SessionDto to JSON, encodes it as base64, and sets it in the Authorization header.
     /// </summary>
-    public HttpClient CreateAuthenticatedClient(string userId, params Constants.Permissions[] permissions)
+    public HttpClient CreateAuthenticatedClient(SessionDto sessionDto)
     {
         var client = AppFactory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-Sub", userId);
-        if (permissions.Length > 0)
-            client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(",", permissions.Select(p => p.ToString())));
+        var token = StringHelper.ConvertToBase64(JsonHelper.Serialize(sessionDto));
+        client.DefaultRequestHeaders.Add("Authorization", $"TestKey {token}");
         return client;
     }
 
@@ -43,7 +43,21 @@ public abstract class MicroserviceBaseTest<TEntryPoint>
     /// Creates an authenticated HTTP client with all permissions for general-purpose test use.
     /// </summary>
     public Task<HttpClient> GetAuthenticatedClientAsync()
-        => Task.FromResult(CreateAuthenticatedClient("1", AllPermissions));
+    {
+        var sessionDto = new SessionDto
+        {
+            User = new SessionUserDto
+            {
+                Id = 1,
+                EmailAddress = "admin@datntdev.com",
+                FirstName = "Admin",
+                LastName = "User",
+                Permissions = AllPermissions,
+                Roles = []
+            }
+        };
+        return Task.FromResult(CreateAuthenticatedClient(sessionDto));
+    }
 
     public static Task StaticAssemblyInitialize(TestContext testContext)
     {

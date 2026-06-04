@@ -1,4 +1,4 @@
-using datntdev.Microservice.Shared.Common;
+using datntdev.Microservice.Shared.Common.Helpers;
 using datntdev.Microservice.Shared.Communication.HttpClients;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Tests.Common.Authentication;
@@ -25,8 +25,8 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
             services.AddAuthentication(TestAuthHandler.SchemeName)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
 
-            // Replace ISrvIdentityHttpClient with a mock that builds a SessionDto from request headers
-            services.AddScoped<ISrvIdentityHttpClient>(sp =>
+            // Replace ISrvIdentityHttpClient with a mock that parses SessionDto from Authorization header
+            services.AddScoped(sp =>
             {
                 var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
                 var mock = Substitute.For<ISrvIdentityHttpClient>();
@@ -35,26 +35,22 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
                     .Returns(_ =>
                     {
                         var request = httpContextAccessor.HttpContext?.Request;
-                        var sub = request?.Headers["X-Test-Sub"].ToString() ?? "1";
-                        var permsHeader = request?.Headers["X-Test-Permissions"].ToString() ?? "";
+                        var authHeader = request?.Headers.Authorization.ToString();
+                        var base64 = StringHelper.GetSubstring(authHeader, "TestKey");
+                        if (string.IsNullOrEmpty(base64)) return Task.FromResult(new SessionDto());
 
-                        var permissions = permsHeader
-                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                            .Select(p => Enum.Parse<Constants.Permissions>(p.Trim(), ignoreCase: true))
-                            .ToArray();
-
-                        return Task.FromResult(new SessionDto
+                        try
                         {
-                            User = new SessionUserDto
-                            {
-                                Id = long.TryParse(sub, out var id) ? id : 1,
-                                EmailAddress = "test@datntdev.com",
-                                FirstName = "Test",
-                                LastName = "User",
-                                Permissions = permissions,
-                                Roles = []
-                            }
-                        });
+                            // Extract and decode SessionDto from Authorization header
+                            var json = StringHelper.ConvertFromBase64(base64);
+                            var sessionDto = JsonHelper.Deserialize<SessionDto>(json);
+
+                            return Task.FromResult(sessionDto ?? new SessionDto());
+                        }
+                        catch
+                        {
+                            return Task.FromResult(new SessionDto());
+                        }
                     });
 
                 return mock;
