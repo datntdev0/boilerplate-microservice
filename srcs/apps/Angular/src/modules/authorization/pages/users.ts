@@ -61,6 +61,8 @@ export class UsersPage implements OnInit {
     this.createForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
       lastName: ['', [Validators.required, Validators.minLength(3)]],
+      emailAddress: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
     this.updateForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -106,6 +108,8 @@ export class UsersPage implements OnInit {
     const data = new UserCreateDto({
       firstName: this.createForm.value.firstName,
       lastName: this.createForm.value.lastName,
+      emailAddress: this.createForm.value.emailAddress,
+      password: this.createForm.value.password,
       roleIds: this.selectedRoleIds,
       permissions: this.permissionSrv.extractPermissions(this.createPermTree),
     });

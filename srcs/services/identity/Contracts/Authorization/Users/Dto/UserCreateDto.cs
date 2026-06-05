@@ -6,6 +6,8 @@ public class UserCreateDto
 {
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
+    public string EmailAddress { get; set; } = default!;
+    public string Password { get; set; } = default!;
     public int[] RoleIds { get; set; } = [];
     public Constants.Permissions[] Permissions { get; set; } = [];
 }

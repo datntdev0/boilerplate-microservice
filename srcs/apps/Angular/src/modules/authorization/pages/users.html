@@ -66,28 +66,64 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="createForm">
-          <div class="fv-row fv-plugins-icon-container mb-4">
-            <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
-              <span class="required">First Name</span>
-            </label>
-            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="firstName"
-              [class.is-invalid]="createForm.get('firstName')?.invalid && createForm.get('firstName')?.touched" />
-            <div class="invalid-feedback"
-              *ngIf="createForm.get('firstName')?.invalid && createForm.get('firstName')?.touched">
-              <span *ngIf="createForm.get('firstName')?.errors?.['required']">First name is required</span>
-              <span *ngIf="createForm.get('firstName')?.errors?.['minlength']">First name must be at least 3 characters</span>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="fv-row fv-plugins-icon-container mb-4">
+                <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                  <span class="required">First Name</span>
+                </label>
+                <input type="text" class="form-control form-control-lg form-control-solid" formControlName="firstName"
+                  [class.is-invalid]="createForm.get('firstName')?.invalid && createForm.get('firstName')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="createForm.get('firstName')?.invalid && createForm.get('firstName')?.touched">
+                  <span *ngIf="createForm.get('firstName')?.errors?.['required']">First name is required</span>
+                  <span *ngIf="createForm.get('firstName')?.errors?.['minlength']">First name must be at least 3 characters</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="fv-row fv-plugins-icon-container mb-4">
+                <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                  <span class="required">Last Name</span>
+                </label>
+                <input type="text" class="form-control form-control-lg form-control-solid" formControlName="lastName"
+                  [class.is-invalid]="createForm.get('lastName')?.invalid && createForm.get('lastName')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="createForm.get('lastName')?.invalid && createForm.get('lastName')?.touched">
+                  <span *ngIf="createForm.get('lastName')?.errors?.['required']">Last name is required</span>
+                  <span *ngIf="createForm.get('lastName')?.errors?.['minlength']">Last name must be at least 3 characters</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="fv-row fv-plugins-icon-container">
-            <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
-              <span class="required">Last Name</span>
-            </label>
-            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="lastName"
-              [class.is-invalid]="createForm.get('lastName')?.invalid && createForm.get('lastName')?.touched" />
-            <div class="invalid-feedback"
-              *ngIf="createForm.get('lastName')?.invalid && createForm.get('lastName')?.touched">
-              <span *ngIf="createForm.get('lastName')?.errors?.['required']">Last name is required</span>
-              <span *ngIf="createForm.get('lastName')?.errors?.['minlength']">Last name must be at least 3 characters</span>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="fv-row fv-plugins-icon-container mb-4">
+                <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                  <span class="required">Email Address</span>
+                </label>
+                <input type="email" class="form-control form-control-lg form-control-solid" formControlName="emailAddress"
+                  [class.is-invalid]="createForm.get('emailAddress')?.invalid && createForm.get('emailAddress')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="createForm.get('emailAddress')?.invalid && createForm.get('emailAddress')?.touched">
+                  <span *ngIf="createForm.get('emailAddress')?.errors?.['required']">Email address is required</span>
+                  <span *ngIf="createForm.get('emailAddress')?.errors?.['email']">Email address must be valid</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="fv-row fv-plugins-icon-container mb-4">
+                <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                  <span class="required">Password</span>
+                </label>
+                <input type="password" class="form-control form-control-lg form-control-solid" formControlName="password"
+                  [class.is-invalid]="createForm.get('password')?.invalid && createForm.get('password')?.touched" />
+                <div class="invalid-feedback"
+                  *ngIf="createForm.get('password')?.invalid && createForm.get('password')?.touched">
+                  <span *ngIf="createForm.get('password')?.errors?.['required']">Password is required</span>
+                  <span *ngIf="createForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
+                </div>
+              </div>
             </div>
           </div>
         </form>

@@ -2049,6 +2049,8 @@ export interface ISignupDto {
 export class UserCreateDto implements IUserCreateDto {
     firstName?: string;
     lastName?: string;
+    emailAddress?: string;
+    password?: string;
     roleIds?: number[];
     permissions?: number[];
 
@@ -2071,6 +2073,8 @@ export class UserCreateDto implements IUserCreateDto {
             }
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            this.emailAddress = _data["emailAddress"];
+            this.password = _data["password"];
             if (Array.isArray(_data["roleIds"])) {
                 this.roleIds = [] as any;
                 for (let item of _data["roleIds"])
@@ -2099,6 +2103,8 @@ export class UserCreateDto implements IUserCreateDto {
         }
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        data["emailAddress"] = this.emailAddress;
+        data["password"] = this.password;
         if (Array.isArray(this.roleIds)) {
             data["roleIds"] = [];
             for (let item of this.roleIds)
@@ -2116,6 +2122,8 @@ export class UserCreateDto implements IUserCreateDto {
 export interface IUserCreateDto {
     firstName?: string;
     lastName?: string;
+    emailAddress?: string;
+    password?: string;
     roleIds?: number[];
     permissions?: number[];
 

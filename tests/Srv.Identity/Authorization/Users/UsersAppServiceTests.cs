@@ -22,6 +22,8 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         {
             FirstName = "John",
             LastName = $"Doe_{Guid.NewGuid():N}",
+            EmailAddress = $"john.doe.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345",
             Permissions = [Constants.Permissions.Users_Read]
         };
 
@@ -57,6 +59,8 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         {
             FirstName = "RoleUser",
             LastName = $"Test_{Guid.NewGuid():N}",
+            EmailAddress = $"roleuser.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345",
             RoleIds = [createdRole!.Id]
         };
 
@@ -80,7 +84,83 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = string.Empty,
-            LastName = "Doe"
+            LastName = "Doe",
+            EmailAddress = $"test.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345"
+        };
+
+        // Act
+        using var response = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task CreateAsync_WithInvalidEmailFormat_ReturnsBadRequest()
+    {
+        // Arrange
+        var client = await GetAuthenticatedClientAsync();
+        var createDto = new UserCreateDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            EmailAddress = "invalid-email-format",
+            Password = "Test@12345"
+        };
+
+        // Act
+        using var response = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task CreateAsync_WithDuplicateEmail_ReturnsBadRequest()
+    {
+        // Arrange
+        var client = await GetAuthenticatedClientAsync();
+        var email = $"duplicate.{Guid.NewGuid():N}@example.com";
+        var firstUserDto = new UserCreateDto
+        {
+            FirstName = "First",
+            LastName = "User",
+            EmailAddress = email,
+            Password = "Test@12345"
+        };
+        
+        // Create the first user
+        using var firstResponse = await client.PostAsJsonAsync(BaseUrl, firstUserDto, CancellationToken);
+        Assert.AreEqual(HttpStatusCode.OK, firstResponse.StatusCode);
+
+        // Try to create second user with same email
+        var secondUserDto = new UserCreateDto
+        {
+            FirstName = "Second",
+            LastName = "User",
+            EmailAddress = email,
+            Password = "Test@12345"
+        };
+
+        // Act
+        using var response = await client.PostAsJsonAsync(BaseUrl, secondUserDto, CancellationToken);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task CreateAsync_WithEmptyEmail_ReturnsBadRequest()
+    {
+        // Arrange
+        var client = await GetAuthenticatedClientAsync();
+        var createDto = new UserCreateDto
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            EmailAddress = string.Empty,
+            Password = "Test@12345"
         };
 
         // Act
@@ -102,7 +182,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = "Get",
-            LastName = $"Test_{Guid.NewGuid():N}"
+            LastName = $"Test_{Guid.NewGuid():N}",
+            EmailAddress = $"get.test.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345"
         };
         using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
@@ -147,7 +229,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
             var createDto = new UserCreateDto
             {
                 FirstName = "Paged",
-                LastName = $"User{i}_{Guid.NewGuid():N}"
+                LastName = $"User{i}_{Guid.NewGuid():N}",
+                EmailAddress = $"paged.user{i}.{Guid.NewGuid():N}@example.com",
+                Password = "Test@12345"
             };
             await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
@@ -176,7 +260,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
             var createDto = new UserCreateDto
             {
                 FirstName = "Pagination",
-                LastName = $"User{i}_{Guid.NewGuid():N}"
+                LastName = $"User{i}_{Guid.NewGuid():N}",
+                EmailAddress = $"pagination.user{i}.{Guid.NewGuid():N}@example.com",
+                Password = "Test@12345"
             };
             await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         }
@@ -231,7 +317,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = "Original",
-            LastName = $"Name_{Guid.NewGuid():N}"
+            LastName = $"Name_{Guid.NewGuid():N}",
+            EmailAddress = $"original.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345"
         };
         using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
@@ -275,6 +363,8 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         {
             FirstName = "RoleUpdateUser",
             LastName = $"Test_{Guid.NewGuid():N}",
+            EmailAddress = $"roleupdate.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345",
             RoleIds = [role1!.Id]
         };
         using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
@@ -307,7 +397,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = "Validation",
-            LastName = $"Test_{Guid.NewGuid():N}"
+            LastName = $"Test_{Guid.NewGuid():N}",
+            EmailAddress = $"validation.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345"
         };
         using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
@@ -356,7 +448,9 @@ public class UsersAppServiceTests : MicroserviceSrvIdentityBaseTest
         var createDto = new UserCreateDto
         {
             FirstName = "Delete",
-            LastName = $"Test_{Guid.NewGuid():N}"
+            LastName = $"Test_{Guid.NewGuid():N}",
+            EmailAddress = $"delete.test.{Guid.NewGuid():N}@example.com",
+            Password = "Test@12345"
         };
         using var createResponse = await client.PostAsJsonAsync(BaseUrl, createDto, CancellationToken);
         var createdUser = await createResponse.Content.ReadFromJsonAsync<UserDto>(CancellationToken);
