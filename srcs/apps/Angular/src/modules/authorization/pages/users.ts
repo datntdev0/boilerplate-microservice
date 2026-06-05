@@ -163,10 +163,9 @@ export class UsersPage implements OnInit {
     modal.show();
   }
 
-  onPageChange(page: number): void {
-    const limit = this.datatableSignal().limit;
-    const offset = (page - 1) * limit;
-    this.fetchUsers(offset, limit);
+  onPageChange(event: { currentPage: number; pageSize: number }): void {
+    const offset = (event.currentPage - 1) * event.pageSize;
+    this.fetchUsers(offset, event.pageSize);
   }
 
   protected onRoleToggle(roleId: number, checked: boolean): void {

@@ -1,0 +1,101 @@
+<div class="form-selector" [class.disabled]="disabled">
+  <div 
+    class="form-selector-control"
+    [class.is-open]="isOpen"
+    [class.has-value]="selectedValues.length > 0"
+    (click)="toggleDropdown()"
+    tabindex="0">
+    
+    <!-- Selected values display -->
+    <div class="form-selector-value">
+      <ng-container *ngIf="!multiple && selectedValues.length > 0">
+        <span class="form-selector-single-value">{{ displayText }}</span>
+      </ng-container>
+
+      <ng-container *ngIf="multiple && selectedValues.length > 0">
+        <span 
+          *ngFor="let value of selectedValues" 
+          class="form-selector-tag">
+          {{ getLabelForValue(value) }}
+          <i 
+            class="bi bi-x form-selector-tag-remove" 
+            (click)="removeValue(value, $event)"></i>
+        </span>
+      </ng-container>
+
+      <span 
+        *ngIf="selectedValues.length === 0" 
+        class="form-selector-placeholder">
+        {{ placeholder }}
+      </span>
+    </div>
+
+    <!-- Clear button -->
+    <div class="form-selector-actions">
+      <i *ngIf="clearable && selectedValues.length > 0 && !disabled"
+        class="bi bi-x-circle form-selector-clear"
+        (click)="clearSelection($event)">
+      </i>
+      <i 
+        class="bi form-selector-arrow"
+        [class.bi-chevron-up]="isOpen"
+        [class.bi-chevron-down]="!isOpen">
+      </i>
+    </div>
+  </div>
+
+  <!-- Dropdown -->
+  <div 
+    class="form-selector-dropdown"
+    [class.show]="isOpen"
+    [style.maxHeight]="maxHeight">
+    
+    <!-- Search input -->
+    <div class="form-selector-search" *ngIf="searchable">
+      <i class="bi bi-search"></i>
+      <input 
+        type="text" 
+        class="form-control form-control-sm"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+        (click)="$event.stopPropagation()"
+        (input)="onSearchInput($event)"
+        [disabled]="disabled">
+    </div>
+
+    <!-- Options list -->
+    <div class="form-selector-options">
+      <div 
+        *ngFor="let option of filteredOptions; let i = index"
+        class="form-selector-option"
+        [class.selected]="isSelected(option)"
+        [class.disabled]="option.disabled"
+        [class.focused]="i === focusedIndex"
+        (click)="selectOption(option)">
+        
+        <div class="form-check form-check-custom form-check-sm" *ngIf="multiple">
+          <input 
+            class="form-check-input" 
+            type="checkbox" 
+            [checked]="isSelected(option)"
+            [disabled]="option.disabled"
+            (click)="$event.stopPropagation()">
+          <label class="form-check-label">
+            {{ option.label }}
+          </label>
+        </div>
+
+        <span *ngIf="!multiple">{{ option.label }}</span>
+
+        <i class="bi bi-check form-selector-check" *ngIf="!multiple && isSelected(option)"></i>
+      </div>
+
+      <div 
+        *ngIf="filteredOptions.length === 0" 
+        class="form-selector-empty">
+        <i class="bi bi-inbox"></i>
+        <span>No options found</span>
+      </div>
+    </div>
+  </div>
+</div>

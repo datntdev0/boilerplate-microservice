@@ -11,6 +11,11 @@ export interface DatatableColumn {
   cellTemplate?: TemplateRef<{ $implicit: any }>;
 }
 
+export interface PageChangeEvent {
+  currentPage: number;
+  pageSize: number;
+}
+
 @Component({
   standalone: false,
   selector: 'app-datatable',
@@ -21,14 +26,30 @@ export class DatatableComponent implements AfterContentInit {
   @Input() columns: DatatableColumn[] = [];
   @Input() checkboxEnabled: boolean = true;
   @Input() currentPage: number = 1;
-  @Input() totalPages: number = 1;
-  @Output() pageChange = new EventEmitter<number>();
+  @Input() pageSize: number = 10;
+  @Input() totalItems: number = 0;
+  @Output() pageChange = new EventEmitter<PageChangeEvent>();
   @ContentChildren(DatatableTemplateDirective, { descendants: true }) contentTemplates!: QueryList<DatatableTemplateDirective>;
   
   actionsTemplate?: TemplateRef<any>;
   
   selectedItems: Set<any> = new Set();
   allSelected: boolean = false;
+
+  pageSizeOptions = [
+    { value: 5, label: '5' },
+    { value: 10, label: '10' },
+    { value: 25, label: '25' },
+    { value: 50, label: '50' },
+    { value: 100, label: '100' },
+    { value: 250, label: '250' },
+    { value: 500, label: '500' },
+  ];
+
+  get totalPages(): number {
+    if (this.pageSize === 0 || this.totalItems === 0) return 1;
+    return Math.ceil(this.totalItems / this.pageSize);
+  }
 
   ngAfterContentInit(): void {
     // Map content templates to columns by key
@@ -97,6 +118,11 @@ export class DatatableComponent implements AfterContentInit {
   }
 
   onPageChange(page: number): void {
-    this.pageChange.emit(page);
+    this.pageChange.emit({ currentPage: page, pageSize: this.pageSize });
+  }
+
+  onPageSizeChange(newPageSize: number): void {
+    // Reset to page 1 when page size changes
+    this.pageChange.emit({ currentPage: 1, pageSize: newPageSize });
   }
 }

@@ -132,10 +132,9 @@ export class TenantsPage implements OnInit, AfterViewInit {
       });
   }
 
-  onPageChange(page: number): void {
-    const limit = this.datatableSignal().limit;
-    const offset = (page - 1) * limit;
-    this.fetchTenants(offset, limit);
+  onPageChange(event: { currentPage: number; pageSize: number }): void {
+    const offset = (event.currentPage - 1) * event.pageSize;
+    this.fetchTenants(offset, event.pageSize);
   }
 
   protected onEdit(item: any, modal: ModalDirective): void {

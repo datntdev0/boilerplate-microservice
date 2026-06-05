@@ -64,13 +64,28 @@
       <tfoot></tfoot>
     </table>
   </div>
-  <div class="row" *ngIf="data.length > 0 && totalPages > 1">
+  <div class="row" *ngIf="data.length > 0">
     <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start dt-toolbar">
+      <div class="d-flex align-items-center gap-3">
+        <label class="form-label mb-0 text-nowrap">Items per page:</label>
+        <app-form-selector
+          [options]="pageSizeOptions"
+          [multiple]="false"
+          [searchable]="false"
+          [clearable]="false"
+          [(ngModel)]="pageSize"
+          (selectionChange)="onPageSizeChange($event)"
+          class="form-selector-sm"
+          style="min-width: 80px;">
+        </app-form-selector>
+      </div>
     </div>
     <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
       <app-paginator 
         [currentPage]="currentPage" 
         [totalPages]="totalPages"
+        [pageSize]="pageSize"
+        [totalItems]="totalItems"
         (pageChange)="onPageChange($event)">
       </app-paginator>
     </div>

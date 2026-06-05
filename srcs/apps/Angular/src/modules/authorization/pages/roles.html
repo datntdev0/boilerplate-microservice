@@ -30,7 +30,8 @@
       [checkboxEnabled]="true"
       [data]="datatableSignal().items"
       [currentPage]="datatableSignal().currentPage"
-      [totalPages]="datatableSignal().totalPages"
+      [pageSize]="datatableSignal().limit"
+      [totalItems]="datatableSignal().total"
       (pageChange)="onPageChange($event)">
       <ng-template appDatatableTemplate column="actions" let-item>
         <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3"

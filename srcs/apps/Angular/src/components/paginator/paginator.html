@@ -1,4 +1,7 @@
 <div class="dt-paging paging_simple_numbers">
+  <div class="dt-info" *ngIf="totalItems > 0">
+    <span class="text-muted fw-semibold">Showing: {{ getFromItem() }} - {{ getToItem() }} of {{ totalItems }}</span>
+  </div>
   <nav aria-label="pagination">
     <ul class="pagination pagination-outline">
       <li class="dt-paging-button page-item" [class.disabled]="currentPage === 1">

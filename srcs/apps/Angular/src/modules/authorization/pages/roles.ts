@@ -82,10 +82,9 @@ export class RolesPage implements OnInit, AfterViewInit {
     // Empty - no longer needed for tooltip initialization
   }
 
-  onPageChange(page: number): void {
-    const limit = this.datatableSignal().limit;
-    const offset = (page - 1) * limit;
-    this.fetchRoles(offset, limit);
+  onPageChange(event: { currentPage: number; pageSize: number }): void {
+    const offset = (event.currentPage - 1) * event.pageSize;
+    this.fetchRoles(offset, event.pageSize);
   }
 
   protected onShowCreate(modal: ModalDirective): void {

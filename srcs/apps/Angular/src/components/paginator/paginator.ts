@@ -8,6 +8,8 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 export class PaginatorComponent implements OnChanges {
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
+  @Input() pageSize: number = 10;
+  @Input() totalItems: number = 0;
   @Input() maxVisiblePages: number = 5;
   @Output() pageChange = new EventEmitter<number>();
 
@@ -48,5 +50,16 @@ export class PaginatorComponent implements OnChanges {
 
   goToLastPage(): void {
     this.goToPage(this.totalPages);
+  }
+
+  getFromItem(): number {
+    if (this.totalItems === 0) return 0;
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  getToItem(): number {
+    if (this.totalItems === 0) return 0;
+    const to = this.currentPage * this.pageSize;
+    return Math.min(to, this.totalItems);
   }
 }

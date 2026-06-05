@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 import { DatatableComponent, DatatableColumn } from '../src/components/datatable/datatable';
-import { ComponentsModule } from '../src/components/components-module';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ComponentsModule } from '../src/components/components.module';
+import { Component } from '@angular/core';
 
 // Sample data for stories
 const sampleUsers = [
@@ -81,19 +81,24 @@ const meta: Meta<DatatableComponent> = {
       control: { type: 'number', min: 1 },
       description: 'Current page number',
     },
-    totalPages: {
-      control: { type: 'number', min: 1 },
-      description: 'Total number of pages',
+    pageSize: {
+      control: { type: 'number', min: 5 },
+      description: 'Number of items per page',
+    },
+    totalItems: {
+      control: { type: 'number', min: 0 },
+      description: 'Total number of items',
     },
     pageChange: {
       action: 'pageChanged',
-      description: 'Event emitted when page changes',
+      description: 'Event emitted when page or page size changes',
     },
   },
   args: {
     checkboxEnabled: true,
     currentPage: 1,
-    totalPages: 1,
+    pageSize: 10,
+    totalItems: 0,
   },
 };
 
@@ -109,17 +114,56 @@ export const BasicTable: Story = {
     ],
     checkboxEnabled: false,
     currentPage: 1,
-    totalPages: 1,
+    pageSize: 10,
+    totalItems: sampleUsers.length,
   },
 };
 
+@Component({
+  selector: 'datatable-with-pagination-demo',
+  standalone: true,
+  imports: [ComponentsModule],
+  template: `
+    <app-datatable 
+      [data]="data" 
+      [columns]="columns"
+      [checkboxEnabled]="false"
+      [currentPage]="currentPage"
+      [pageSize]="pageSize"
+      [totalItems]="totalItems"
+      (pageChange)="onPageChange($event)">
+    </app-datatable>
+  `,
+})
+class DatatableWithPaginationComponent {
+  data = sampleUsers;
+  columns = userColumns;
+  currentPage = 2;
+  pageSize = 10;
+  totalItems = 47;
+
+  onPageChange(event: { currentPage: number; pageSize: number }) {
+    this.currentPage = event.currentPage;
+    this.pageSize = event.pageSize;
+    console.log('Page changed:', event);
+    // In a real app, you would fetch new data here based on currentPage and pageSize
+  }
+}
+
 export const WithPagination: Story = {
-  args: {
-    data: sampleUsers,
-    columns: userColumns,
-    checkboxEnabled: false,
-    currentPage: 2,
-    totalPages: 5,
+  render: (args) => ({
+    props: args,
+    template: `<datatable-with-pagination-demo></datatable-with-pagination-demo>`,
+    moduleMetadata: {
+      imports: [DatatableWithPaginationComponent, ComponentsModule],
+    },
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Datatable with working pagination. Click on page numbers to see the current page update.',
+      },
+    },
   },
 };
 
@@ -129,25 +173,8 @@ export const WithCheckboxes: Story = {
     columns: userColumns,
     checkboxEnabled: true,
     currentPage: 1,
-    totalPages: 1,
-  },
-};
-
-export const EmptyTable: Story = {
-  name: 'Empty State',
-  args: {
-    data: [],
-    columns: userColumns,
-    checkboxEnabled: true,
-    currentPage: 1,
-    totalPages: 1,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Shows the empty state with icon and descriptive message. Pagination is automatically hidden when there is no data.',
-      },
-    },
+    pageSize: 10,
+    totalItems: sampleUsers.length,
   },
 };
 
@@ -159,25 +186,22 @@ export const EmptyTable: Story = {
     <app-datatable 
       [data]="data" 
       [columns]="columns"
-      [actionsTemplate]="actionsTemplate"
       [checkboxEnabled]="true"
       [currentPage]="1"
-      [totalPages]="1">
+      [pageSize]="10"
+      [totalItems]="data.length">
+      <ng-template appDatatableTemplate column="actions" let-item>
+        <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3" (click)="handleEdit(item)">
+          <i class="fs-6 bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px" (click)="handleDelete(item)">
+          <i class="fs-6 bi bi-trash"></i>
+        </button>
+      </ng-template>
     </app-datatable>
-    
-    <ng-template #actionsTemplate let-item>
-      <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px me-3">
-        <i class="fs-6 bi bi-sliders2-vertical"></i>
-      </button>
-      <button class="btn btn-icon btn-light btn-active-light-primary w-30px h-30px">
-        <i class="fs-6 bi bi-x-octagon"></i>
-      </button>
-    </ng-template>
   `,
 })
 class DatatableWithActionsComponent {
-  @ViewChild('actionsTemplate', { static: true }) actionsTemplate!: TemplateRef<any>;
-
   data = sampleUsers;
   columns: DatatableColumn[] = [
     { key: 'name', title: 'Name', minWidth: '125px', sortable: true },
@@ -220,6 +244,25 @@ export const WithActionMenu: Story = {
     docs: {
       description: {
         story: 'Datatable with action menu containing Edit and Delete options for each row.',
+      },
+    },
+  },
+};
+
+export const EmptyTable: Story = {
+  name: 'Empty State',
+  args: {
+    data: [],
+    columns: userColumns,
+    checkboxEnabled: true,
+    currentPage: 1,
+    pageSize: 10,
+    totalItems: 0,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Shows the empty state with icon and descriptive message. Pagination is automatically hidden when there is no data.',
       },
     },
   },

@@ -30,7 +30,8 @@
       [checkboxEnabled]="true"
       [data]="datatableSignal().items"
       [currentPage]="datatableSignal().currentPage"
-      [totalPages]="datatableSignal().totalPages"
+      [pageSize]="datatableSignal().limit"
+      [totalItems]="datatableSignal().total"
       (pageChange)="onPageChange($event)">
       <ng-template appDatatableTemplate column="emailAddress" let-item>
         <span class="text-gray-800 text-hover-primary mb-1">{{ item.emailAddress || '' }}</span>
