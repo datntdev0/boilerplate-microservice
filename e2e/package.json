@@ -1,20 +1,18 @@
 {
-  "name": "e2e",
-  "version": "1.0.0",
-  "description": "",
+  "name": "datntdev-microservices-app-e2e",
+  "author": "datntdev",
+  "version": "0.1.0",
+  "license": "MIT",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
     "test:debug": "npx playwright test --debug",
     "test:report": "npx playwright show-report"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^25.5.0"
   }
 }

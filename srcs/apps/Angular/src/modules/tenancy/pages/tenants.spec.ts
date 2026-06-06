@@ -208,7 +208,7 @@ describe('Pages.Tenants', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 10, limit: 10 });
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(10, 10);
     });
 
@@ -216,7 +216,7 @@ describe('Pages.Tenants', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 20, limit: 10 });
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(3);
+      component.onPageChange({ currentPage: 3, pageSize: 10 });
       expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(20, 10);
     });
 
@@ -224,7 +224,7 @@ describe('Pages.Tenants', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 0, limit: 10 });
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(mockSrvAdminClient.tenants_GetAll).toHaveBeenCalledWith(0, 10);
     });
 
@@ -233,7 +233,7 @@ describe('Pages.Tenants', () => {
       const newTenant = new TenantListDto({ id: 2, name: 'Tenant 2', organization: 'Org 2' });
       const mockResponse = new PaginatedResultOfTenantListDto({ items: [newTenant], total: 1, offset: 10, limit: 10 });
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(component.datatableSignal().items).toEqual([newTenant]);
     });
   });
@@ -243,7 +243,7 @@ describe('Pages.Tenants', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(true);
       subject.complete();
     });
@@ -252,7 +252,7 @@ describe('Pages.Tenants', () => {
       const mockResponse = new PaginatedResultOfTenantListDto({ items: [], total: 0, offset: 0, limit: 10 });
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(false);
     });
 
@@ -261,7 +261,7 @@ describe('Pages.Tenants', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvAdminClient.tenants_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       subject.error(new Error('Network error'));
       expect(component.isDataLoadingSignal()).toBe(false);
       vi.useRealTimers();

@@ -84,7 +84,7 @@ describe('Pages.Roles', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfRoleListDto({ items: [], total: 0, offset: 10, limit: 10 });
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(mockSrvIdentityClient.roles_GetAll).toHaveBeenCalledWith(10, 10);
     });
 
@@ -92,7 +92,7 @@ describe('Pages.Roles', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfRoleListDto({ items: [], total: 0, offset: 20, limit: 10 });
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(3);
+      component.onPageChange({ currentPage: 3, pageSize: 10 });
       expect(mockSrvIdentityClient.roles_GetAll).toHaveBeenCalledWith(20, 10);
     });
 
@@ -100,7 +100,7 @@ describe('Pages.Roles', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfRoleListDto({ items: [], total: 0, offset: 0, limit: 10 });
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(mockSrvIdentityClient.roles_GetAll).toHaveBeenCalledWith(0, 10);
     });
 
@@ -109,7 +109,7 @@ describe('Pages.Roles', () => {
       const newRole = new RoleListDto({ id: 2, name: 'Editor', description: 'Editor role' });
       const mockResponse = new PaginatedResultOfRoleListDto({ items: [newRole], total: 1, offset: 10, limit: 10 });
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(component.datatableSignal().items).toEqual([newRole]);
     });
   });
@@ -119,7 +119,7 @@ describe('Pages.Roles', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(true);
       subject.complete();
     });
@@ -128,7 +128,7 @@ describe('Pages.Roles', () => {
       const mockResponse = new PaginatedResultOfRoleListDto({ items: [], total: 0, offset: 0, limit: 10 });
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(false);
     });
 
@@ -137,7 +137,7 @@ describe('Pages.Roles', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.roles_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       subject.error(new Error('Network error'));
       expect(component.isDataLoadingSignal()).toBe(false);
       vi.useRealTimers();

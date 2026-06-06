@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with: 
           dotnet-version: 9.0.x
       - name: Trust HTTPS development certificate
@@ -37,7 +37,7 @@ jobs:
           -reports:tests/**/coverage.cobertura.xml \
           -targetdir:tests/TestResults \
           -reporttypes:TextSummary \
-          -assemblyfilters:"-*.Tests*"
+          -assemblyfilters:"-*.Tests*;-*.Communication*"
           cat tests/TestResults/Summary.txt
 
   frontend_tests:

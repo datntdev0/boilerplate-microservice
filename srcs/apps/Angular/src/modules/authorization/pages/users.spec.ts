@@ -90,7 +90,7 @@ describe('Pages.Users', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfUserListDto({ items: [], total: 0, offset: 10, limit: 10 });
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(mockSrvIdentityClient.users_GetAll).toHaveBeenCalledWith(10, 10);
     });
 
@@ -98,7 +98,7 @@ describe('Pages.Users', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfUserListDto({ items: [], total: 0, offset: 20, limit: 10 });
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(3);
+      component.onPageChange({ currentPage: 3, pageSize: 10 });
       expect(mockSrvIdentityClient.users_GetAll).toHaveBeenCalledWith(20, 10);
     });
 
@@ -106,7 +106,7 @@ describe('Pages.Users', () => {
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       const mockResponse = new PaginatedResultOfUserListDto({ items: [], total: 0, offset: 0, limit: 10 });
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(mockSrvIdentityClient.users_GetAll).toHaveBeenCalledWith(0, 10);
     });
 
@@ -115,7 +115,7 @@ describe('Pages.Users', () => {
       const newUser = new UserListDto({ id: 2, firstName: 'Jane', lastName: 'Smith' });
       const mockResponse = new PaginatedResultOfUserListDto({ items: [newUser], total: 1, offset: 10, limit: 10 });
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(2);
+      component.onPageChange({ currentPage: 2, pageSize: 10 });
       expect(component.datatableSignal().items).toEqual([newUser]);
     });
   });
@@ -125,7 +125,7 @@ describe('Pages.Users', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(true);
       subject.complete();
     });
@@ -134,7 +134,7 @@ describe('Pages.Users', () => {
       const mockResponse = new PaginatedResultOfUserListDto({ items: [], total: 0, offset: 0, limit: 10 });
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(of(mockResponse));
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       expect(component.isDataLoadingSignal()).toBe(false);
     });
 
@@ -143,7 +143,7 @@ describe('Pages.Users', () => {
       const subject = new Subject<any>();
       component.datatableSignal.set(new Datatable({ limit: 10 }));
       (mockSrvIdentityClient.users_GetAll as any).mockReturnValue(subject.asObservable());
-      component.onPageChange(1);
+      component.onPageChange({ currentPage: 1, pageSize: 10 });
       subject.error(new Error('Network error'));
       expect(component.isDataLoadingSignal()).toBe(false);
       vi.useRealTimers();
