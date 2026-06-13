@@ -1,0 +1,30 @@
+---
+name: scrumai-conventions
+description: Shared conventions for the ScrumAI workflow — repo layout, build/test commands, commit format, and where feature documents live. Loaded by the scrumai.* commands and agents.
+---
+
+# ScrumAI Conventions (skeleton)
+
+> Author the shared knowledge below. Keep it the single source of truth so the
+> four commands and their agents stay consistent.
+
+## Feature artifacts
+- One folder per feature: `.scrumai/features/<NNN>-<name>/`
+  - `<NNN>`: zero-padded 3-digit sequential feature ID (`001`, `002`, …).
+  - `<name>`: 2–4 word kebab-case slug.
+- Files: `spec.md`, `design.md`, `plan.md`, `test.md`, `evidence/`.
+
+## Commit format (conventional)
+- Types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
+- TODO: pin the exact convention (scope? imperative mood? one task per commit?).
+
+## Build / test commands
+- Backend build: `dotnet build datntdev.Microservice.slnf`
+- Backend tests: `dotnet test --settings .runsettings`
+- Angular (from srcs/apps/Angular): `npm start`, `ng build`, `npm run test:ci`
+- E2E (from e2e/): `npx playwright test`
+- Migrations: run the Migrator project.
+
+## Architecture reminders
+- DDD/SOLID; modular `BaseModule` `[DependOn]` DI; YARP gateway; OpenIddict auth.
+- TODO: add anything else every phase must know.
