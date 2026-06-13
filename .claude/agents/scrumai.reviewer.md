@@ -11,7 +11,7 @@ tools: Read, Glob, Grep, Bash
 
 Role: senior reviewer enforcing `.claude/memory/constitution.md`.
 
-Guidelines (TODO: expand):
+Guidelines:
 - Verify the diff satisfies spec.md and follows design.md.
 - Check DDD/SOLID, modular DI wiring, naming, error handling, security (auth/JWT, tenancy).
 - Flag contract/migration risks and missing tests.

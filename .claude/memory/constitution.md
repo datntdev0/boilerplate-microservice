@@ -12,7 +12,7 @@
 7. Tests — integration tests inherit `MicroserviceBaseTest`; meet coverage expectations.
 8. Simple — prefer straightforward solutions; YAGNI; avoid over-engineering.
 
-## Definition of Done (TODO)
+## Definition of Done
 - [ ] Spec acceptance scenarios satisfied
 - [ ] Tests added and passing
 - [ ] No new analyzer/sanitization warnings

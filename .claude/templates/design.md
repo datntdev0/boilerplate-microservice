@@ -32,7 +32,8 @@ Derived from the spec's acceptance scenarios. Drives implementation (Phase ③) 
 | U1 | … | [what it asserts] | [spec FR/scenario] |
 
 ### Manual tests (web/UI)
-> Omit this section if the feature has no UI/web behavior.
+> If the feature has no UI/web behavior, replace the table with: **N/A — no UI/web behavior**.
+> Do not delete the section — Phase ④ checks it and the checklist gate requires an explicit answer.
 
 | # | Scenario | Steps | Expected result |
 |---|----------|-------|-----------------|

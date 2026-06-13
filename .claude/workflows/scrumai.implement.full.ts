@@ -8,11 +8,17 @@ export const meta = {
   ],
 }
 
+// This script only ORCHESTRATES. Each phase's actual procedure lives in its command file
+// (.claude/commands/scrumai.implement.*.md), the scrumai-conventions skill, the templates,
+// and the agent definitions — the single source of truth. Don't restate those rules here;
+// keep the prompts as thin delegations so there's nothing to drift.
+
 // `args` may be a string (feature folder) or { feature }. Empty = let Design resolve the latest.
 const target =
   (args && typeof args === 'object' && args.feature) ? args.feature :
   (typeof args === 'string' ? args : '')
 
+// Design must return the resolved feature folder so later phases target the same one.
 const DESIGN_RESULT = {
   type: 'object',
   additionalProperties: false,
@@ -23,56 +29,28 @@ const DESIGN_RESULT = {
   },
 }
 
-// ── Phase ② Design ───────────────────────────────────────────────────────────
 phase('Design')
 const design = await agent(
-  [
-    'You are running Phase ② Design of the ScrumAI workflow.',
-    target ? `Feature folder: ${target}` : 'Resolve the most recent .scrumai/features/<NNN>-<name>/ folder.',
-    'Load the `scrumai-conventions` skill. Read .claude/commands/scrumai.implement.design.md,',
-    '.claude/memory/constitution.md, and the feature\'s spec.md (confirm it has no open clarifications).',
-    'Design the solution (affected services/modules, DDD/SOLID, modular BaseModule DI,',
-    'data/contract/migration impacts, risks) and define test cases — unit tests AND manual tests.',
-    'Write design.md from .claude/templates/design.md (including the Test Cases section) and',
-    'plan.md from .claude/templates/plan.md into the feature folder. Do NOT edit source code in this phase.',
-    'Return the resolved feature folder path and a one-paragraph summary.',
-  ].join('\n'),
+  `Run Phase ② Design by following .claude/commands/scrumai.implement.design.md.\n` +
+  (target ? `Feature folder: ${target}.` : `No folder given — resolve the most recent .scrumai/features/<NNN>-<name>/.`) +
+  `\nReturn the resolved feature folder path and a one-paragraph summary.`,
   { label: 'design', schema: DESIGN_RESULT },
 )
 
 const feature = (design && design.feature) || target
 log(`Design complete for ${feature}`)
 
-// ── Phase ③ Implement ────────────────────────────────────────────────────────
 phase('Implement')
 const implement = await agent(
-  [
-    `You are running Phase ③ Implement of the ScrumAI workflow for feature ${feature}.`,
-    'Load the `scrumai-conventions` skill and follow .claude/commands/scrumai.implement.start.md.',
-    'Ensure you are on a feature branch (not `main`). Work plan.md to completion: implement each',
-    'task following repo idioms and the modular DI system, build (`dotnet build` / `ng build`) to',
-    'confirm it compiles, commit locally with conventional messages, and check tasks off in plan.md.',
-    'Then run an internal code review applying .claude/agents/scrumai.reviewer.md and',
-    '.claude/memory/constitution.md against spec.md and design.md; fix the findings and commit.',
-    'Do NOT push. Return a summary of the changes and the commits made.',
-  ].join('\n'),
+  `Run Phase ③ Implement for feature ${feature} by following .claude/commands/scrumai.implement.start.md.\n` +
+  `Return a summary of the changes and the commits made.`,
   { label: 'implement' },
 )
 
-// ── Phase ④ Verify ───────────────────────────────────────────────────────────
 phase('Verify')
 const verify = await agent(
-  [
-    `You are running Phase ④ Verify of the ScrumAI workflow for feature ${feature}.`,
-    'Load the `scrumai-conventions` skill and follow .claude/commands/scrumai.implement.verify.md.',
-    'Code review: apply .claude/agents/scrumai.reviewer.md (enforces the constitution).',
-    'Testing: run the design\'s test cases — unit (`dotnet test --settings .runsettings`,',
-    '`npm run test:ci`) and, if the feature has UI/web behavior, manual browser testing via the',
-    '`tools-playwright` skill (globally installed playwright-cli). Capture evidence into the',
-    'feature\'s evidence/ folder.',
-    'Write test.md from .claude/templates/test.md with findings, results, evidence links, and a',
-    'PASS/FAIL verdict. Do NOT push. Return the verdict and a short summary.',
-  ].join('\n'),
+  `Run Phase ④ Verify for feature ${feature} by following .claude/commands/scrumai.implement.verify.md.\n` +
+  `Return the PASS/FAIL verdict and a short summary.`,
   { label: 'verify' },
 )
 

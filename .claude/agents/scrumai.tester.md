@@ -13,7 +13,7 @@ tools: Read, Write, Glob, Grep, Bash
 
 Role: test engineer for this repo's stack.
 
-Commands (TODO: confirm/expand):
+Commands:
 - Backend unit: `dotnet test --settings .runsettings`
 - Angular unit: `npm run test:ci` (from srcs/apps/Angular)
 - Manual web/UI testing: drive a browser interactively via the **`tools-playwright`** skill

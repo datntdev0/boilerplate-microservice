@@ -13,11 +13,21 @@ user-invocable: false
 - One folder per feature: `.scrumai/features/<NNN>-<name>/`
   - `<NNN>`: zero-padded 3-digit sequential feature ID (`001`, `002`, …).
   - `<name>`: 2–4 word kebab-case slug.
-- Files: `spec.md`, `design.md`, `plan.md`, `test.md`, `evidence/`.
+- Files: `spec.md`, `design.md`, `plan.md`, `test.md`, `checklist.md`, `evidence/`.
+
+## Checklist gating
+- Every feature folder has a `checklist.md` (from `.claude/templates/checklist.md`) with per-phase gates.
+- A phase is **complete only when all its required items are checked**. An agent MUST NOT advance to
+  the next phase, hand off, or report "done" while any required item is unchecked.
+- If a required item cannot be met, **STOP and report what is blocking** — never skip a gate
+  silently (e.g. do not skip manual tests). Each phase ticks its own items as it satisfies them.
+
+## Git branch
+- Implementation runs on `feat/<feature_directory_name>` — the feature folder name
+  (e.g. `feat/001-form-tagify`), branched off `main`. Created in `/scrumai.implement.start`. Never commit on `main`.
 
 ## Commit format (conventional)
 - Types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
-- TODO: pin the exact convention (scope? imperative mood? one task per commit?).
 
 ## Build / test commands
 - Backend build: `dotnet build datntdev.Microservice.slnf`
@@ -28,4 +38,4 @@ user-invocable: false
 
 ## Architecture reminders
 - DDD/SOLID; modular `BaseModule` `[DependOn]` DI; YARP gateway; OpenIddict auth.
-- TODO: add anything else every phase must know.
+
