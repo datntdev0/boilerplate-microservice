@@ -2,6 +2,7 @@
 name: tools-playwright
 description: Drive a real browser interactively to manually verify a just-built web/UI feature during development, capturing snapshots/screenshots as evidence. Use during /scrumai.implement.verify when a feature has UI or web behavior. Hands-on manual testing via the globally installed playwright-cli — NOT the e2e/ regression suite.
 allowed-tools: Bash(playwright-cli:*), Read, Write
+user-invocable: false
 ---
 
 # tools-playwright

@@ -1,6 +1,7 @@
 ---
 name: scrumai-conventions
 description: Shared conventions for the ScrumAI workflow — repo layout, build/test commands, commit format, and where feature documents live. Loaded by the scrumai.* commands and agents.
+user-invocable: false
 ---
 
 # ScrumAI Conventions (skeleton)

@@ -33,3 +33,6 @@ storybook-static
 .datagrip/**/workspace.xml
 .datagrip/**/dataSources/
 .datagrip/**/dataSources.local.xml
+
+# Agent-specific ignore files
+.scrumai/
