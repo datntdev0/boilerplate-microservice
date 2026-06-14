@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ComponentsModule } from '@components/components.module';
-import { provideSrvAdminProxy } from '@shared/proxies/proxy-providers';
+import { FormTagifyComponent } from '@components/form-tagify/form-tagify';
+import { provideSrvAdminProxy, provideSrvIdentityProxy } from '@shared/proxies/proxy-providers';
 import { TenantsPage } from './pages/tenants';
 
 const routes: Routes = [
@@ -18,12 +19,14 @@ const routes: Routes = [
   imports: [
     CommonModule,
     ComponentsModule,
+    FormTagifyComponent,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
   ],
   providers: [
     ComponentsModule,
     provideSrvAdminProxy(),
+    provideSrvIdentityProxy(),
   ],
 })
 export class TenancyModule { }

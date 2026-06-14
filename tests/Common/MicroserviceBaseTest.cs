@@ -59,6 +59,27 @@ public abstract class MicroserviceBaseTest<TEntryPoint> where TEntryPoint : clas
         return Task.FromResult(CreateAuthenticatedClient(sessionDto));
     }
 
+    /// <summary>
+    /// Creates an authenticated HTTP client with no permissions so auth middleware reaches the
+    /// permission-check step and returns 403 (not 401 from an unauthenticated caller).
+    /// </summary>
+    public HttpClient CreateClientWithoutPermissions()
+    {
+        var sessionDto = new SessionDto
+        {
+            User = new SessionUserDto
+            {
+                Id = 99,
+                EmailAddress = "noperm@example.com",
+                FirstName = "No",
+                LastName = "Permission",
+                Permissions = [],
+                Roles = []
+            }
+        };
+        return CreateAuthenticatedClient(sessionDto);
+    }
+
     public static Task StaticAssemblyInitialize(TestContext testContext)
     {
         Console.WriteLine("Initializing WebApplicationFactory for integration tests...");

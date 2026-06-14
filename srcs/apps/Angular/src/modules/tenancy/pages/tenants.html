@@ -25,10 +25,10 @@
   </div>
 
   <div class="card-body pt-0">
-    <app-datatable 
-      [columns]="columns" 
-      [checkboxEnabled]="true" 
-      [data]="datatableSignal().items" 
+    <app-datatable
+      [columns]="columns"
+      [checkboxEnabled]="true"
+      [data]="datatableSignal().items"
       [currentPage]="datatableSignal().currentPage"
       [pageSize]="datatableSignal().limit"
       [totalItems]="datatableSignal().total"
@@ -52,6 +52,7 @@
   }
 </div>
 
+<!-- Create Tenant Modal -->
 <div class="modal fade" bsModal #createModal="bs-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -100,49 +101,119 @@
   </div>
 </div>
 
+<!-- Edit Tenant Modal — large stacked layout -->
 <div class="modal fade" bsModal #updateModal="bs-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 id="dialog-static-name" class="modal-title pull-left">Update Tenant</h4>
+        <h4 id="dialog-update-name" class="modal-title pull-left">Edit Tenant</h4>
         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="updateModal.hide()">
           <span aria-hidden="true" class="visually-hidden">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+
+        <!-- Section 1: Tenant Information -->
         <form [formGroup]="updateForm">
-          <div class="fv-row fv-plugins-icon-container">
-            <label class="d-flex align-items-center fs-5 fw-semibold">
-              <span class="required">Tenant Name</span>
-            </label>
-            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="name"
-              [class.is-invalid]="updateForm.get('name')?.invalid && updateForm.get('name')?.touched" />
-            <div class="invalid-feedback"
-              *ngIf="updateForm.get('name')?.invalid && updateForm.get('name')?.touched">
-              <span *ngIf="updateForm.get('name')?.errors?.['required']">Tenant name is required</span>
-              <span *ngIf="updateForm.get('name')?.errors?.['minlength']">Tenant name must be at least 3
-                characters</span>
+          <div class="row mb-4">
+            <div class="col-md-6 fv-row fv-plugins-icon-container">
+              <label class="d-flex align-items-center fs-5 fw-semibold mb-1">
+                <span class="required">Tenant Name</span>
+              </label>
+              <input type="text" class="form-control form-control-lg form-control-solid" formControlName="name"
+                [class.is-invalid]="updateForm.get('name')?.invalid && updateForm.get('name')?.touched" />
+              <div class="invalid-feedback"
+                *ngIf="updateForm.get('name')?.invalid && updateForm.get('name')?.touched">
+                <span *ngIf="updateForm.get('name')?.errors?.['required']">Tenant name is required</span>
+                <span *ngIf="updateForm.get('name')?.errors?.['minlength']">Tenant name must be at least 3 characters</span>
+              </div>
+            </div>
+            <div class="col-md-6 fv-row fv-plugins-icon-container">
+              <label class="d-flex align-items-center fs-5 fw-semibold mb-1">
+                <span>Organization</span>
+              </label>
+              <input type="text" class="form-control form-control-lg form-control-solid" formControlName="organization" />
             </div>
           </div>
-          <div class="fv-row fv-plugins-icon-container">
-            <label class="d-flex align-items-center fs-5 fw-semibold">
-              <span>Organization</span>
-            </label>
-            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="organization" />
+          <div class="d-flex justify-content-end mb-5 pb-5 border-bottom">
+            <button type="reset" class="btn btn-light me-3" (click)="updateForm.reset(); updateModal.hide()">
+              Discard
+            </button>
+            <button type="submit" class="btn btn-primary" [attr.data-ui-indicator]="isLoadingSignal() ? 'on' : 'off'"
+              [disabled]="isLoadingSignal() || updateForm.invalid" (click)="onUpdate(updateModal)">
+              <span class="indicator-label">Save</span>
+              <span class="indicator-progress">
+                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+              </span>
+            </button>
           </div>
         </form>
-        <div class="text-center pt-10">
-          <button type="reset" class="btn btn-light me-3" (click)="updateForm.reset(); updateModal.hide()">
-            Discard
-          </button>
-          <button type="submit" class="btn btn-primary" [attr.data-ui-indicator]="isLoadingSignal() ? 'on' : 'off'"
-            [disabled]="isLoadingSignal() || updateForm.invalid" (click)="onUpdate(updateModal)">
-            <span class="indicator-label">Submit</span>
-            <span class="indicator-progress">
-              Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-            </span>
-          </button>
+
+        <!-- Section 2: User Assignment -->
+        <div>
+          <h5 class="fw-bold mb-3">Assigned Users</h5>
+
+          <!-- Feedback banners -->
+          @if (inviteWarning()) {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{ inviteWarning() }}
+              <button type="button" class="btn-close" (click)="inviteWarning.set(null)" aria-label="Close"></button>
+            </div>
+          }
+          @if (inviteSuccess()) {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              {{ inviteSuccess() }}
+              <button type="button" class="btn-close" (click)="inviteSuccess.set(null)" aria-label="Close"></button>
+            </div>
+          }
+
+          <!-- Toolbox -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center gap-2 flex-grow-1 me-3">
+              <form-tagify
+                [formControl]="emailTagsControl"
+                placeholder="Enter email addresses…"
+                class="flex-grow-1">
+              </form-tagify>
+              <button type="button" class="btn btn-primary"
+                [disabled]="isInviteLoadingSignal() || (emailTagsControl.value?.length ?? 0) === 0"
+                (click)="onInvite()">
+                <span *ngIf="!isInviteLoadingSignal()"><i class="bi bi-envelope-plus me-1"></i>Invite</span>
+                <span *ngIf="isInviteLoadingSignal()">
+                  <span class="spinner-border spinner-border-sm align-middle me-2"></span>Inviting...
+                </span>
+              </button>
+            </div>
+            <div>
+              @if (hasSelectedUsers()) {
+                <button type="button" class="btn btn-light-danger" (click)="onRemoveSelected()">
+                  <i class="bi bi-person-dash me-1"></i>Remove
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Assigned Users Datatable -->
+          <div [class.blockui]="isUsersLoadingSignal()">
+            <app-datatable
+              #assignedUsersDatatableRef
+              [columns]="assignedUsersColumns"
+              [checkboxEnabled]="true"
+              [data]="assignedUsersDatatable().items"
+              [currentPage]="assignedUsersDatatable().currentPage"
+              [pageSize]="assignedUsersDatatable().limit"
+              [totalItems]="assignedUsersDatatable().total"
+              (pageChange)="onAssignedUsersPageChange($event)"
+              (selectionChange)="onAssignedUsersCheckboxChange($event)">
+            </app-datatable>
+            @if (isUsersLoadingSignal()) {
+              <div class="blockui-overlay">
+                <span class="spinner-border text-primary" role="status"></span>
+              </div>
+            }
+          </div>
         </div>
+
       </div>
     </div>
   </div>

@@ -53,9 +53,11 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
             Name = action.Controller.ControllerName + "." + action.ActionName
         };
 
-        foreach (var param in action.Parameters.Where(x => x.Name != "id" && x.BindingInfo is null))
+        foreach (var param in action.Parameters.Where(x =>
+            x.Name != "id" &&
+            x.BindingInfo is null))
         {
-            if (httpMethod == "POST" || httpMethod == "PUT")
+            if (httpMethod == "POST" || httpMethod == "PUT" || httpMethod == "PATCH")
             {
                 param.BindingInfo = BindingInfo.GetBindingInfo([new FromBodyAttribute()]);
             }
@@ -119,6 +121,9 @@ public partial class AppServiceFeatureProvider : ControllerFeatureProvider, IApp
 
         if (actionName.StartsWith("Create", StringComparison.OrdinalIgnoreCase))
             return "POST";
+
+        if (actionName.StartsWith("Patch", StringComparison.OrdinalIgnoreCase))
+            return "PATCH";
 
         throw new InvalidOperationException($"No conventional HTTP verb found for action '{actionName}'");
     }

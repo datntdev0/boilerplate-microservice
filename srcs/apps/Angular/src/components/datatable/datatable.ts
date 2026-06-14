@@ -29,6 +29,7 @@ export class DatatableComponent implements AfterContentInit {
   @Input() pageSize: number = 10;
   @Input() totalItems: number = 0;
   @Output() pageChange = new EventEmitter<PageChangeEvent>();
+  @Output() selectionChange = new EventEmitter<number>();
   @ContentChildren(DatatableTemplateDirective, { descendants: true }) contentTemplates!: QueryList<DatatableTemplateDirective>;
   
   actionsTemplate?: TemplateRef<any>;
@@ -72,6 +73,7 @@ export class DatatableComponent implements AfterContentInit {
     } else {
       this.selectedItems.clear();
     }
+    this.selectionChange.emit(this.selectedItems.size);
   }
 
   toggleSelectItem(item: any) {
@@ -81,6 +83,7 @@ export class DatatableComponent implements AfterContentInit {
       this.selectedItems.add(item);
     }
     this.allSelected = this.selectedItems.size === this.data.length;
+    this.selectionChange.emit(this.selectedItems.size);
   }
 
   isSelected(item: any): boolean {

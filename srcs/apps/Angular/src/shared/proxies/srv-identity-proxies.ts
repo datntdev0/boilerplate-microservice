@@ -21,8 +21,8 @@ export interface ISrvIdentityClientProxy {
      */
     users_Create(body: UserCreateDto): Observable<UserDto>;
     /**
-     * @param offset (optional) 
-     * @param limit (optional) 
+     * @param offset (optional)
+     * @param limit (optional)
      * @return OK
      */
     users_GetAll(offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfUserListDto>;
@@ -43,8 +43,8 @@ export interface ISrvIdentityClientProxy {
      */
     roles_Create(body: RoleCreateDto): Observable<RoleDto>;
     /**
-     * @param offset (optional) 
-     * @param limit (optional) 
+     * @param offset (optional)
+     * @param limit (optional)
      * @return OK
      */
     roles_GetAll(offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfRoleListDto>;
@@ -72,6 +72,20 @@ export interface ISrvIdentityClientProxy {
      * @return OK
      */
     identities_GetSession(): Observable<SessionDto>;
+    /**
+     * @param offset (optional)
+     * @param limit (optional)
+     * @return OK
+     */
+    tenantUsers_GetAll(id: number, offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfTenantUserListDto>;
+    /**
+     * @return OK
+     */
+    tenantUsers_CreateInvite(id: number, body: TenantUsersInviteDto): Observable<TenantUsersInviteResultDto>;
+    /**
+     * @return OK
+     */
+    tenantUsers_Patch(id: number, body: TenantUsersPatchDto): Observable<void>;
 }
 
 @Injectable()
@@ -1256,6 +1270,287 @@ export class SrvIdentityClientProxy implements ISrvIdentityClientProxy {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @param offset (optional)
+     * @param limit (optional)
+     * @return OK
+     */
+    tenantUsers_GetAll(id: number, offset: number | undefined, limit: number | undefined): Observable<PaginatedResultOfTenantUserListDto> {
+        let url_ = this.baseUrl + "/api/tenants/{id}/users?";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (offset === null)
+            throw new globalThis.Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "Offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new globalThis.Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "Limit=" + encodeURIComponent("" + limit) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTenantUsers_GetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTenantUsers_GetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResultOfTenantUserListDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResultOfTenantUserListDto>;
+        }));
+    }
+
+    protected processTenantUsers_GetAll(response: HttpResponseBase): Observable<PaginatedResultOfTenantUserListDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResultOfTenantUserListDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorResponse.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("Internal Server Error", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    tenantUsers_CreateInvite(id: number, body: TenantUsersInviteDto): Observable<TenantUsersInviteResultDto> {
+        let url_ = this.baseUrl + "/api/tenants/{id}/users";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTenantUsers_CreateInvite(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTenantUsers_CreateInvite(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TenantUsersInviteResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TenantUsersInviteResultDto>;
+        }));
+    }
+
+    protected processTenantUsers_CreateInvite(response: HttpResponseBase): Observable<TenantUsersInviteResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TenantUsersInviteResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorResponse.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("Internal Server Error", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    tenantUsers_Patch(id: number, body: TenantUsersPatchDto): Observable<void> {
+        let url_ = this.baseUrl + "/api/tenants/{id}/users";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTenantUsers_Patch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTenantUsers_Patch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTenantUsers_Patch(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorResponse.fromJS(resultData403);
+            return throwException("Forbidden", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorResponse.fromJS(resultData500);
+            return throwException("Internal Server Error", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export class PaginatedResultOfRoleListDto implements IPaginatedResultOfRoleListDto {
@@ -2378,6 +2673,326 @@ export interface IUserUpdateDto {
     roleIds?: number[];
     permissions?: number[];
     id?: number;
+
+    [key: string]: any;
+}
+
+export class PaginatedResultOfTenantUserListDto implements IPaginatedResultOfTenantUserListDto {
+    total?: number;
+    limit?: number;
+    offset?: number;
+    items?: TenantUserListDto[];
+
+    [key: string]: any;
+
+    constructor(data?: IPaginatedResultOfTenantUserListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.total = _data["total"];
+            this.limit = _data["limit"];
+            this.offset = _data["offset"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(TenantUserListDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedResultOfTenantUserListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResultOfTenantUserListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["total"] = this.total;
+        data["limit"] = this.limit;
+        data["offset"] = this.offset;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedResultOfTenantUserListDto {
+    total?: number;
+    limit?: number;
+    offset?: number;
+    items?: TenantUserListDto[];
+
+    [key: string]: any;
+}
+
+export class TenantUserListDto implements ITenantUserListDto {
+    userId?: number;
+    email?: string;
+    fullName?: string;
+    assignedDate?: Date | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: ITenantUserListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.userId = _data["userId"];
+            this.email = _data["email"];
+            this.fullName = _data["fullName"];
+            this.assignedDate = _data["assignedDate"] ? new Date(_data["assignedDate"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): TenantUserListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TenantUserListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["userId"] = this.userId;
+        data["email"] = this.email;
+        data["fullName"] = this.fullName;
+        data["assignedDate"] = this.assignedDate ? this.assignedDate.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface ITenantUserListDto {
+    userId?: number;
+    email?: string;
+    fullName?: string;
+    assignedDate?: Date | undefined;
+
+    [key: string]: any;
+}
+
+export class TenantUsersInviteDto implements ITenantUsersInviteDto {
+    emails?: string[];
+
+    [key: string]: any;
+
+    constructor(data?: ITenantUsersInviteDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["emails"])) {
+                this.emails = [] as any;
+                for (let item of _data["emails"])
+                    this.emails!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TenantUsersInviteDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TenantUsersInviteDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.emails)) {
+            data["emails"] = [];
+            for (let item of this.emails)
+                data["emails"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ITenantUsersInviteDto {
+    emails?: string[];
+
+    [key: string]: any;
+}
+
+export class TenantUsersInviteResultDto implements ITenantUsersInviteResultDto {
+    recognizedEmails?: string[];
+    unrecognizedEmails?: string[];
+
+    [key: string]: any;
+
+    constructor(data?: ITenantUsersInviteResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["recognizedEmails"])) {
+                this.recognizedEmails = [] as any;
+                for (let item of _data["recognizedEmails"])
+                    this.recognizedEmails!.push(item);
+            }
+            if (Array.isArray(_data["unrecognizedEmails"])) {
+                this.unrecognizedEmails = [] as any;
+                for (let item of _data["unrecognizedEmails"])
+                    this.unrecognizedEmails!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TenantUsersInviteResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TenantUsersInviteResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.recognizedEmails)) {
+            data["recognizedEmails"] = [];
+            for (let item of this.recognizedEmails)
+                data["recognizedEmails"].push(item);
+        }
+        if (Array.isArray(this.unrecognizedEmails)) {
+            data["unrecognizedEmails"] = [];
+            for (let item of this.unrecognizedEmails)
+                data["unrecognizedEmails"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ITenantUsersInviteResultDto {
+    recognizedEmails?: string[];
+    unrecognizedEmails?: string[];
+
+    [key: string]: any;
+}
+
+export class TenantUsersPatchDto implements ITenantUsersPatchDto {
+    create?: number[];
+    delete?: number[];
+
+    [key: string]: any;
+
+    constructor(data?: ITenantUsersPatchDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["create"])) {
+                this.create = [] as any;
+                for (let item of _data["create"])
+                    this.create!.push(item);
+            }
+            if (Array.isArray(_data["delete"])) {
+                this.delete = [] as any;
+                for (let item of _data["delete"])
+                    this.delete!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): TenantUsersPatchDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TenantUsersPatchDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.create)) {
+            data["create"] = [];
+            for (let item of this.create)
+                data["create"].push(item);
+        }
+        if (Array.isArray(this.delete)) {
+            data["delete"] = [];
+            for (let item of this.delete)
+                data["delete"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ITenantUsersPatchDto {
+    create?: number[];
+    delete?: number[];
 
     [key: string]: any;
 }

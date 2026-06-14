@@ -1,6 +1,7 @@
 using datntdev.Microservice.Shared.Common.Modular;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Identities;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles;
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Tenants;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts;
 using Microsoft.Extensions.Configuration;
@@ -24,5 +25,7 @@ public class MicroserviceSrvIdentityApplicationModule : BaseModule
         services.AddScoped<RoleUpdatingValidator>();
 
         services.AddScoped<IdentitiesManager>();
+
+        services.AddScoped<TenantsManager>();
     }
 }
