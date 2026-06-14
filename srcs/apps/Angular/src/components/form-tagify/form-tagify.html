@@ -1,0 +1,23 @@
+<div class="form-tagify d-flex flex-wrap align-items-center gap-1 p-1 border rounded" [class.disabled]="disabled">
+  @for (tag of tags; track tag; let i = $index) {
+    <span class="badge bg-secondary d-inline-flex align-items-center gap-1">
+      {{ tag }}
+      <button
+        type="button"
+        class="btn-close"
+        style="font-size: 0.6em;"
+        aria-label="Remove tag"
+        [disabled]="disabled"
+        (click)="removeTag(i)">
+      </button>
+    </span>
+  }
+  <input
+    type="text"
+    class="form-control-plaintext flex-grow-1"
+    style="min-width: 120px; outline: none; border: none; padding: 0.125rem 0.25rem;"
+    [placeholder]="tags.length === 0 ? placeholder : ''"
+    [disabled]="disabled"
+    [(ngModel)]="inputValue"
+    (keydown)="onKeyDown($event)" />
+</div>

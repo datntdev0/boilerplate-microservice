@@ -6,6 +6,7 @@ import { DatatableComponent } from './datatable/datatable';
 import { DatatableTemplateDirective } from './datatable/datatable-template.directive';
 import { DialogComponent } from './dialog/dialog';
 import { FormSelectorComponent } from './form-selector/form-selector';
+import { FormTagifyComponent } from './form-tagify/form-tagify';
 import { PaginatorComponent } from './paginator/paginator';
 import { SelectorPermissionsComponent } from './selector-permissions/selector-permissions';
 import { SelectorRolesComponent } from './selector-roles/selector-roles';
@@ -25,6 +26,7 @@ import { DialogService } from './dialog/dialog.service';
     CommonModule,
     FormsModule,
     ModalModule,
+    FormTagifyComponent,
   ],
   exports: [
     DatatableComponent,
@@ -32,6 +34,7 @@ import { DialogService } from './dialog/dialog.service';
     PaginatorComponent,
     DialogComponent,
     FormSelectorComponent,
+    FormTagifyComponent,
     SelectorPermissionsComponent,
     SelectorRolesComponent,
     ModalModule,
