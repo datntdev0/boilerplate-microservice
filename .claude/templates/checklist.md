@@ -16,10 +16,10 @@
 - [ ] `design.md` approach + affected components recorded
 - [ ] Unit test cases defined (each tied to a requirement)
 - [ ] Manual test cases defined **or** `design.md` states "N/A — no UI/web behavior"
-- [ ] Implementation tasks listed under ③ below (ordered, independently committable)
+- [ ] Implementation tasks listed under ③ below (ordered, independently parallelizable)
 
 ## ③ Implement
-> Tasks — filled in by `/scrumai.implement.design`, checked off by `/scrumai.implement.start`:
+> Tasks — filled in by `/scrumai.design`, checked off by `/scrumai.start`:
 - [ ] T1 — [task] · _commit:_ `type: …`
 - [ ] T2 — [task] · _commit:_ `type: …`
 

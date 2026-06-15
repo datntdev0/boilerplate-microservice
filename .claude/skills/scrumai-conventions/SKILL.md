@@ -6,36 +6,69 @@ user-invocable: false
 
 # ScrumAI Conventions (skeleton)
 
-> Author the shared knowledge below. Keep it the single source of truth so the
-> four commands and their agents stay consistent.
+> Author the shared knowledge below. Keep it the single source of truth so the four commands and their agents stay consistent.
 
 ## Feature artifacts
-- One folder per feature: `.scrumai/features/<name>/` — `<name>` is the feature directory name
-  (kebab-case) the human provides when invoking a command. No auto-numbering.
+- One folder per feature: `.scrumai/features/<name>/` — `<name>` is the feature working directory.
 - Files: `spec.md`, `design.md`, `test.md`, `checklist.md`, `evidence/`.
-- Implementation tasks live in `checklist.md` under ③ Implement — there is no separate `plan.md`.
 
 ## Checklist gating
 - Every feature folder has a `checklist.md` (from `.claude/templates/checklist.md`) with per-phase gates.
-- A phase is **complete only when all its required items are checked**. An agent MUST NOT advance to
-  the next phase, hand off, or report "done" while any required item is unchecked.
-- If a required item cannot be met, **STOP and report what is blocking** — never skip a gate
-  silently (e.g. do not skip manual tests). Each phase ticks its own items as it satisfies them.
+- A phase is **complete only when all its required items are checked**. An agent MUST NOT advance to the next phase, hand off, or report "done" while any required item is unchecked.
+- If a required item cannot be met, **refers to the memory/troubleshoots.md to find guidance**. An agent MUST try to resolve blockers at least three times with different approaches.
+- If a required items is actually not achievable, **STOP and report what is blocking** — never skip a gate silently. Each phase ticks its own items as it satisfies them.
 
-## Git branch
-- Implementation runs on `feat/<name>` — the feature directory name
-  (e.g. `feat/form-tagify`), branched off `main`. Created in `/scrumai.implement.start`. Never commit on `main`.
+## Git branch & Commit conventions
+- Implementation runs on feature branch (e.g. `feat/form-tagify`).
+- Don't commit the .scrumai artifacts (spec/design/test/checklist).
+- Branch off from current branch: `git checkout -b feat/<name>` — the feature folder name.
+- Commit message: types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
 
-## Commit format (conventional)
-- Types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
+## Project commands: build, start, run
 
-## Build / test commands
-- Backend build: `dotnet build datntdev.Microservice.slnf`
-- Backend tests: `dotnet test --settings .runsettings`
-- Angular (from srcs/apps/Angular): `npm start`, `ng build`, `npm run test:ci`
-- E2E (from e2e/): `npx playwright test`
-- Migrations: run the Migrator project.
+### Backend (.NET 9)
 
-## Architecture reminders
-- DDD/SOLID; modular `BaseModule` `[DependOn]` DI; YARP gateway; OpenIddict auth.
+```bash
+# Build
+dotnet build datntdev.Microservice.slnf
+# Run all unit/integration tests (with coverage)
+dotnet test --no-build --settings .runsettings
+# Run tests for a single service
+dotnet test tests/Srv.Admin/datntdev.Microservice.Tests.Srv.Admin.csproj --no-build
+# Apply database migrations & seed data
+dotnet run --project ./srcs/infra/Migrator/datntdev.Microservice.Infra.Migrator.csproj
+# Start all services locally via Aspire
+dotnet run --project ./srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj
+```
+
+### Frontend (Angular v21, from `srcs/apps/Angular/`)
+
+```bash
+npm install
+npm start               # dev server
+ng build                # production build
+npm run test:ci         # headless unit tests (CI)
+npm test                # watch mode
+npm run nswag           # regenerate TypeScript API proxies from backend contracts
+npm run storybook:start # Storybook component explorer
+```
+
+### E2E Tests (Playwright, from `e2e/`)
+
+```bash
+npm ci && npx playwright install --with-deps
+npx playwright test         # run all
+npx playwright test --ui    # interactive UI mode
+npx playwright test --debug
+npx playwright show-report
+```
+
+### Local Infrastructure (Docker)
+
+```bash
+# Start SQL Server 2022 + MongoDB 8.0
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
+# Stop and remove volumes
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra down -v
+```
 

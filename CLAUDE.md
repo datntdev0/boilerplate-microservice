@@ -6,59 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Enterprise-grade multi-tenant SaaS microservices boilerplate. Backend is .NET 9 with DDD/SOLID patterns; frontend is Angular v21. Local orchestration uses .NET Aspire.
 
-## Commands
-
-### Backend (.NET 9)
-
-```bash
-# Build
-dotnet build datntdev.Microservice.slnf
-
-# Run all unit/integration tests (with coverage)
-dotnet test --no-build --settings .runsettings
-
-# Run tests for a single service
-dotnet test tests/Srv.Admin/datntdev.Microservice.Tests.Srv.Admin.csproj --no-build
-
-# Apply database migrations & seed data
-dotnet run --project ./srcs/infra/Migrator/datntdev.Microservice.Infra.Migrator.csproj
-
-# Start all services locally via Aspire
-dotnet run --project ./srcs/infra/Aspire/datntdev.Microservice.Infra.Aspire.csproj
-```
-
-### Frontend (Angular v21, from `srcs/apps/Angular/`)
-
-```bash
-npm install
-npm start               # dev server
-ng build                # production build
-npm run test:ci         # headless unit tests (CI)
-npm test                # watch mode
-npm run nswag           # regenerate TypeScript API proxies from backend contracts
-npm run storybook:start # Storybook component explorer
-```
-
-### E2E Tests (Playwright, from `e2e/`)
-
-```bash
-npm ci && npx playwright install --with-deps
-npx playwright test         # run all
-npx playwright test --ui    # interactive UI mode
-npx playwright test --debug
-npx playwright show-report
-```
-
-### Local Infrastructure (Docker)
-
-```bash
-# Start SQL Server 2022 + MongoDB 8.0
-docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
-
-# Stop and remove volumes
-docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra down -v
-```
-
 ## Architecture
 
 ### Repository Layout

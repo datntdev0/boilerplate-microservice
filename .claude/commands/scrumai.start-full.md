@@ -1,10 +1,10 @@
 ---
 description: Run the full implementation workflow (design → implement → verify) autonomously from a ready spec, then stop for human review.
-argument-hint: feature folder, e.g. .scrumai/features/001-user-auth (defaults to latest)
+argument-hint: feature folder, e.g. .scrumai/features/user-auth (defaults to latest)
 allowed-tools: Workflow
 ---
 
-# /scrumai.implement.full — Autonomous ②③④
+# /scrumai.start-full — Autonomous ②③④
 
 <goal>
 Run the saved workflow Design → Implement → Verify without interruption from a ready spec, then stop
@@ -12,7 +12,7 @@ after Verify so the human can review the final result.
 </goal>
 
 <prerequisite>
-- A ready `spec.md` exists in the target feature folder (run `/scrumai.requirement.specify` first).
+- A ready `spec.md` exists in the target feature folder (run `/scrumai.specify` first).
 </prerequisite>
 
 <action>
@@ -27,5 +27,5 @@ many tool calls / commits. Do not run other work meanwhile.
 <onComplete>
 - Summarize the `test.md` verdict (PASS/FAIL), the commits made, and the changed documents.
 - Do **not** push.
-- If the human has feedback, point them to `/scrumai.implement.refine`.
+- If the human has feedback, point them to `/scrumai.refine`.
 </onComplete>

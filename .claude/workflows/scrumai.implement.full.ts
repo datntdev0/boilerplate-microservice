@@ -18,41 +18,29 @@ const target =
   (args && typeof args === 'object' && args.feature) ? args.feature :
   (typeof args === 'string' ? args : '')
 
-// Design must return the resolved feature folder so later phases target the same one.
-const DESIGN_RESULT = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['feature', 'summary'],
-  properties: {
-    feature: { type: 'string', description: 'Resolved feature folder, e.g. .scrumai/features/001-user-auth' },
-    summary: { type: 'string', description: 'One-paragraph summary of the design.' },
-  },
-}
-
 phase('Design')
 const design = await agent(
-  `Run Phase ② Design by following .claude/commands/scrumai.implement.design.md.\n` +
-  (target ? `Feature folder: ${target}.` : `No folder given — resolve the most recent .scrumai/features/<name>/.`) +
-  `\nReturn the resolved feature folder path and a one-paragraph summary.`,
-  { label: 'design', schema: DESIGN_RESULT },
+  `Run Phase ② Design by following .claude/commands/scrumai.design.md.\nFeature folder: ${target}. `,
+  { label: 'design' },
 )
 
-const feature = (design && design.feature) || target
-log(`Design complete for ${feature}`)
+log(`Design complete for ${target}`)
 
 phase('Implement')
 const implement = await agent(
-  `Run Phase ③ Implement for feature ${feature} by following .claude/commands/scrumai.implement.start.md.\n` +
-  `Return a summary of the changes and the commits made.`,
+  `Run Phase ③ Implement by following .claude/commands/scrumai.start.md.\nFeature folder: ${target}. ` +
+  `Return the failed tasks, if any, and a short summary of the implementation progress.`,
   { label: 'implement' },
 )
 
+log(`Implement complete for ${target}`)
+
 phase('Verify')
 const verify = await agent(
-  `Run Phase ④ Verify for feature ${feature} by following .claude/commands/scrumai.implement.verify.md.\n` +
+  `Run Phase ④ Verify by following .claude/commands/scrumai.verify.md.\nFeature folder: ${target}. ` +
   `Return the PASS/FAIL verdict and a short summary.`,
   { label: 'verify' },
 )
 
-log(`implement.full complete for ${feature} — stopping for human review.`)
-return { feature, design, implement, verify }
+log(`implement.full complete for ${target} — stopping for human review.`)
+return { feature: target, design, implement, verify }

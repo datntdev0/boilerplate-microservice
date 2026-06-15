@@ -4,7 +4,7 @@ argument-hint: <feedback text> [feature folder] (folder defaults to latest)
 allowed-tools: AskUserQuestion, Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
 
-# /scrumai.implement.refine — Phase ⑤ Refine
+# /scrumai.refine — Phase ⑤ Refine
 
 <goal>
 Act on the human's feedback after verification — adjust code and keep `spec.md` / `design.md` /

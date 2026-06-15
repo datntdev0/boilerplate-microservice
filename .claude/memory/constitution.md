@@ -1,4 +1,4 @@
-# Project Constitution (skeleton)
+# Project Constitution
 
 > Principles the scrumai.reviewer enforces. Author the binding rules below.
 

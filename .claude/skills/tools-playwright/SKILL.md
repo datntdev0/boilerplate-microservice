@@ -1,35 +1,24 @@
 ---
 name: tools-playwright
-description: Drive a real browser interactively to manually verify a just-built web/UI feature during development, capturing snapshots/screenshots as evidence. Use during /scrumai.implement.verify when a feature has UI or web behavior. Hands-on manual testing via the globally installed playwright-cli — NOT the e2e/ regression suite.
-allowed-tools: Bash(playwright-cli:*), Read, Write
+description: Drive a real browser interactively to manually verify a just-built web/UI feature during development, capturing snapshots/screenshots as evidence. Use during /scrumai.verify when a feature has UI or web behavior. Hands-on manual testing via the globally installed playwright-cli — NOT the e2e/ regression suite.
 user-invocable: false
 ---
 
 # tools-playwright
 
-Interactive, manual browser testing for the **verification phase**. The agent drives a real
-browser with the **`playwright-cli`** command — navigate, snapshot, click, fill, screenshot — to
-confirm a freshly implemented feature behaves per its `spec.md` acceptance scenarios.
+Interactive, manual browser testing for the **verification phase**. The agent drives a real browser with the **`playwright-cli`** command — navigate, snapshot, click, fill, screenshot — to confirm a freshly implemented feature behaves per its `spec.md` acceptance scenarios.
 
-> This is **development-time manual testing**, not regression automation. Do **not** write or run
-> specs in `e2e/`. The `e2e/` project is a separate, human-owned regression suite authored only
-> after a feature has stabilized.
+> This is **development-time manual testing**, not regression automation. Do **not** write or run specs in `e2e/`. The `e2e/` project is a separate, human-owned regression suite authored only after a feature has stabilized.
 
 ## Mechanism — playwright-cli
 
-`playwright-cli` is assumed to be **installed globally** and on `PATH`. Always invoke it directly
-as `playwright-cli ...` — do **not** use the Playwright installed in `e2e/` (that project is the
-regression suite and is independent of this manual-testing flow). It keeps browser state on disk
-and prints a snapshot after each command, so it's token-light.
+`playwright-cli` is assumed to be **installed globally** and on `PATH`. Always invoke it directly as `playwright-cli ...` — do **not** use the Playwright installed in `e2e/` (that project is the regression suite and is independent of this manual-testing flow). It keeps browser state on disk and prints a snapshot after each command, so it's token-light.
 
 ```bash
 playwright-cli --version   # confirm it's available
 ```
 
-If the command is missing, install it globally once: `npm install -g @playwright/cli@latest`
-(then `playwright-cli install chromium` if browsers aren't present). The tool also ships a full
-command reference skill (`playwright-cli`'s own SKILL.md) covering tabs, storage, network mocking,
-and tracing — consult it for commands beyond the core set below.
+If the command is missing, install it globally once: `npm install -g @playwright/cli@latest` (then `playwright-cli install chromium` if browsers aren't present). The tool also ships a full command reference skill (`playwright-cli`'s own SKILL.md) covering tabs, storage, network mocking, and tracing — consult it for commands beyond the core set below.
 
 ### Core commands you'll use
 
@@ -52,8 +41,7 @@ Interact using **refs** from the latest `snapshot`, or CSS / role / test-id loca
 | Angular SPA | http://localhost:4200 |
 | Identity provider (login) | https://localhost:7240 |
 
-Start the app first — full stack via Aspire (`dotnet run --project ./srcs/infra/Aspire/...`) or the
-SPA alone via `npm start` in `srcs/apps/Angular`. Confirm the page loads before driving it.
+Start the app first — full stack via Aspire (`dotnet run --project ./srcs/infra/Aspire/...`) or the SPA alone via `npm start` in `srcs/apps/Angular`. Confirm the page loads before driving it.
 
 ## Procedure
 
@@ -80,4 +68,4 @@ type notes; you receive the annotated screenshot + snapshot. Use when the spec c
 ## Reporting
 
 Hand back a PASS/FAIL per acceptance scenario, each linked to its evidence file, plus the browser
-and URL used. `/scrumai.implement.verify` records this in `test.md`.
+and URL used. `/scrumai.verify` records this in `test.md`.

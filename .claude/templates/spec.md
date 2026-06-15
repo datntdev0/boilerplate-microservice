@@ -1,6 +1,6 @@
 # Specification: [FEATURE NAME]
 
-**Feature**: `<name>` · **Created**: [DATE] · **Status**: Draft
+**Feature**: `<name>` · **Created**: [DATE]
 
 ## Summary
 [1–2 sentences: what and why.]

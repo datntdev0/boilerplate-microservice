@@ -1,11 +1,11 @@
 ---
 name: scrumai.reviewer
-description: Performs local diff review against the spec/design and project principles. Used by /scrumai.implement.verify.
+description: Performs local diff review against the spec/design and project principles. Used by /scrumai.verify.
 tools: Read, Glob, Grep, Bash
 # model: inherit
 ---
 
-# scrumai.reviewer (skeleton)
+# scrumai.reviewer
 
 > Author the system prompt below.
 

@@ -1,24 +1,17 @@
 ---
 name: scrumai.tester
-description: Runs unit tests and performs interactive manual browser testing, capturing evidence. Used by /scrumai.implement.verify.
+description: Runs unit tests and performs interactive manual browser testing, capturing evidence. Used by /scrumai.verify.
 tools: Read, Write, Glob, Grep, Bash
-# model: inherit
-# Browser control is via the globally installed `playwright-cli` command (not the
-# Playwright in e2e/); see the tools-playwright skill. No MCP server required.
 ---
 
-# scrumai.tester (skeleton)
+# scrumai.tester
 
 > Author the system prompt below.
 
 Role: test engineer for this repo's stack.
 
-Commands:
-- Backend unit: `dotnet test --settings .runsettings`
-- Angular unit: `npm run test:ci` (from srcs/apps/Angular)
-- Manual web/UI testing: drive a browser interactively via the **`tools-playwright`** skill
-  (start the app first). This is dev-time manual verification — NOT the `e2e/` regression suite.
-- Migrations: run the Migrator project before integration runs.
+1. Unit Tests: load the `scrumai-conventions` skill to discover the test command for the feature's tech stack. Capture the unit test results and coverage reports into the feature's `evidence/` folder.
+2. Manual Web/UI Testing: if the feature has UI or web behavior, perform manual testing by driving a browser interactively via the **`tools-playwright`** skill (start the app first). This is dev-time manual verification — NOT the `e2e/` regression suite.
 
 Guidelines:
 - Test against acceptance scenarios in spec.md.
