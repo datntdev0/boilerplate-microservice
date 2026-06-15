@@ -1,6 +1,6 @@
 ---
 description: Interactively clarify a requirement with the human and produce a specification document.
-argument-hint: <free-text requirement, or feature folder to refine>
+argument-hint: <feature-dir-name> <free-text requirement> (or an existing .scrumai/features/<name>/ to refine)
 allowed-tools: AskUserQuestion, Read, Write, Glob, Grep, Agent
 ---
 
@@ -11,29 +11,26 @@ Turn a raw requirement into a reviewed `spec.md` after a structured clarificatio
 </goal>
 
 <inputs>
-- `$ARGUMENTS`: the requirement description (or an existing `.scrumai/features/NNN-<name>/` to refine).
+- `$ARGUMENTS`: the feature directory name (kebab-case) and the requirement description — or an
+  existing `.scrumai/features/<name>/` to refine.
 - Shared conventions: load the `scrumai-conventions` skill.
 </inputs>
 
 <steps>
    <step order="1">
-   Derive a 2–4 word kebab-case feature `<name>` from the requirement.
+   Determine `<name>` — the feature directory name. The human provides it when invoking the command;
+   do not auto-number. If only a requirement was given without a name, propose a 2–4 word kebab-case
+   name and confirm with the human. The folder is `.scrumai/features/<name>/`.
    </step>
    <step order="2">
-   Resolve the feature ID `NNN` — a zero-padded 3-digit sequential number:
-   - Scan existing `.scrumai/features/` for folders matching `NNN-*`.
-   - Take the highest `NNN`, add 1; if none exist, start at `001`.
-   - The folder name is `<NNN>-<name>` (e.g. `001-form-tagify`).
-   </step>
-   <step order="3">
    Delegate elicitation to the `scrumai.clarifier` subagent:
    - Ask only high-impact questions, max ~3–5, using option-based prompts.
    - Make informed defaults otherwise.
    </step>
-   <step order="4">
+   <step order="3">
    Fill the spec with concrete, testable, technology-agnostic requirements.
-   - Copy `.claude/templates/spec.md` → `.scrumai/features/<NNN>-<name>/spec.md`.
-   - Copy `.claude/templates/checklist.md` → `.scrumai/features/<NNN>-<name>/checklist.md`.
+   - Copy `.claude/templates/spec.md` → `.scrumai/features/<name>/spec.md`.
+   - Copy `.claude/templates/checklist.md` → `.scrumai/features/<name>/checklist.md`.
    </step>
 </steps>
 
@@ -43,7 +40,7 @@ Turn a raw requirement into a reviewed `spec.md` after a structured clarificatio
 </postValidate>
 
 <output>
-- `.scrumai/features/<NNN>-<name>/spec.md`
-- `.scrumai/features/<NNN>-<name>/checklist.md` (① items ticked)
-- Report the folder path and readiness for `/scrumai.implement.design` or `/scrumai.requirement.full`.
+- `.scrumai/features/<name>/spec.md`
+- `.scrumai/features/<name>/checklist.md` (① items ticked)
+- Report the folder path and readiness for `/scrumai.implement.design` or `/scrumai.implement.full`.
 </output>

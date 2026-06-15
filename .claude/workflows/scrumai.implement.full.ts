@@ -2,8 +2,8 @@ export const meta = {
   name: 'scrumai.implement.full',
   description: 'From a ready spec, run Design → Implement → Verify autonomously, then stop for human review.',
   phases: [
-    { title: 'Design', detail: 'spec.md → design.md + plan.md (incl. test cases)' },
-    { title: 'Implement', detail: 'work plan.md, internal review, local commits' },
+    { title: 'Design', detail: 'spec.md → design.md + tasks in checklist.md (incl. test cases)' },
+    { title: 'Implement', detail: 'work checklist ③ tasks, internal review, local commits' },
     { title: 'Verify', detail: 'review + unit/manual tests → test.md (PASS/FAIL)' },
   ],
 }
@@ -32,7 +32,7 @@ const DESIGN_RESULT = {
 phase('Design')
 const design = await agent(
   `Run Phase ② Design by following .claude/commands/scrumai.implement.design.md.\n` +
-  (target ? `Feature folder: ${target}.` : `No folder given — resolve the most recent .scrumai/features/<NNN>-<name>/.`) +
+  (target ? `Feature folder: ${target}.` : `No folder given — resolve the most recent .scrumai/features/<name>/.`) +
   `\nReturn the resolved feature folder path and a one-paragraph summary.`,
   { label: 'design', schema: DESIGN_RESULT },
 )

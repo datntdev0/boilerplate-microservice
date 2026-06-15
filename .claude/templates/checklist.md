@@ -16,11 +16,16 @@
 - [ ] `design.md` approach + affected components recorded
 - [ ] Unit test cases defined (each tied to a requirement)
 - [ ] Manual test cases defined **or** `design.md` states "N/A — no UI/web behavior"
-- [ ] `plan.md` tasks are ordered and independently committable
+- [ ] Implementation tasks listed under ③ below (ordered, independently committable)
 
 ## ③ Implement
-- [ ] On branch `feat/<feature_directory_name>` (not `main`)
-- [ ] All `plan.md` tasks done and checked off
+> Tasks — filled in by `/scrumai.implement.design`, checked off by `/scrumai.implement.start`:
+- [ ] T1 — [task] · _commit:_ `type: …`
+- [ ] T2 — [task] · _commit:_ `type: …`
+
+Gates:
+- [ ] On branch `feat/<name>` (not `main`)
+- [ ] All tasks above done and checked off
 - [ ] Build passes (`dotnet build` / `ng build`)
 - [ ] Internal review (`scrumai.reviewer`) clean; findings fixed
 
@@ -32,5 +37,5 @@
 
 ## ⑤ Refine (per feedback round)
 - [ ] Every feedback item triaged and addressed
-- [ ] Documents synced (`spec.md` / `design.md` / `plan.md` / `test.md`)
+- [ ] Documents synced (`spec.md` / `design.md` / `test.md` + tasks in `checklist.md`)
 - [ ] Re-review and re-test passed (manual tests re-run where UI changed)

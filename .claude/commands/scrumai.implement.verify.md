@@ -11,8 +11,8 @@ Review the implementation and test it against the spec/design, recording finding
 </goal>
 
 <inputs>
-- Active feature folder (arg, or most recent `.scrumai/features/<NNN>-<name>/`).
-- `spec.md`, `design.md`, `plan.md`, and the local diff.
+- Active feature folder (arg, or most recent `.scrumai/features/<name>/`).
+- `spec.md`, `design.md`, `checklist.md`, and the local diff.
 - Shared conventions: load the `scrumai-conventions` skill.
 </inputs>
 
@@ -31,7 +31,9 @@ Review the implementation and test it against the spec/design, recording finding
    - capture logs, coverage, and screenshots into `evidence/`.
    </step>
    <step order="3">
-   Write `test.md` from `.claude/templates/test.md`: findings, test results, evidence links, and a PASS/FAIL verdict.
+   Write `test.md` from `.claude/templates/test.md`: findings, test results, evidence links, and a
+   PASS/FAIL verdict. Fill the **Environment** and **Test Data** sections (accounts, inputs, created
+   IDs, config, log/artifact paths) so the run can be debugged or reproduced later.
    </step>
 </steps>
 
@@ -42,8 +44,8 @@ Review the implementation and test it against the spec/design, recording finding
 </postValidate>
 
 <output>
-- `.scrumai/features/<NNN>-<name>/test.md`
-- `.scrumai/features/<NNN>-<name>/evidence/`
+- `.scrumai/features/<name>/test.md`
+- `.scrumai/features/<name>/evidence/`
 - `checklist.md` with ④ items ticked (or the blocking gate reported)
 - Report verdict and any follow-up tasks.
 </output>

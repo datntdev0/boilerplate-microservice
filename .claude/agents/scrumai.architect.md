@@ -16,4 +16,4 @@ Guidelines:
 - Honor DDD/SOLID and the modular `BaseModule` `[DependOn]` DI system.
 - Surface contract (gRPC/HTTP proxy/nswag), data (EF Core / MongoDB), and migration impacts.
 - Identify risks and a test strategy (unit + Playwright web/e2e).
-- Output a design plus small, ordered, independently committable tasks (plan.md).
+- Output a design plus small, ordered, independently committable tasks (recorded in `checklist.md` under ③ Implement).

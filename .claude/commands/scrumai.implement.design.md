@@ -1,17 +1,18 @@
 ---
-description: Take a specification and design the solution, plan implementation steps, and write a design document.
-argument-hint: feature folder, e.g. .scrumai/features/001-user-auth (defaults to latest)
+description: Take a specification and design the solution, plan implementation tasks, and write a design document.
+argument-hint: feature folder, e.g. .scrumai/features/user-auth (defaults to latest)
 allowed-tools: Read, Write, Glob, Grep, Agent
 ---
 
 # /scrumai.implement.design — Phase ② Design
 
 <goal>
-Convert `spec.md` into a concrete `design.md` plus an ordered, checkable `plan.md`.
+Convert `spec.md` into a concrete `design.md`, and record ordered implementation tasks in
+`checklist.md` under ③ Implement (no separate plan file).
 </goal>
 
 <inputs>
-- Active feature folder (arg, or most recent `.scrumai/features/<NNN>-<name>/`).
+- Active feature folder (arg, or most recent `.scrumai/features/<name>/`).
 - `spec.md` from Phase ①.
 - Shared conventions: load the `scrumai-conventions` skill.
 - Project principles: `.claude/memory/constitution.md`.
@@ -38,18 +39,19 @@ Convert `spec.md` into a concrete `design.md` plus an ordered, checkable `plan.m
    Write `design.md` from `.claude/templates/design.md` (including the Test Cases section).
    </step>
    <step order="5">
-   Decompose into `plan.md` from `.claude/templates/plan.md` — small, ordered, each independently committable.
+   Record the implementation tasks in `checklist.md` under **③ Implement** — small, ordered, each
+   independently committable, with a suggested conventional commit type. There is no separate `plan.md`.
    </step>
 </steps>
 
 <postValidate>
 - Tick the **② Design** items in `checklist.md`. Honor checklist gating (see `scrumai-conventions`):
-- Manual test cases must be defined or explicitly marked "N/A — no UI/web behavior".
+  manual test cases must be defined or explicitly marked "N/A — no UI/web behavior", and the ③ task
+  list must be populated.
 </postValidate>
 
 <output>
-- `.scrumai/features/<NNN>-<name>/design.md`
-- `.scrumai/features/<NNN>-<name>/plan.md`
-- `checklist.md` with ② items ticked
+- `.scrumai/features/<name>/design.md`
+- `.scrumai/features/<name>/checklist.md` (③ tasks added, ② items ticked)
 - Report readiness for `/scrumai.implement.start`.
 </output>

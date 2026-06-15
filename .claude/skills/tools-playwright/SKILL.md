@@ -67,7 +67,7 @@ SPA alone via `npm start` in `srcs/apps/Angular`. Confirm the page loads before 
    `snapshot` again and confirm the expected state appeared. Use `console` / `requests` to catch errors.
 5. **Capture evidence** at each key state:
    ```bash
-   playwright-cli screenshot --filename=../.scrumai/features/<NNN>-<name>/evidence/<scenario>-<step>.png
+   playwright-cli screenshot --filename=../.scrumai/features/<name>/evidence/<scenario>-<step>.png
    ```
 6. `playwright-cli close` when done.
 7. **Record PASS/FAIL per scenario** with a one-line note and the evidence filename.

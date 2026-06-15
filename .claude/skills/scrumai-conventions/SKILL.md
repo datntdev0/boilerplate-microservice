@@ -10,10 +10,10 @@ user-invocable: false
 > four commands and their agents stay consistent.
 
 ## Feature artifacts
-- One folder per feature: `.scrumai/features/<NNN>-<name>/`
-  - `<NNN>`: zero-padded 3-digit sequential feature ID (`001`, `002`, …).
-  - `<name>`: 2–4 word kebab-case slug.
-- Files: `spec.md`, `design.md`, `plan.md`, `test.md`, `checklist.md`, `evidence/`.
+- One folder per feature: `.scrumai/features/<name>/` — `<name>` is the feature directory name
+  (kebab-case) the human provides when invoking a command. No auto-numbering.
+- Files: `spec.md`, `design.md`, `test.md`, `checklist.md`, `evidence/`.
+- Implementation tasks live in `checklist.md` under ③ Implement — there is no separate `plan.md`.
 
 ## Checklist gating
 - Every feature folder has a `checklist.md` (from `.claude/templates/checklist.md`) with per-phase gates.
@@ -23,8 +23,8 @@ user-invocable: false
   silently (e.g. do not skip manual tests). Each phase ticks its own items as it satisfies them.
 
 ## Git branch
-- Implementation runs on `feat/<feature_directory_name>` — the feature folder name
-  (e.g. `feat/001-form-tagify`), branched off `main`. Created in `/scrumai.implement.start`. Never commit on `main`.
+- Implementation runs on `feat/<name>` — the feature directory name
+  (e.g. `feat/form-tagify`), branched off `main`. Created in `/scrumai.implement.start`. Never commit on `main`.
 
 ## Commit format (conventional)
 - Types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
