@@ -6,7 +6,7 @@ namespace datntdev.Microservice.Srv.Identity.Contracts.Authorization.Tenants;
 
 public interface ITenantsAppService : IAppService
 {
-    Task<PaginatedResult<TenantUserListDto>> GetAllAsync(long id, PaginatedRequest request);
-    Task<TenantUsersInviteResultDto> CreateTenantUsersAsync(long id, TenantUsersInviteDto request);
-    Task PatchTenantUsersAsync(long id, TenantUsersPatchDto request);
+    Task<PaginatedResult<TenantUserListDto>> GetAllAsync(int id, PaginatedRequest request);
+    Task<TenantUsersInviteResultDto> CreateTenantUsersAsync(int id, TenantUsersInviteDto request);
+    Task PatchTenantUsersAsync(int id, TenantUsersPatchDto request);
 }

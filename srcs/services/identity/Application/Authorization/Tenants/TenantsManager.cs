@@ -10,7 +10,7 @@ public class TenantsManager(IServiceProvider services)
 {
     public IQueryable<UserTenantEntity> Queryable => _dbContext.AppUserTenants;
 
-    public async Task<List<UserTenantEntity>> GetByTenantAsync(long tenantId, int offset, int limit)
+    public async Task<List<UserTenantEntity>> GetByTenantAsync(int tenantId, int offset, int limit)
     {
         return await _dbContext.AppUserTenants
             .Where(ut => ut.TenantId == tenantId)
@@ -22,7 +22,7 @@ public class TenantsManager(IServiceProvider services)
             .ToListAsync();
     }
 
-    public async Task<int> CountByTenantAsync(long tenantId)
+    public async Task<int> CountByTenantAsync(int tenantId)
     {
         return await _dbContext.AppUserTenants
             .Where(ut => ut.TenantId == tenantId)
@@ -46,7 +46,7 @@ public class TenantsManager(IServiceProvider services)
             .ToListAsync();
     }
 
-    public async Task AssignUsersAsync(long tenantId, IEnumerable<long> userIds)
+    public async Task AssignUsersAsync(int tenantId, IEnumerable<long> userIds)
     {
         var existingIds = await _dbContext.AppUserTenants
             .Where(ut => ut.TenantId == tenantId && userIds.Contains(ut.UserId))

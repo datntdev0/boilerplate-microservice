@@ -5,7 +5,7 @@ namespace datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Ent
 public class UserTenantEntity : ICreated
 {
     public long UserId { get; set; }
-    public long TenantId { get; set; }
+    public int TenantId { get; set; }
     public DateTime? CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
 

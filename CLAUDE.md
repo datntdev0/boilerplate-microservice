@@ -67,17 +67,29 @@ Polyglot persistence: SQL Server (EF Core) is the default; the Admin service als
 
 OpenTelemetry traces and metrics are emitted via the OTLP exporter (consumed by an external collector). The Aspire dashboard provides a local view during development. Note: no Prometheus/Grafana dashboards are wired up in the repo today.
 
-## Testing Conventions
+## Knowledge Base Maps
 
-- Framework: MSTest with `EnableMSTestRunner=true`
-- Integration tests inherit from `MicroserviceBaseTest` and use `WebApplicationFactory`
-- Coverage output: `tests/TestResults/` (Cobertura format)
-- CI generates an HTML coverage report via `reportgenerator`
+There is a curated knowledge base under `docs/`. Treat it as authoritative context that complements the code.
 
-## CI/CD
+**Routing rule (applies to the main agent AND every subagent you spawn):**
 
-GitHub Actions workflows in `.github/workflows/`:
-- `sub_unit_tests.yml` — build, EF migrations check, MSTest, Angular tests, coverage
-- `sub_e2e_tests.yml` — Playwright tests with artifact upload
-- `sub_security_scans.yml` / `schedule_security_scans.yml` — security scanning
-- `sub_deploy.yml` / `manual_deploy.yml` — deployment pipeline
+1. Before starting any task, scan the request for the keywords in the table below.
+2. If a keyword matches, **Read the mapped doc(s) first** and use them as primary context — they outline intended behavior, requirements, and conventions that the code alone may not reveal.
+3. When you delegate work to a subagent (Agent/Task tool), **name the matching doc path in the subagent's prompt** (e.g. "Read `docs/2.requirements/03.authorization.md` first") so the routing survives delegation. Subagents inherit this CLAUDE.md, so they must apply this same rule recursively.
+4. If several keywords match, read all mapped docs. If none match but the task is broad/architectural, start from the Overview docs.
+5. Knowledge base docs describe intent and requirements; when they disagree with the code, trust the code for current behavior and flag the discrepancy.
+
+| Keywords (match any) | Knowledge base doc |
+| --- | --- |
+| migration, EF Core, DbContext, schema change, seed data, squash migrations, Migrator | [Database Migrations](docs/3.development/database.migration.md) |
+| authentication, login, sign-in, OAuth2, OIDC, OpenIddict, JWT, token, identity provider | [Authentication](docs/2.requirements/02.authentication.md) |
+| authorization, permission, role, RBAC, access control, user access | [Authorization](docs/2.requirements/03.authorization.md) |
+| tenant, multi-tenancy, multi-tenant, tenant isolation, tenant assignment | [Multi-Tenancy](docs/2.requirements/04.multi-tenancy.md) |
+| notification, notify, email, alerts | [Notifications](docs/2.requirements/05.notifications.md) |
+| payment, billing, subscription, invoice, checkout | [Payments](docs/2.requirements/06.payments.md) |
+| platform requirement, NFR, non-functional, constraints, SLA | [Platform Requirements](docs/2.requirements/01.platform.md) |
+| architecture, service layering, design pattern, bounded context, repository structure | [Architecture](docs/1.overview/02.architecture.md) |
+| setup, getting started, run locally, build, test command, Aspire dashboard, prerequisites | [Getting Started](docs/1.overview/03.getting-started.md) |
+| glossary, terminology, definition, what does X mean | [Glossary](docs/1.overview/99.glossary.md) |
+
+Doc index: `docs/1.overview/` (intro, architecture, getting started, glossary), `docs/2.requirements/` (per-domain requirements), `docs/3.development/` (developer guides). Diagrams live in `docs/9.attachments/`.

@@ -184,8 +184,8 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");

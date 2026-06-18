@@ -16,7 +16,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
 
     [AppAuthorize(Constants.Permissions.Tenancy_Read)]
     [AppRoute("{id}/users")]
-    public async Task<PaginatedResult<TenantUserListDto>> GetAllAsync(long id, PaginatedRequest request)
+    public async Task<PaginatedResult<TenantUserListDto>> GetAllAsync(int id, PaginatedRequest request)
     {
         var total = await _manager.CountByTenantAsync(id);
         var items = await _manager.GetByTenantAsync(id, request.Offset, request.Limit);
@@ -32,7 +32,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
 
     [AppAuthorize(Constants.Permissions.Tenancy_Write)]
     [AppRoute("{id}/users")]
-    public async Task<TenantUsersInviteResultDto> CreateTenantUsersAsync(long id, TenantUsersInviteDto request)
+    public async Task<TenantUsersInviteResultDto> CreateTenantUsersAsync(int id, TenantUsersInviteDto request)
     {
         var matchedUserIds = await _manager.GetUserIdsByEmailsAsync(request.Emails);
         var matchedEmails = await _manager.GetEmailsByUserIdsAsync(matchedUserIds.ToArray());
@@ -54,7 +54,7 @@ public class TenantsAppService(IServiceProvider services) : BaseAppService, ITen
 
     [AppAuthorize(Constants.Permissions.Tenancy_Write)]
     [AppRoute("{id}/users")]
-    public async Task PatchTenantUsersAsync(long id, TenantUsersPatchDto request)
+    public async Task PatchTenantUsersAsync(int id, TenantUsersPatchDto request)
     {
         if (request.Create.Length > 0)
         {

@@ -12,8 +12,8 @@ using datntdev.Microservice.Srv.Identity.Application;
 namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
 {
     [DbContext(typeof(MicroserviceSrvIdentityDbContext))]
-    [Migration("20260509082600_AddUserTenantRelationship")]
-    partial class AddUserTenantRelationship
+    [Migration("20260618173803_InitialDatabase")]
+    partial class InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,8 +187,8 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
