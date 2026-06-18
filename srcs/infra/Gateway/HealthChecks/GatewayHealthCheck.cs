@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using datntdev.Microservice.Shared.Communication.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace datntdev.Microservice.Infra.Gateway.HealthChecks;
 
@@ -10,7 +11,7 @@ public class GatewayHealthCheck(IHttpClientFactory httpClientFactory, IConfigura
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         var clusters = _configuration.GetSection("ReverseProxy:Clusters").GetChildren();
-        var clients = clusters.Select(x => _httpClientFactory.CreateClient(x.Key));
+        var clients = clusters.Select(x => _httpClientFactory.CreateClient($"{x.Key}-{HttpProxyServiceTypes.TypeDefault}")).ToList();
         var resultTasks = clients.Select(client => client.GetStringAsync("/alive", cancellationToken));
 
         var responses = await Task.WhenAll(resultTasks);

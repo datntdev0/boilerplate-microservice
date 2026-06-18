@@ -1,5 +1,7 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Application;
+using datntdev.Microservice.Shared.Communication.Extensions;
+using datntdev.Microservice.Shared.Communication.HttpClients;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
@@ -16,6 +18,7 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
     private readonly IdentitiesManager _manager = services.GetRequiredService<IdentitiesManager>();
     private readonly UsersManager _userManager = services.GetRequiredService<UsersManager>();
     private readonly HttpContext _httpContext = services.GetRequiredService<IHttpContextAccessor>().HttpContext!;
+    private readonly ISrvAdminHttpClient _srvAdminHttpClientApiKey = services.GetRequiredHttpProxyService<ISrvAdminHttpClient>(true);
 
     [AppRoute("signin")]
     public async Task<UserDto> CreateSigninAsync(SigninDto request)
@@ -34,6 +37,8 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
     [AppRoute("session")]
     public async Task<SessionDto> GetSessionAsync()
     {
+        var tenants = await _srvAdminHttpClientApiKey.Tenants_GetAllAsync(null, null);
+
         if (_httpContext.User.Identity?.IsAuthenticated ?? false)
         {
             var emailAddress = _httpContext.User.GetClaim(Claims.Email);

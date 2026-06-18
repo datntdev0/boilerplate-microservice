@@ -1,5 +1,6 @@
 ﻿using datntdev.Microservice.Shared.Common;
 using datntdev.Microservice.Shared.Common.Exceptions;
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Communication.HttpClients;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
@@ -14,7 +15,7 @@ public class IdentityManager(IServiceProvider services)
     : MicroserviceAppIdentityBaseManager(services)
 {
     private readonly IHttpContextAccessor _contextAccessor = services.GetRequiredService<IHttpContextAccessor>();
-    private readonly ISrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredService<ISrvIdentityHttpClient>();
+    private readonly ISrvIdentityHttpClient _srvIdentityHttpClient = services.GetRequiredHttpProxyService<ISrvIdentityHttpClient>();
 
     /// <summary>
     /// Validates user credentials against the Identity Service.

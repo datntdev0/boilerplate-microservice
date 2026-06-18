@@ -1,4 +1,5 @@
 using datntdev.Microservice.Shared.Common.Helpers;
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Communication.HttpClients;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Tests.Common.Authentication;
@@ -25,8 +26,8 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
             services.AddAuthentication(TestAuthHandler.SchemeName)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
 
-            // Replace ISrvIdentityHttpClient with a mock that parses SessionDto from Authorization header
-            services.AddScoped(sp =>
+            // Replace all ISrv*HttpClient with keyed mocks (both default and apikey variants)
+            ISrvIdentityHttpClient CreateIdentityMock(IServiceProvider sp)
             {
                 var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
                 var mock = Substitute.For<ISrvIdentityHttpClient>();
@@ -41,10 +42,8 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
 
                         try
                         {
-                            // Extract and decode SessionDto from Authorization header
                             var json = StringHelper.ConvertFromBase64(base64);
                             var sessionDto = JsonHelper.Deserialize<SessionDto>(json);
-
                             return Task.FromResult(sessionDto ?? new SessionDto());
                         }
                         catch
@@ -54,12 +53,16 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
                     });
 
                 return mock;
-            });
+            }
 
-            // Replace remaining ISrv*HttpClient with no-op stubs
-            services.AddScoped<ISrvAdminHttpClient>(_ => Substitute.For<ISrvAdminHttpClient>());
-            services.AddScoped<ISrvNotifyHttpClient>(_ => Substitute.For<ISrvNotifyHttpClient>());
-            services.AddScoped<ISrvPaymentHttpClient>(_ => Substitute.For<ISrvPaymentHttpClient>());
+            services.AddKeyedScoped<ISrvIdentityHttpClient>(HttpProxyServiceTypes.TypeDefault, (sp, _) => CreateIdentityMock(sp));
+            services.AddKeyedScoped<ISrvIdentityHttpClient>(HttpProxyServiceTypes.TypeApiKey, (sp, _) => CreateIdentityMock(sp));
+            services.AddKeyedScoped<ISrvAdminHttpClient>(HttpProxyServiceTypes.TypeDefault, (_, _) => Substitute.For<ISrvAdminHttpClient>());
+            services.AddKeyedScoped<ISrvAdminHttpClient>(HttpProxyServiceTypes.TypeApiKey, (_, _) => Substitute.For<ISrvAdminHttpClient>());
+            services.AddKeyedScoped<ISrvNotifyHttpClient>(HttpProxyServiceTypes.TypeDefault, (_, _) => Substitute.For<ISrvNotifyHttpClient>());
+            services.AddKeyedScoped<ISrvNotifyHttpClient>(HttpProxyServiceTypes.TypeApiKey, (_, _) => Substitute.For<ISrvNotifyHttpClient>());
+            services.AddKeyedScoped<ISrvPaymentHttpClient>(HttpProxyServiceTypes.TypeDefault, (_, _) => Substitute.For<ISrvPaymentHttpClient>());
+            services.AddKeyedScoped<ISrvPaymentHttpClient>(HttpProxyServiceTypes.TypeApiKey, (_, _) => Substitute.For<ISrvPaymentHttpClient>());
         });
     }
 }

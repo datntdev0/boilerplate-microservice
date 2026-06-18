@@ -1,13 +1,14 @@
 using datntdev.Microservice.Shared.Application.Services;
 using datntdev.Microservice.Shared.Common.Model;
+using datntdev.Microservice.Shared.Communication.Extensions;
 using datntdev.Microservice.Shared.Communication.HttpClients;
 using Mapster;
 
 namespace datntdev.Microservice.Shared.Application.Authorization;
 
-public class SessionAppProvider(ISrvIdentityHttpClient httpClient) : BaseScopedAppProvider
+public class SessionAppProvider(IServiceProvider services) : BaseScopedAppProvider
 {
-    private readonly ISrvIdentityHttpClient _httpClient = httpClient;
+    private readonly ISrvIdentityHttpClient _httpClient = services.GetRequiredHttpProxyService<ISrvIdentityHttpClient>(false);
 
     private SessionModel? _currentSession;
 
