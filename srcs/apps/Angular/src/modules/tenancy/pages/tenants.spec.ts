@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { DialogService } from '@components/dialog/dialog.service';
 import { PaginatedResultOfTenantListDto, SrvAdminClientProxy, TenantListDto } from '@shared/proxies/srv-admin-proxies';
+import { PaginatedResultOfTenantUserListDto, SrvIdentityClientProxy } from '@shared/proxies/srv-identity-proxies';
 import { Datatable } from '@shared/models/datatable';
 import { of, Subject } from 'rxjs';
 import { TenancyModule } from '../tenancy.module';
@@ -11,6 +12,7 @@ describe('Pages.Tenants', () => {
   let component: TenantsPage;
   let fixture: ComponentFixture<TenantsPage>;
   let mockSrvAdminClient: Partial<SrvAdminClientProxy>;
+  let mockSrvIdentityClient: any;
   let mockDialogService: Partial<DialogService>;
 
   beforeEach(async () => {
@@ -29,6 +31,12 @@ describe('Pages.Tenants', () => {
       tenants_Delete: vi.fn()
     };
 
+    mockSrvIdentityClient = {
+      tenantUsers_GetAll: () => of(new PaginatedResultOfTenantUserListDto({ items: [], total: 0, offset: 0, limit: 10 })),
+      tenantUsers_CreateInvite: () => of({}),
+      tenantUsers_Patch: () => of({})
+    };
+
     mockDialogService = {
       confirmDelete: vi.fn().mockReturnValue(of(true))
     };
@@ -37,6 +45,7 @@ describe('Pages.Tenants', () => {
       imports: [TenancyModule],
       providers: [
         { provide: SrvAdminClientProxy, useValue: mockSrvAdminClient },
+        { provide: SrvIdentityClientProxy, useValue: mockSrvIdentityClient },
         { provide: DialogService, useValue: mockDialogService }
       ]
     }).compileComponents();
