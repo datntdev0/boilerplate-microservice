@@ -21,29 +21,24 @@ Work the ③ Implement tasks in `checklist.md` to completion on a feature branch
   - If any are missing, report and halt.
   </step>
   <step order="2">
-  For each ③ task in the `${DIRECTORY}/checklist.md`, perform the following steps until all are done:
-  1. implement the change following repo idioms and the modular DI system,
-  2. build (`dotnet build` / `ng build`) to confirm it compiles,
-  3. commit locally with a conventional message (feat/fix/refactor/build/chore),
-  4. check the task off in `${DIRECTORY}/checklist.md` (③).
+  Implement the ③ tasks **wave by wave**, using the dependency graph in `${DIRECTORY}/design.md`. Process waves in ascending order; do not start a wave until the previous one is fully committed. For each completed task, check it off in `${DIRECTORY}/checklist.md`.
   </step>
   <step order="3">
-  Delegate to the `scrumai.reviewer` subagent with following prompt:
+  Delegate to the `scrumai.reviewer` subagent with EXACT following prompt:
   ```
   Perform an internal code review against the `${DIRECTORY}/spec.md` and `${DIRECTORY}/design.md`. 
-  Copy the `.claude/templates/review.md` → `${DIRECTORY}/test.md` if not exists and fill the review findings.
+  Fill the review findings into the **Code Review Finding** section in `${DIRECTORY}/test.md`.
   ```
   </step>
   <step order="4">
-  For each review finding in `${DIRECTORY}/test.md`, address by fixing code:
-  1. implement the code change for the review finding
-  2. build to confirm it compiles successfully
-  3. commit locally with a conventional message (feat/fix/refactor/build/chore)
-  4. update status for the finding in `${DIRECTORY}/test.md` to "fixed" and add a reference to the commit hash that fixed it.
+  1. Loop until there is no more unchecked **Code Review Finding** in `${DIRECTORY}/test.md`.
+  2. For each finding, fix the code and ensure the application build succesfuly.
+  3. Check the working review finding off in `${DIRECTORY}/test.md`.
   </step>
 </steps>
 
 <postValidate>
+- Validate the application builds successfully (`dotnet build` / `ng build`). Loop until clean.
 - Validate all tasks are checked off in `${DIRECTORY}/checklist.md`. Loop until clean.
 - Validate all review findings are fixed in `${DIRECTORY}/test.md`. Loop until clean.
 - Tick the **③ Implement** items in `${DIRECTORY}/checklist.md`.
@@ -51,8 +46,8 @@ Work the ③ Implement tasks in `checklist.md` to completion on a feature branch
 </postValidate>
 
 <output>
-- Code changes + local commits.
-- `${DIRECTORY}/checklist.md` with ③ tasks and gate items checked.
+- Code changes + application build success.
 - Internal review findings addressed (`scrumai.reviewer`).
+- `${DIRECTORY}/checklist.md` with ③ tasks and gate items checked.
 - Report readiness for `/scrumai.verify`.
 </output>

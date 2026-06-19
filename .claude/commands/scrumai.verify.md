@@ -17,15 +17,19 @@ Perform unit tests and manual testing against the spec/design.
 
 <steps>
   <step order="1">
-  Delegate to the `scrumai.tester` subagent with following prompt:
+  - Resolve the `$DIRECTORY` and check the `${DIRECTORY}/checklist.md` exists.
+  - If any are missing, report and halt.
+  </step>
+  <step order="1">
+  Delegate to the `scrumai.tester` subagent with EXACT following prompt:
   ```
-  Perform unit tests for the feature in `${DIRECTORY}` according Unit Test sections in `${DIRECTORY}/design.md`.
+  Perform unit tests for the feature in `${DIRECTORY}` according **Unit Test** sections in `${DIRECTORY}/test.md`.
   ``` 
   </step>
   <step order="2">
-  Delegate to the `scrumai.tester` subagent with following prompt:
+  Delegate to the `scrumai.tester` subagent with EXACT following prompt:
   ```
-  Perform manual web/UI testing for the feature in `${DIRECTORY}` according Manual Test sections in `${DIRECTORY}/design.md`.
+  Perform manual web/UI testing for the feature in `${DIRECTORY}` according **Manual tests (web/UI)** sections in `${DIRECTORY}/test.md`.
   ```
   </step>
   <step order="3">
@@ -38,7 +42,8 @@ Perform unit tests and manual testing against the spec/design.
 </steps>
 
 <postValidate>
-- Validate all test results and evidence are properly documented in `${DIRECTORY}/test.md`. Loop until clean.
+- Validate all **Unit Test** item passed and documented in `${DIRECTORY}/test.md`. Loop until clean.
+- Validate all **Manual tests (web/UI)** item passed and documented in `${DIRECTORY}/test.md`. Loop until clean.
 - Tick the **④ Verify** items in `${DIRECTORY}/checklist.md`.
 </postValidate>
 

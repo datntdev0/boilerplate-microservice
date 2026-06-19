@@ -11,6 +11,7 @@ user-invocable: false
 ## Feature artifacts
 - One folder per feature: `.scrumai/features/<name>/` — `<name>` is the feature working directory.
 - Files: `spec.md`, `design.md`, `test.md`, `checklist.md`, `evidence/`.
+- Do not deviate the structure or content of these templates.
 
 ## Checklist gating
 - Every feature folder has a `checklist.md` (from `.claude/templates/checklist.md`) with per-phase gates.
@@ -18,13 +19,16 @@ user-invocable: false
 - If a required item cannot be met, **refers to the memory/troubleshoots.md to find guidance**. An agent MUST try to resolve blockers at least three times with different approaches.
 - If a required items is actually not achievable, **STOP and report what is blocking** — never skip a gate silently. Each phase ticks its own items as it satisfies them.
 
-## Git branch & Commit conventions
-- Implementation runs on feature branch (e.g. `feat/form-tagify`).
-- Don't commit the .scrumai artifacts (spec/design/test/checklist).
-- Branch off from current branch: `git checkout -b feat/<name>` — the feature folder name.
-- Commit message: types seen in this repo: `feat` `fix`/`bugs` `refactor` `build` `chore`.
-
 ## Project commands: build, start, run
+
+### Local Infrastructure (Docker)
+
+```bash
+# Start SQL Server 2022 + MongoDB 8.0
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
+# Stop and remove volumes
+docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra down -v
+```
 
 ### Backend (.NET 9)
 
@@ -52,23 +56,3 @@ npm test                # watch mode
 npm run nswag           # regenerate TypeScript API proxies from backend contracts
 npm run storybook:start # Storybook component explorer
 ```
-
-### E2E Tests (Playwright, from `e2e/`)
-
-```bash
-npm ci && npx playwright install --with-deps
-npx playwright test         # run all
-npx playwright test --ui    # interactive UI mode
-npx playwright test --debug
-npx playwright show-report
-```
-
-### Local Infrastructure (Docker)
-
-```bash
-# Start SQL Server 2022 + MongoDB 8.0
-docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra up -d
-# Stop and remove volumes
-docker compose -f deploy/dockercompose.local.infra.yml -p datntdev_microservices_infra down -v
-```
-

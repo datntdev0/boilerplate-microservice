@@ -22,20 +22,33 @@ Convert `spec.md` into a concrete `design.md`, and record ordered implementation
   - If the directory or spec is missing, report and halt.
   </step>
   <step order="2">
-  Delegate to the `scrumai.architect` subagent with following prompt:
+  Delegate to the `scrumai.architect` subagent with EXACT following prompt:
   ```
-  Fill the design with a technical solution and implementation plan for `${DIRECTORY}/spec.md`.
+  Let analyze thoroughly the `${DIRECTORY}/spec.md` and codebase to produce a design for it.
+  1. Use the `.claude/templates/design.md` template to create `${DIRECTORY}/design.md`.
+  2. Check the ② Design items in `${DIRECTORY}/checklist.md` as you satisfy them.
+  ```
+  </step>
+  <step order="3">
+  Delegate to the `scrumai.architect` subagent with EXACT following prompt:
+  ```
+  Let analyze thoroughly the `${DIRECTORY}/design.md` and `${DIRECTORY}/spec.md` to list the test cases:
+  1. Use the `.claude/template/test.md` template to create `${DIRECTORY}/test.md`.
+  2. Check the ② Design items in `${DIRECTORY}/checklist.md` as you satisfy them.
   ```
   </step>
 </steps>
 
 <postValidate>
 - Validate the design is complete and feasible; loop with the architect until it is.
+- Validate the `design.md` contains the Implementation Plan table and the Mermaid dependency graph.
+- Validate the ③ Implement declare list of task checklist in the `${DIRECTORY}/checklist.md`.
 - Tick the **② Design** items in `${DIRECTORY}/checklist.md`.
 </postValidate>
 
 <output>
-- `${DIRECTORY}/design.md`
-- `${DIRECTORY}/checklist.md` (③ tasks added, ② items ticked)
-- Report readiness for `/scrumai.start` or `/scrumai.start-full`.
+- `${DIRECTORY}/design.md` (incl. Implementation Plan table + Mermaid dependency/parallelization graph)
+- `${DIRECTORY}/checklist.md` (③ tasks added with waves + dependencies, ② items ticked)
+- `${DIRECTORY}/test.md` (test cases per requirement)
+- Report readiness for `/scrumai.start` or `/scrumai.start-full`
 </output>

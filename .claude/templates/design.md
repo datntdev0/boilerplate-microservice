@@ -22,18 +22,29 @@
 ## Risks & Trade-offs
 - [risk → mitigation]
 
-## Test Cases
+## Implementation Plan
 
-Derived from the spec's acceptance scenarios. Drives implementation (Phase ③) and verification (Phase ④).
+Small, independently committable tasks for Phase ③. Tasks in the same **wave** are independent and run in parallel (one agent each); a task runs only after every task it depends on is done. Tasks in the same wave **must touch disjoint files** — if two tasks share a file, add a dependency so they run in separate waves.
 
-### Unit tests
-| #   | Target (service/component) | Requirement        | Case              |
-|-----|----------------------------|--------------------|-------------------|
-| U01 | …                          | [spec FR/scenario] | [what it asserts] |
+| #   | Task | Area / files touched | Depends on | Wave | Commit    |
+|-----|------|----------------------|------------|------|-----------|
+| T1  | …    | …                    | —          | 1    | `type: …` |
+| T2  | …    | …                    | —          | 1    | `type: …` |
+| T3  | …    | …                    | T1, T2     | 2    | `type: …` |
 
-### Manual tests (web/UI)
-> If the feature has no UI/web behavior, replace the table with: **N/A — no UI/web behavior**. Do not delete the section — Phase ④ checks it and the checklist gate requires an explicit answer.
+### Dependency & parallelization graph
 
-| #   | Scenario | Steps                                   | Expected result      |
-|-----|----------|-----------------------------------------|----------------------|
-| M01 | …        | 1. step 1 <br> 2. step 2 <br> 3. step 3 | [observable outcome] |
+> Edges point from a prerequisite to the task that depends on it. One subgraph per wave; tasks inside a wave run concurrently.
+
+```mermaid
+flowchart TD
+    subgraph W1["Wave 1 · parallel"]
+        T1["T1 · …"]
+        T2["T2 · …"]
+    end
+    subgraph W2["Wave 2"]
+        T3["T3 · …"]
+    end
+    T1 --> T3
+    T2 --> T3
+```
