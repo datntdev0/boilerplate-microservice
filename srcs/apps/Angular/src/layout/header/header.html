@@ -43,6 +43,19 @@
         </div>
       </div>
     </div>
+    @if (tenantOptions.length > 0) {
+      <div class="menu-item px-3 py-2">
+        <div class="tenant-selector" [title]="selectedTenantLabel" data-bs-toggle="tooltip" data-bs-placement="top">
+          <app-form-selector
+            [options]="tenantOptions"
+            [clearable]="false"
+            [searchable]="false"
+            [(ngModel)]="selectedTenantId"
+            (selectionChange)="onTenantChange($event)">
+          </app-form-selector>
+        </div>
+      </div>
+    }
     <div class="separator my-2"></div>
     <div class="menu-item">
       <a id="sign-out-button" href="javascript:void(0)" class="menu-link px-5" (click)="signOut()">

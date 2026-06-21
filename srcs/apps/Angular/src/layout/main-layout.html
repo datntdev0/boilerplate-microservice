@@ -2,9 +2,10 @@
   <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
     <app-header
       [applicationName]="applicationName"
-      [menuItems]="menuItems" 
+      [menuItems]="menuItems"
       [emailAddress]="userEmailAddress()"
       [fullName]="userFullName()"
+      [tenantOptions]="tenantOptions"
       (onClickSignOut)="signOut()">
     </app-header>
     <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">

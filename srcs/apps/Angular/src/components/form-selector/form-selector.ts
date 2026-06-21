@@ -181,8 +181,11 @@ export class FormSelectorComponent implements ControlValueAccessor {
 
   // ControlValueAccessor implementation
   writeValue(value: any): void {
-    if (value === null || value === undefined) {
+    if (value === undefined) {
       this.selectedValues = [];
+    } else if (value === null && !this.multiple) {
+      // null is a valid selection (e.g. the "Host" tenant with id = null)
+      this.selectedValues = [null];
     } else if (this.multiple && Array.isArray(value)) {
       this.selectedValues = [...value];
     } else if (!this.multiple) {

@@ -2085,6 +2085,7 @@ export class SessionRoleDto implements ISessionRoleDto {
     id?: number;
     name?: string;
     permissions?: number[];
+    tenantId?: number | undefined;
 
     [key: string]: any;
 
@@ -2110,6 +2111,7 @@ export class SessionRoleDto implements ISessionRoleDto {
                 for (let item of _data["permissions"])
                     this.permissions!.push(item);
             }
+            this.tenantId = _data["tenantId"];
         }
     }
 
@@ -2133,6 +2135,7 @@ export class SessionRoleDto implements ISessionRoleDto {
             for (let item of this.permissions)
                 data["permissions"].push(item);
         }
+        data["tenantId"] = this.tenantId;
         return data;
     }
 }
@@ -2141,6 +2144,7 @@ export interface ISessionRoleDto {
     id?: number;
     name?: string;
     permissions?: number[];
+    tenantId?: number | undefined;
 
     [key: string]: any;
 }
@@ -2152,6 +2156,7 @@ export class SessionUserDto implements ISessionUserDto {
     lastName?: string;
     permissions?: number[];
     roles?: SessionRoleDto[];
+    tenants?: SessionTenantDto[];
 
     [key: string]: any;
 
@@ -2184,6 +2189,11 @@ export class SessionUserDto implements ISessionUserDto {
                 for (let item of _data["roles"])
                     this.roles!.push(SessionRoleDto.fromJS(item));
             }
+            if (Array.isArray(_data["tenants"])) {
+                this.tenants = [] as any;
+                for (let item of _data["tenants"])
+                    this.tenants!.push(SessionTenantDto.fromJS(item));
+            }
         }
     }
 
@@ -2214,6 +2224,11 @@ export class SessionUserDto implements ISessionUserDto {
             for (let item of this.roles)
                 data["roles"].push(item ? item.toJSON() : undefined as any);
         }
+        if (Array.isArray(this.tenants)) {
+            data["tenants"] = [];
+            for (let item of this.tenants)
+                data["tenants"].push(item ? item.toJSON() : undefined as any);
+        }
         return data;
     }
 }
@@ -2225,6 +2240,59 @@ export interface ISessionUserDto {
     lastName?: string;
     permissions?: number[];
     roles?: SessionRoleDto[];
+    tenants?: SessionTenantDto[];
+
+    [key: string]: any;
+}
+
+export class SessionTenantDto implements ISessionTenantDto {
+    id?: number | undefined;
+    name?: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISessionTenantDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SessionTenantDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SessionTenantDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ISessionTenantDto {
+    id?: number | undefined;
+    name?: string;
 
     [key: string]: any;
 }

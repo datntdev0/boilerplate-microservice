@@ -1,17 +1,32 @@
 import { CommonModule } from '@angular/common';
-import { Component, DOCUMENT, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, DOCUMENT, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
+import { ComponentsModule } from '@components/components.module';
+import { FormSelectorOption } from '@components/form-selector/form-selector';
+import { APPLICATION } from '@shared/models/constants';
 import { MenuSection } from '@shared/models/menu';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { filter } from 'rxjs/operators';
 
+const TENANT_ID_KEY = `${APPLICATION.name}.TenantId`;
+
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, PopoverModule],
-  templateUrl: './header.html'
+  imports: [CommonModule, PopoverModule, ComponentsModule, FormsModule],
+  templateUrl: './header.html',
+  styles: [`
+    ::ng-deep .tenant-selector .form-selector-single-value {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: block;
+      max-width: 160px;
+    }
+  `]
 })
-export class HeaderComponent implements OnInit {
-  
+export class HeaderComponent implements OnInit, OnChanges {
+
   private readonly document: Document = inject(DOCUMENT);
   private readonly router: Router = inject(Router);
 
@@ -20,28 +35,56 @@ export class HeaderComponent implements OnInit {
   @Input() emailAddress: string = 'developer@datntdev.com';
   @Input() fullName: string = 'Developer User';
   @Input() menuItems: MenuSection[] = [];
+  @Input() tenantOptions: FormSelectorOption[] = [];
 
   @Output() onClickSignOut = new EventEmitter<void>();
 
-  public pageTitle: string | undefined
-  public pageDescription: string | undefined
+  public pageTitle: string | undefined;
+  public pageDescription: string | undefined;
+  public selectedTenantId: any = null;
 
-  protected signOut(): void {
-    this.onClickSignOut.emit();
+  get selectedTenantLabel(): string {
+    return this.tenantOptions.find(o => o.value === this.selectedTenantId)?.label ?? '';
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tenantOptions'] && this.tenantOptions.length > 0) {
+      const stored = this.getStoredTenantId();
+      const inList = stored !== undefined && this.tenantOptions.some(o => o.value === stored);
+      this.selectedTenantId = inList ? stored : this.tenantOptions[0].value;
+      if (!inList) this.persistTenantId(this.selectedTenantId);
+    }
   }
 
   public ngOnInit(): void {
-    // Set initial page info
     this.updatePageInfo(this.router.url);
-
-    // Subscribe to route changes
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => this.updatePageInfo(event.urlAfterRedirects));
   }
 
+  protected signOut(): void {
+    this.onClickSignOut.emit();
+  }
+
+  protected onTenantChange(value: any): void {
+    this.persistTenantId(value);
+    window.location.reload();
+  }
+
+  private getStoredTenantId(): any {
+    const stored = sessionStorage.getItem(TENANT_ID_KEY);
+    if (stored === null) return undefined;
+    if (stored === '') return null;
+    const num = Number(stored);
+    return isNaN(num) ? null : num;
+  }
+
+  private persistTenantId(value: any): void {
+    sessionStorage.setItem(TENANT_ID_KEY, value == null ? '' : String(value));
+  }
+
   private updatePageInfo(url: string): void {
-    // Find matching menu item by URL
     for (const section of this.menuItems) {
       for (const item of section.items) {
         if (item.url && url.includes(item.url)) {

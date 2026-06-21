@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { MainLayout } from './main-layout';
+import { SrvIdentityClientProxy } from '@shared/proxies/srv-identity-proxies';
 import { AuthService } from '@shared/services/auth.service';
 import { signal } from '@angular/core';
 
@@ -19,6 +21,11 @@ const mockAuthService = {
   signOut: vi.fn()
 };
 
+// Mock SrvIdentityClientProxy
+const mockIdentityProxy = {
+  identities_GetSession: vi.fn().mockReturnValue(of({ user: { tenants: [] } }))
+};
+
 describe('Components.MainLayout', () => {
   let component: MainLayout;
   let fixture: ComponentFixture<MainLayout>;
@@ -28,7 +35,8 @@ describe('Components.MainLayout', () => {
       imports: [MainLayout],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: mockAuthService }
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: SrvIdentityClientProxy, useValue: mockIdentityProxy }
       ]
     }).compileComponents();
 
