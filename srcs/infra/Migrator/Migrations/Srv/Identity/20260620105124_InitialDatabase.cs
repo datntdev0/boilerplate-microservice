@@ -113,17 +113,11 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     TenantId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserEntityId = table.Column<long>(type: "bigint", nullable: true)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppUserTenants", x => new { x.UserId, x.TenantId });
-                    table.ForeignKey(
-                        name: "FK_AppUserTenants_AppUsers_UserEntityId",
-                        column: x => x.UserEntityId,
-                        principalTable: "AppUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AppUserTenants_AppUsers_UserId",
                         column: x => x.UserId,
@@ -147,11 +141,6 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                 table: "AppUserRoles",
                 columns: new[] { "UserId", "RoleId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppUserTenants_UserEntityId",
-                table: "AppUserTenants",
-                column: "UserEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUserTenants_UserId_TenantId",

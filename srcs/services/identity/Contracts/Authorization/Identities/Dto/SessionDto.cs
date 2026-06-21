@@ -22,6 +22,7 @@ public class SessionUserDto
     public string LastName { get; set; } = string.Empty;
     public Constants.Permissions[] Permissions { get; set; } = [];
     public SessionRoleDto[] Roles { get; set; } = [];
+    public SessionTenantDto[] Tenants { get; set; } = [];
 }
 
 public class SessionRoleDto
@@ -29,4 +30,11 @@ public class SessionRoleDto
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public Constants.Permissions[] Permissions { get; set; } = [];
+    public int? TenantId { get; set; }
+}
+
+public class SessionTenantDto
+{
+    public int? Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

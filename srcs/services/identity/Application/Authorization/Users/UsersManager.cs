@@ -32,6 +32,7 @@ public class UsersManager(IServiceProvider services)
             .Where(x => x.Identities.Any(i => i.EmailAddress == emailAddress))
             .Include(x => x.Roles)
             .Include(x => x.Identities)
+            .Include(x => x.Tenants)
             .FirstOrDefaultAsync();
         return entity is null ? throw new ExceptionNotFound() : entity;
     }

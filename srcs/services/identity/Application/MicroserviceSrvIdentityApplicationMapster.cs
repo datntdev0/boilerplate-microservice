@@ -1,3 +1,4 @@
+using datntdev.Microservice.Srv.Identity.Application.Authorization.Roles.Entities;
 using datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Tenants.Dto;
@@ -11,7 +12,11 @@ public class MicroserviceSrvIdentityApplicationMapster : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<UserEntity, SessionUserDto>()
-            .Map(dest => dest.EmailAddress, src => src.Identities.First().EmailAddress);
+            .Map(dest => dest.EmailAddress, src => src.Identities.First().EmailAddress)
+            .Map(dest => dest.Roles, src => src.Roles);
+
+        config.NewConfig<RoleEntity, SessionRoleDto>()
+            .Map(dest => dest.TenantId, src => src.TenantId);
 
         config.NewConfig<UserEntity, UserListDto>()
             .Map(dest => dest.EmailAddress, src => src.Identities.First().EmailAddress, src => src.Identities.Any());

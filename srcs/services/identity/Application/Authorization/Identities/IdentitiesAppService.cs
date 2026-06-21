@@ -8,6 +8,7 @@ using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Identities.Dto;
 using datntdev.Microservice.Srv.Identity.Contracts.Authorization.Users.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -19,6 +20,7 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
     private readonly UsersManager _userManager = services.GetRequiredService<UsersManager>();
     private readonly HttpContext _httpContext = services.GetRequiredService<IHttpContextAccessor>().HttpContext!;
     private readonly ISrvAdminHttpClient _srvAdminHttpClientApiKey = services.GetRequiredHttpProxyService<ISrvAdminHttpClient>(true);
+    private readonly ILogger<IdentitiesAppService> _logger = services.GetRequiredService<ILogger<IdentitiesAppService>>();
 
     [AppRoute("signin")]
     public async Task<UserDto> CreateSigninAsync(SigninDto request)
@@ -37,16 +39,28 @@ public class IdentitiesAppService(IServiceProvider services) : BaseAppService, I
     [AppRoute("session")]
     public async Task<SessionDto> GetSessionAsync()
     {
-        var tenants = await _srvAdminHttpClientApiKey.Tenants_GetAllAsync(null, null);
+        if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
+            return new SessionDto();
 
-        if (_httpContext.User.Identity?.IsAuthenticated ?? false)
-        {
-            var emailAddress = _httpContext.User.GetClaim(Claims.Email);
-            if (string.IsNullOrEmpty(emailAddress)) return new SessionDto();
+        var emailAddress = _httpContext.User.GetClaim(Claims.Email);
+        if (string.IsNullOrEmpty(emailAddress)) return new SessionDto();
 
-            var userEntity = await _userManager.GetAsync(emailAddress);
-            return new SessionDto() { User = Map<SessionUserDto>(userEntity) };
-        }
-        return new SessionDto();
+        var userEntity = await _userManager.GetAsync(emailAddress);
+        var sessionUser = Map<SessionUserDto>(userEntity);
+        var tenantList = new List<SessionTenantDto>();
+
+        if (userEntity.Roles.Any(r => r.TenantId == null))
+            tenantList.Add(new SessionTenantDto { Id = null, Name = "Host" });
+
+        var adminTenants = await _srvAdminHttpClientApiKey.Tenants_GetAllAsync(null, null);
+        var assignedTenantIds = userEntity.Tenants.Select(t => t.TenantId).ToHashSet();
+        var assignedTenants = adminTenants.Items
+            .Where(t => assignedTenantIds.Contains(t.Id))
+            .OrderBy(t => t.Name, StringComparer.OrdinalIgnoreCase)
+            .Select(t => new SessionTenantDto { Id = t.Id, Name = t.Name });
+        tenantList.AddRange(assignedTenants);
+
+        sessionUser.Tenants = [.. tenantList];
+        return new SessionDto { User = sessionUser };
     }
 }

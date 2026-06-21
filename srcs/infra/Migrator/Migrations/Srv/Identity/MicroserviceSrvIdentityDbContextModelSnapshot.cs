@@ -193,12 +193,7 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserEntityId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("UserId", "TenantId");
-
-                    b.HasIndex("UserEntityId");
 
                     b.HasIndex("UserId", "TenantId")
                         .IsUnique();
@@ -238,12 +233,8 @@ namespace datntdev.Microservice.Infra.Migrator.Migrations.Srv.Identity
 
             modelBuilder.Entity("datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities.UserTenantEntity", b =>
                 {
-                    b.HasOne("datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities.UserEntity", null)
-                        .WithMany("Tenants")
-                        .HasForeignKey("UserEntityId");
-
                     b.HasOne("datntdev.Microservice.Srv.Identity.Application.Authorization.Users.Entities.UserEntity", "User")
-                        .WithMany()
+                        .WithMany("Tenants")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -45,7 +45,6 @@ public class MicroserviceSrvIdentityDbContext(DbContextOptions<MicroserviceSrvId
         {
             entity.HasKey(ut => new { ut.UserId, ut.TenantId });
             entity.HasIndex(ut => new { ut.UserId, ut.TenantId }).IsUnique();
-            entity.HasOne(ut => ut.User).WithMany().HasForeignKey(ut => ut.UserId);
         });
     }
 }
